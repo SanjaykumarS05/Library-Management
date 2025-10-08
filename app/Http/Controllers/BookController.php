@@ -21,7 +21,7 @@ class BookController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.add_book', compact('categories'));
+        return view('admin.addbook', compact('categories'));
     }
 
     public function add(BookRequest $request)
@@ -34,7 +34,7 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
         $categories = Category::all();
-        return view('admin.edit_book', compact('book', 'categories'));
+        return view('admin.editbook', compact('book', 'categories'));
     }
 
     public function update(BookRequest $request, $id)

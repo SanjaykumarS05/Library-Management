@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +49,13 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user', function() { return view('user.dashboard'); })->name('user.dashboard');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/books', [BookController::class, 'index'])->name('admin.books');
+    Route::get('/admin/books/create', [BookController::class, 'create'])->name('admin.books.create');
+    Route::post('/admin/books', [BookController::class, 'add'])->name('admin.books.add');
+    Route::get('/admin/books/{id}/edit', [BookController::class, 'edit'])->name('admin.books.edit');
+    Route::put('/admin/books/{id}', [BookController::class, 'update'])->name('admin.books.update');
+    Route::delete('/admin/books/{id}', [BookController::class, 'delete'])->name('admin.books.delete');
 });
