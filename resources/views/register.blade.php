@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Register</title>
+    <title>Sign Up</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -13,9 +13,9 @@
 </head>
 <body>
     <div class="container">
-        <form action="{{ route('store') }}" method="post" onsubmit="return Register();">
+        <form action="{{ route('store') }}" method="post" >
         @csrf
-        <h1>Register</h1>
+        <h1>Sign Up</h1>
         <div class="input-group">
             <i class="material-icons">person</i>
             <label for="name">Name:</label>
@@ -39,7 +39,7 @@
         <div class="input-group">
             <button type="submit" class="submit">Register</button>
         </div>
-        <p class="p2">Have an account? <a href="{{ route('login') }}">Login here</a></p>
+        <p class="p2">Have an account? <a href="{{ route('login') }}">Sign in</a></p>
         </form>
     </div>
     <script>
