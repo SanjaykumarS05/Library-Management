@@ -29,13 +29,17 @@ class UserController extends Controller
         return redirect()->route('login')->with('success', 'User registered successfully.');
     }
 
-    public function submit(UserRequest $request)
+    public function submit(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
         $user = User::where('email', $data['email'])->first();
         if(!$user)
             return redirect()->back()->with('error', 'Invalid Email');
-        if ($user && bcrypt($data['password']) === $user->password) {
+        if ($user && Hash::check($data['password'], $user->password)) {
             Auth::login($user);
             return redirect()->route('dashboard');
         }
@@ -48,6 +52,6 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('auth.login')->with('success', 'Logged out successfully.');
+        return redirect()->route('login')->with('success', 'Logged out successfully.');
     }
 }

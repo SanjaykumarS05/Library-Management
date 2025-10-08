@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\BookRequest;
 use App\Models\Book;
-use App\Models\BookIssue;
-use App\Models\Category;
+use App\Models\book_issue;
+use App\Models\catagory as Category;
 
 class BookController extends Controller
 {
     public function index()
     {
-        $books = Book::all();
-        $book_issues = BookIssue::all();
+        $books = Book::paginate(100);
+        $book_issues = book_issue::all();
         $categories = Category::all();
-        return view('admin.dashboard', compact('books', 'book_issues', 'categories'));
+        return view('admin.manage_books', compact('books', 'book_issues', 'categories'));
     }
 
     public function create()

@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Requests\UserRequest;
+use App\Http\Requests\UserRequest;
+
 
 class ManageUserController extends Controller
 {
@@ -31,10 +32,15 @@ class ManageUserController extends Controller
         return view('admin.edituser', compact('user'));
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
+        $data =$request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'role' => 'required|in:admin,staff,user',
+        ]);
         $user = User::findOrFail($id);
-        $user->update($request->validated());
+        $user->update($data);
         return redirect()->route('admin.manage_users')->with('success', 'User updated successfully.');
     }
 

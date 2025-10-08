@@ -5,9 +5,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ManageUserController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/login', [UserController::class, 'index'])->name('login');
 Route::post('/login', [UserController::class, 'submit'])->name('submit');
@@ -31,11 +28,9 @@ Route::get('/dashboard', function() {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', function() { return view('admin.dashboard'); })->name('admin.dashboard');
 });
-
 Route::middleware(['auth', 'role:staff'])->group(function () {
     Route::get('/staff', function() { return view('staff.dashboard'); })->name('staff.dashboard');
 });
-
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user', function() { return view('user.dashboard'); })->name('user.dashboard');
 });
