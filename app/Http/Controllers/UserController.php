@@ -23,7 +23,7 @@ class UserController extends Controller
     public function Registerstore(UserRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = Hash::make($data['password']);
+        $data['password'] = bcrypt($data['password']);
         User::create($data);
 
         return redirect()->route('login')->with('success', 'User registered successfully.');
@@ -35,7 +35,7 @@ class UserController extends Controller
         $user = User::where('email', $data['email'])->first();
         if(!$user)
             return redirect()->back()->with('error', 'Invalid Email');
-        if ($user && Hash::check($data['password'], $user->password)) {
+        if ($user && bcrypt($data['password']) === $user->password) {
             Auth::login($user);
             return redirect()->route('dashboard');
         }

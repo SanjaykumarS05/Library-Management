@@ -24,7 +24,7 @@ class BookController extends Controller
         return view('admin.addbook', compact('categories'));
     }
 
-    public function add(BookRequest $request)
+    public function store(BookRequest $request)
     {
         Book::create($request->validated());
         return redirect()->route('admin.dashboard')->with('success', 'Book added successfully.');

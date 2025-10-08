@@ -3,22 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\ManageUserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 Route::get('/login', [UserController::class, 'index'])->name('login');
 Route::post('/login', [UserController::class, 'submit'])->name('submit');
@@ -54,8 +43,15 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/books', [BookController::class, 'index'])->name('admin.books');
     Route::get('/admin/books/create', [BookController::class, 'create'])->name('admin.books.create');
-    Route::post('/admin/books', [BookController::class, 'add'])->name('admin.books.add');
+    Route::post('/admin/books', [BookController::class, 'store'])->name('admin.books.add');
     Route::get('/admin/books/{id}/edit', [BookController::class, 'edit'])->name('admin.books.edit');
     Route::put('/admin/books/{id}', [BookController::class, 'update'])->name('admin.books.update');
     Route::delete('/admin/books/{id}', [BookController::class, 'delete'])->name('admin.books.delete');
+
+    Route::get('/admin/manage_users', [ManageUserController::class, 'index'])->name('admin.manage_users');
+    Route::get('/admin/manage_users/create', [ManageUserController::class, 'create'])->name('admin.manage_users.create');
+    Route::post('/admin/manage_users', [ManageUserController::class, 'store'])->name('admin.manage_users.store');
+    Route::get('/admin/manage_users/{id}/edit', [ManageUserController::class, 'edit'])->name('admin.manage_users.edit');
+    Route::put('/admin/manage_users/{id}', [ManageUserController::class, 'update'])->name('admin.manage_users.update');
+    Route::delete('/admin/manage_users/{id}', [ManageUserController::class, 'delete'])->name('admin.manage_users.delete');
 });
