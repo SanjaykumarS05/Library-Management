@@ -11,19 +11,54 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body>
+    @include('Style.templatecss')
     <header>
-        <div class="box">
-        @yield('header')
-        <div>
+        <div class="box" style="display: flex; justify-content: center; align-items: center;">
+            <h1>Library Management System</h1>
+            <form method="POST" style="margin-left: auto;">
+                @csrf
+                <button type="submit" formaction="{{ route('logout') }}" style="margin-left: 20px; padding: 8px 16px; background-color: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
+            </form>
+</div>
     </header>
+
+    <aside>
+        <h2>Library System</h2>
+        <p>{{ ucfirst(auth()->user()->role) }} Panel</p>
+        <hr>
+        <h3>{{ ucfirst(auth()->user()->name) }}</h3>
+        <p>{{ auth()->user()->email }}</p>
+        <hr>
+        <nav>
+            <ul>
+                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ route('search') }}">Search Books</a></li>
+                <li><a href="{{ route('books') }}">Manage Books</a></li>
+                <li><a href="{{ route('users') }}">Manage Users</a></li>
+                <li><a href="{{ route('categories.index') }}">Manage Categories</a></li>
+                <li><a href="{{ route('books.issue_return') }}">Issue / Return Books</a></li>
+            </ul>
+    </aside>
+
+
     <main>
         <div class="content">
         @yield('content')
         </div>
         @yield('scripts')
     </main>
-    <footer>
-        <p>&copy; 2025 Rsoft Library. All rights reserved.</p>
-    </footer>
+
+    <script>
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+        @foreach ($errors->all() as $error)
+            toastr.error("{{ $error }}");
+        @endforeach
+    </script> 
 </body>
 </html>

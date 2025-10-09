@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id(); 
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('book_id');
+            $table->unsignedBigInteger('issued_id');
             $table->date('issue_date');
             $table->date('return_date')->nullable();
             $table->enum('status', ['Issued', 'Returned'])->default('Issued');
@@ -22,6 +23,7 @@ return new class extends Migration
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
+            $table->foreign('issued_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

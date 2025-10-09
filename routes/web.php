@@ -4,7 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\BookIssueController;
 
+Route::get('/template', [TemplateController::class, 'index'])->name('template');
+Route::post('/logout', [TemplateController::class, 'logout'])->name('logout');
 
 Route::get('/login', [UserController::class, 'index'])->name('login');
 Route::post('/login', [UserController::class, 'submit'])->name('submit');
@@ -26,7 +33,7 @@ Route::get('/dashboard', function() {
 
 // Role-specific dashboards
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', function() { return view('admin.dashboard'); })->name('admin.dashboard');
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 Route::middleware(['auth', 'role:staff'])->group(function () {
     Route::get('/staff', function() { return view('staff.dashboard'); })->name('staff.dashboard');
@@ -35,18 +42,32 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user', function() { return view('user.dashboard'); })->name('user.dashboard');
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/books', [BookController::class, 'index'])->name('admin.books');
-    Route::get('/admin/books/create', [BookController::class, 'create'])->name('admin.books.create');
-    Route::post('/admin/books', [BookController::class, 'store'])->name('admin.books.add');
-    Route::get('/admin/books/{id}/edit', [BookController::class, 'edit'])->name('admin.books.edit');
-    Route::put('/admin/books/{id}', [BookController::class, 'update'])->name('admin.books.update');
-    Route::delete('/admin/books/{id}', [BookController::class, 'delete'])->name('admin.books.delete');
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
-    Route::get('/admin/manage_users', [ManageUserController::class, 'index'])->name('admin.manage_users');
-    Route::get('/admin/manage_users/create', [ManageUserController::class, 'create'])->name('admin.manage_users.create');
-    Route::post('/admin/manage_users', [ManageUserController::class, 'store'])->name('admin.manage_users.store');
-    Route::get('/admin/manage_users/{id}/edit', [ManageUserController::class, 'edit'])->name('admin.manage_users.edit');
-    Route::put('/admin/manage_users/{id}', [ManageUserController::class, 'update'])->name('admin.manage_users.update');
-    Route::delete('/admin/manage_users/{id}', [ManageUserController::class, 'delete'])->name('admin.manage_users.delete');
+    Route::get('/manage_users', [ManageUserController::class, 'index'])->name('users');
+    Route::get('/manage_users/create', [ManageUserController::class, 'create'])->name('users.create');
+    Route::post('/manage_users', [ManageUserController::class, 'store'])->name('users.store');
+    Route::get('/manage_users/{id}/edit', [ManageUserController::class, 'edit'])->name('users.edit');
+    Route::put('/manage_users/{id}', [ManageUserController::class, 'update'])->name('users.update');
+    Route::delete('/manage_users/{id}', [ManageUserController::class, 'delete'])->name('users.delete');
+
+    Route::get('/books', [BookController::class, 'index'])->name('books');
+    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
+    Route::post('/books', [BookController::class, 'store'])->name('books.add');
+    Route::get('/books/{id}/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/books/{id}', [BookController::class, 'delete'])->name('books.delete');
+
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [CategoryController::class, 'delete'])->name('categories.delete');
+
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
+    Route::post('/issue-book/{book}', [BookIssueController::class, 'issue'])->name('issue.book');
+    Route::get('/issue-return', [BookIssueController::class, 'showIssueReturnForm'])->name('books.issue_return');
+    Route::post('/issue-book', [BookIssueController::class, 'issuebook'])->name('book.issue');
+    Route::post('/return-book', [BookIssueController::class, 'returnBook'])->name('book.return');
 });

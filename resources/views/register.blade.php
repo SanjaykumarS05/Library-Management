@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body>
+    @include('Style.style')
     <div class="container">
         <form action="{{ route('store') }}" method="post" >
         @csrf

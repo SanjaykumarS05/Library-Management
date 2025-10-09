@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\BookRequest;
+use App\Http\Requests\BooksRequest;
 use App\Models\Book;
 use App\Models\book_issue;
-use App\Models\catagory as Category;
+use App\Models\category as Category;
 
 class BookController extends Controller
 {
@@ -24,10 +24,10 @@ class BookController extends Controller
         return view('admin.addbook', compact('categories'));
     }
 
-    public function store(BookRequest $request)
+    public function store(BooksRequest $request)
     {
         Book::create($request->validated());
-        return redirect()->route('admin.dashboard')->with('success', 'Book added successfully.');
+        return redirect()->route('books')->with('success', 'Book added successfully.');
     }
 
     public function edit($id)
@@ -37,18 +37,17 @@ class BookController extends Controller
         return view('admin.editbook', compact('book', 'categories'));
     }
 
-    public function update(BookRequest $request, $id)
+    public function update(BooksRequest $request, $id)
     {
         $book = Book::findOrFail($id);
         $book->update($request->validated());
-        return redirect()->route('admin.dashboard')->with('success', 'Book updated successfully.');
+        return redirect()->route('books')->with('success', 'Book updated successfully.');
     }   
 
     public function delete($id)
     {
         $book = Book::findOrFail($id);
         $book->delete();
-        return redirect()->route('admin.dashboard')->with('success', 'Book deleted successfully.');
+        return redirect()->route('books')->with('success', 'Book deleted successfully.');
     }
-
 }

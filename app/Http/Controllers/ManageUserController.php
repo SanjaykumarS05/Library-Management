@@ -17,13 +17,13 @@ class ManageUserController extends Controller
 
     public function create()
     {
-        return view('admin.createuser');
+        return view('admin.adduser');
     }
 
     public function store(UserRequest $request)
     {
         User::create($request->validated());
-        return redirect()->route('admin.manage_users')->with('success', 'User created successfully.');
+        return redirect()->route('users')->with('success', 'User created successfully.');
     }
 
     public function edit($id)
@@ -41,13 +41,13 @@ class ManageUserController extends Controller
         ]);
         $user = User::findOrFail($id);
         $user->update($data);
-        return redirect()->route('admin.manage_users')->with('success', 'User updated successfully.');
+        return redirect()->route('users')->with('success', 'User updated successfully.');
     }
 
     public function delete($id)
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->route('admin.manage_users')->with('success', 'User deleted successfully.');
+        return redirect()->route('users')->with('success', 'User deleted successfully.');
     }
 }

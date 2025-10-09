@@ -5,7 +5,7 @@
 @endsection
 @section('content')
 <p> User List</p>
-<a href="{{ route('admin.manage_users.create') }}">Add Member</a>
+<a href="{{ route('users.create') }}">Add Member</a>
 <table border="1">
     <thead>
         <tr>
@@ -24,15 +24,14 @@
             <td>{{ $user->email }}</td>
             <td>{{ $user->role }}</td>
             <td>
-                <a href="{{ route('admin.manage_users.edit', $user->id) }}">Edit</a>
+                <a href="{{ route('users.edit', $user->id) }}">Edit</a>
                 @if($user->id !== Auth::id())
-                <form action="{{ route('admin.manage_users.delete', $user->id) }}" method="POST" style="display:inline;">
+                <form action="{{ route('users.delete', $user->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('Are you sure you want to delete this user?');">Remove</button>
                 </form>
                 @else
-                Admin cannot Remove themselves
                 @endif
             </td>
         </tr>

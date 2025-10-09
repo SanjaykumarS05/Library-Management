@@ -21,13 +21,15 @@ class BooksRequest extends FormRequest
      */
     public function rules(): array
     {
+        $bookId = $this->route('book');
         return [
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'isbn' => 'required|string|max:13|unique:books',
-            'category_id' => 'required|exists:categories,id',
-            'published_year' => 'required|digits:4|integer|min:1000|max:' . (date('Y')),
-            'availability' => 'required|in:available,unavailable',
+            'title' => 'required',
+            'author' => 'required',
+            'isbn' => 'required|unique:books,isbn,' . $bookId,
+            'category_id' => 'required',
+            'publish_year' => 'required',
+            'availability' => 'required',
+            'stock' => 'required|integer|min:0',
             'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }

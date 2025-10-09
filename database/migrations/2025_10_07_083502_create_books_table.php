@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->year('publish_year')->nullable();
             $table->enum('availability', ['Yes', 'No'])->default('Yes');
+            $table->integer('stock')->default(0); 
             $table->text('image_path')->nullable();
             $table->timestamps();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');

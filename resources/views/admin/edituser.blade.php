@@ -6,7 +6,7 @@
 
 @section('content')
 
- <form action="{{ route('admin.manage_users.update', $user->id) }}" method="post">
+ <form action="{{ route('users.update', $user->id) }}" method="post">
         @csrf
         @method('PUT')
         <label for="name">Name:</label>

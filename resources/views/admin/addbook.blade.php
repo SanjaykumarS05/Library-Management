@@ -1,4 +1,5 @@
 @extends('layout.template')
+@include('Style.admincss')
 @section('title', 'Add Books')
 @section('header')
     <h1>Add Books</h1>
@@ -6,7 +7,7 @@
 
 @section('content')
 
-<form action="{{ route('admin.books.add') }}" method="POST">
+<form action="{{ route('books.add') }}" method="POST">
     @csrf
     <div>
         <label for="title">Title:</label>
@@ -18,33 +19,38 @@
     </div>
     <div>
         <label for="isbn">ISBN:</label>
-        <input type="text" id="isbn" name="isbn" value="{{ old('isbn') }}" required>
+        <input type="text" id="isbn" name="isbn" value="{{ old('isbn') }}" maxlength="13" pattern="\d{10}|\d{13}" title="Enter a 10 or 13 digit ISBN" required>
+
     </div>
 
     <div>
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
+        <label for="category_id">Category:</label>
+        <select id="category_id" name="category_id" required>
             @foreach($categories as $category)
-                <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                <option value="" disabled selected>Select category</option>
+                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
             @endforeach
         </select>
     </div>
 
     <div>
-        <label for="publisher_year">Publisher:</label>
-        <input type="text" id="publisher_year" name="publisher_year" value="{{ old('publisher_year') }}" required>
+        <label for="publish_year">Published Year:</label>
+        <input type="text" id="publish_year" name="publish_year" value="{{ old('publish_year') }}" required maxlength="4" pattern="\d{4}" title="Enter a valid year (e.g., 2000)">
     </div>
     
-    <div>
-        <label for="availability">Availability:</label>
-        <input type="number" id="availability" name="availability" value="{{ old('availability') }}" required>
-    </div>
-    
+    <input type="hidden" id="availability" name="availability" value="Yes">
 
     <div>
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required>{{ old('description') }}</textarea>
+        <label for="stock">Stock:</label>
+        <input type="number" id="stock" name="stock" value="{{ old('stock') }}" required min="0">
     </div>
+    <form action="{{ route('books.add') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div>
+        <label for="image_path">Image:</label>
+        <input type="file" id="image_path" name="image_path" accept="image/*">
+    </div>
+    </form>
 
     <button type="submit">Add Book</button>
     </div>
@@ -59,6 +65,5 @@
             toastr.error("{{ $error }}");
         @endforeach
     </script>
-</body>
-</html>
+@endsection
 

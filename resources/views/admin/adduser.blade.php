@@ -6,7 +6,7 @@
 
 @section('content')
 
-<form action="{{ route('admin.manage_users.store') }}" method="POST">
+<form action="{{ route('users.store') }}" method="POST">
     @csrf
     <div>
         <label for="name">Name:</label>
@@ -31,7 +31,6 @@
         </select>
         <div>
     <button type="submit">Add Member</button>
-    <a href="{{ route('admin.manage_users') }}">Back</a>
     </div>
     <script>
            @if(session('success'))
@@ -44,6 +43,5 @@
             toastr.error("{{ $error }}");
         @endforeach
     </script>
-</body>
-</html>
+@endsection
 

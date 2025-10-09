@@ -8,11 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 class book_issue extends Model
 {
     use HasFactory;
-    Protected $fillable = [
+
+    protected $table = 'book_issues';
+
+    protected $fillable = [
         'user_id',
         'book_id',
         'issue_date',
         'return_date',
         'status',
     ];
+
+    // Cast dates to Carbon
+    protected $dates = ['issue_date', 'return_date'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
 }
