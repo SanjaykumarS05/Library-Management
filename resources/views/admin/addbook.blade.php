@@ -1,13 +1,12 @@
 @extends('layout.template')
 @include('Style.admincss')
 @section('title', 'Add Books')
-@section('header')
-    <h1>Add Books</h1>
-@endsection
+@include('style.addcss')
 
 @section('content')
+<h1>Add Books</h1>
 
-<form action="{{ route('books.add') }}" method="POST">
+<form action="{{ route('books.add') }}"  class =form method="POST">
     @csrf
     <div>
         <label for="title">Title:</label>

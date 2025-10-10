@@ -1,15 +1,6 @@
 <style>
- /* === Container === */
-.container.book-search {
-    max-width: 100%;
-    margin: 40px auto;
-    padding: 20px;
-    background: #fdfdfd;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-}
+    /* === Container === */
+
 
 /* === Page Title === */
 .container.book-search h2 {
@@ -17,8 +8,6 @@
     margin-bottom: 25px;
     color: #2e3a59;
 }
-
-/* === Search Form === */
 .search-form {
     display: flex;
     flex-wrap: wrap;
@@ -35,12 +24,6 @@
     font-size: 14px;
     min-width: 180px;
     transition: 0.3s ease;
-    position: relative;
-}
-input[type="text"]
-{   
-    width:100%;
-    margin-bottom:10px;
 }
 
 .search-form input[type="text"]:focus,

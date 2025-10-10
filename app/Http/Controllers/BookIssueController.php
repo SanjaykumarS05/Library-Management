@@ -102,4 +102,18 @@ class BookIssueController extends Controller
 
         return back()->with('success', 'Book returned successfully!');
     }
+
+    public function issueReturn($bookId = null)
+{
+    $users = User::all();
+    $books = Book::all();
+    $book_issues = Book_issue::whereNull('return_date')->get();
+
+    $selectedBook = null;
+    if ($bookId) {
+        $selectedBook = Book::find($bookId);
+    }
+    return view('admin.issue_return', compact('users', 'books', 'book_issues', 'selectedBook'));
+}
+
 }

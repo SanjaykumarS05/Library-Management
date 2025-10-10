@@ -1,12 +1,13 @@
 @extends('layout.template')
 @section('title', 'Add Member')
+@include('Style.admincss')
 @section('header')
     <h1>Add Member</h1>
 @endsection
 
 @section('content')
 
-<form action="{{ route('users.store') }}" method="POST">
+<form action="{{ route('users.store') }}" class="form" method="POST">
     @csrf
     <div>
         <label for="name">Name:</label>

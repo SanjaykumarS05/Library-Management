@@ -13,13 +13,13 @@
     <div class="stats-grid">
         <div class="stat-card">
             <h3>Total Books</h3>
-            <p>{{ $totalBooks }}</p>
+            <p>{{ $totalBooks + $issuedBooks }}</p>
             <p class="sub">Across {{ $categoriesCount }} categories</p>
         </div>
 
         <div class="stat-card">
             <h3>Available Books</h3>
-            <p>{{ $availableBooks }}</p>
+            <p>{{ $totalBooks }}</p>
             <p class="sub">Books currently in stock</p>
         </div>
 

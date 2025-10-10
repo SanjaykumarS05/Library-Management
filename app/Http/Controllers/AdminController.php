@@ -12,11 +12,12 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $totalBooks = Book::count();
+        $totalBooks = Book::sum('stock');
 
         $categoriesCount = Category::count();
 
         $availableBooks = Book::where('availability', 'Yes')->count();
+        $issuedBooks = Book_issue::where('status', 'issued')->count();
 
         $outOfStockBooks = Book::where('stock', '<=', 0)->count();
 
@@ -24,7 +25,7 @@ class AdminController extends Controller
         $activeUsers = User::where('role', 'user')->count();
         
         $issuedPercentage = $totalBooks > 0
-            ? round(($outOfStockBooks / $totalBooks) * 100, 2)
+            ? round(($issuedBooks / ($totalBooks + $issuedBooks)) * 100, 2)
             : 0;
 
         $lowStockBooks = Book::where('stock', '<', 5)->get();
@@ -47,6 +48,7 @@ class AdminController extends Controller
             'totalBooks' => $totalBooks,
             'categoriesCount' => $categoriesCount,
             'availableBooks' => $availableBooks,
+            'issuedBooks' => $issuedBooks,
             'outOfStockBooks' => $outOfStockBooks,
             'activeStaff' => $activeStaff,
             'activeUsers' => $activeUsers,

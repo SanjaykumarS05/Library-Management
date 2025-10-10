@@ -40,9 +40,20 @@ class BookController extends Controller
     public function update(BooksRequest $request, $id)
     {
         $book = Book::findOrFail($id);
-        $book->update($request->validated());
-        return redirect()->route('books')->with('success', 'Book updated successfully.');
-    }   
+        $data = $request->validated();
+        
+        $book_stock = (int) $data['stock'];
+        if ($book_stock <= 0) {
+            $data['availability'] = 'No';
+        } else {
+            $data['availability'] = 'Yes';
+        }
+
+        $book->update($data);
+
+            return redirect()->route('books')->with('success', 'Book updated successfully.');
+        }
+
 
     public function delete($id)
     {

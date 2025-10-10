@@ -9,6 +9,8 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\BookIssueController;
+use App\Http\Controllers\BarcodeController;
+use App\Http\Controllers\OverallbookController;
 
 Route::get('/template', [TemplateController::class, 'index'])->name('template');
 Route::post('/logout', [TemplateController::class, 'logout'])->name('logout');
@@ -68,6 +70,13 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search');
     Route::post('/issue-book/{book}', [BookIssueController::class, 'issue'])->name('issue.book');
     Route::get('/issue-return', [BookIssueController::class, 'showIssueReturnForm'])->name('books.issue_return');
+    Route::get('/books/issue-return/{bookId?}', [BookIssueController::class, 'issueReturn'])->name('books.issue_return1');
     Route::post('/issue-book', [BookIssueController::class, 'issuebook'])->name('book.issue');
     Route::post('/return-book', [BookIssueController::class, 'returnBook'])->name('book.return');
+    Route::get('/overallbook', [OverallbookController::class, 'index'])->name('overallbook.index');
+    
 });
+Route::get('/barcode', [BarcodeController::class, 'index'])->name('barcode.index');
+Route::get('/barcode/book-info/{barcode}', [BarcodeController::class, 'getBookInfo']);
+
+

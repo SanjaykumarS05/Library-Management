@@ -1,11 +1,10 @@
 @extends('layout.template')
 @section('title', 'Manage Categories')
-@section('header')
-    <h1>Manage Categories</h1>
-@endsection
+@include ('style.managebookcss')
 @section('content')
-<p> Category List</p>
-<a href="{{ route('categories.create') }}">Add Category</a>
+<h2>Manage Categories</h2>
+<h3 class="h3"> Category List</h3>
+<a href="{{ route('categories.create') }}" class="addbook">╋ Add Category</a>
 <table border="1">
     <thead>
         <tr>

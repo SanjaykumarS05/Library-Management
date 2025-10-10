@@ -44,4 +44,19 @@ class SearchController extends Controller
       
         return view('admin.search', compact('books', 'query', 'categories', 'category', 'availability'));
     }
+
+
+    public function issueReturn($bookId = null)
+    {
+    $users = User::all();
+    $books = Book::all();
+    $book_issues1 = Book_issue::whereNull('return_date')->get(); // only issued but not returned
+
+    $selectedBook = null;
+    if ($bookId) {
+        $selectedBook = Book::find($bookId);
+    }
+
+    return view('books.issue_return', compact('users', 'books', 'book_issues1', 'selectedBook'));
+    }
 }

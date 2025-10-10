@@ -7,7 +7,7 @@
 
 @section('content')
 
-<form action="{{ route('categories.store') }}" method="POST">
+<form action="{{ route('categories.store') }}"  class="form" method="POST">
     @csrf
     <div>
         <label for="name">Category Name:</label>

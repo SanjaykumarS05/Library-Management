@@ -1,11 +1,10 @@
 @extends('layout.template')
 @section('title', 'Manage Users')
-@section('header')
-    <h1>Manage Users</h1>
-@endsection
+@include ('style.managebookcss')
 @section('content')
-<p> User List</p>
-<a href="{{ route('users.create') }}">Add Member</a>
+<h2 class="h2">Manage Users</h2>
+<h3 class="h3"> User List</h3>
+<a href="{{ route('users.create') }}" class="addbook"> ╋ Add Member</a>
 <table border="1">
     <thead>
         <tr>
@@ -13,7 +12,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Actions</th>
+            <th>Actions</th> 
         </tr>
     </thead>
     <tbody>

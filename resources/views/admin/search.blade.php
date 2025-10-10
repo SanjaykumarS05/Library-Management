@@ -25,7 +25,6 @@
                 <option value="Yes" {{ request('availability') == 'Yes' ? 'selected' : '' }}>Available</option>
                 <option value="No" {{ request('availability') == 'No' ? 'selected' : '' }}>Unavailable</option>
             </select>
-
             <button type="submit">🔍 Search</button>
         </div>
     </form>
@@ -46,10 +45,7 @@
                 </p>
 
                 @if($book->stock > 0)
-                    <form method="POST" action="{{ route('issue.book', $book->id) }}">
-                        @csrf
-                        <button type="submit" class="issue-btn">📖 Issue Book</button>
-                    </form>
+                    <a href ="{{ route('books.issue_return1', $book->id) }}">📖 Issue Book</a>
                 @endif
             </div>
         @empty

@@ -30,16 +30,22 @@
         <p>{{ auth()->user()->email }}</p>
         <hr>
         <nav>
+            @if(auth()->user()->role === 'admin')
             <ul>
                 <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ route('search') }}">Search Books</a></li>
                 <li><a href="{{ route('books') }}">Manage Books</a></li>
                 <li><a href="{{ route('users') }}">Manage Users</a></li>
                 <li><a href="{{ route('categories.index') }}">Manage Categories</a></li>
+                <li><a href="{{ route('overallbook.index') }}">Overall Issued Books</a></li>
                 <li><a href="{{ route('books.issue_return') }}">Issue / Return Books</a></li>
+                <li><a href="{{ route('barcode.index') }}">Barcode</a></li>
+                <li><a href="}">Reports</a></li>
+                <li><a href="">Settings</a></li>
+                
             </ul>
+            @endif
     </aside>
-
 
     <main>
         <div class="content">
