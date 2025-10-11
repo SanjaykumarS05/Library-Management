@@ -2,12 +2,13 @@
 @section('title', 'Manage Categories')
 @include ('style.managebookcss')
 @section('content')
-<h2>Manage Categories</h2>
+<h2 class="h2">Manage Categories</h2>
 <h3 class="h3"> Category List</h3>
 <a href="{{ route('categories.create') }}" class="addbook">╋ Add Category</a>
 <table border="1">
     <thead>
         <tr>
+            <th>S.no</th>
             <th>Categories</th>
             <th>Description</th>
             <th>Actions</th>
@@ -16,6 +17,7 @@
     <tbody>
         @foreach($categories as $category)
         <tr>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $category->name }}</td>
             <td>{{ $category->description }}</td>
             <td>

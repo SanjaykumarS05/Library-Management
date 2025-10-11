@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Category;
@@ -37,14 +37,14 @@ class AdminController extends Controller
             ->map(function ($issue) {
                 return (object)[
                     'type' => ucfirst($issue->status),
-                    'book_title' => $issue->book->title ?? 'Unknown',
-                    'user_name' => ucfirst($issue->user->name ?? 'Unknown'),
+                    'book_title' => $issue->book->title,
+                    'user_name' => ucfirst($issue->user->name),
                     'time_ago' => $issue->created_at->diffForHumans(),
                 ];
             });
 
         return view('admin.dashboard', [
-            'admin' => auth()->user(),
+            'admin' => auth()->user(),  
             'totalBooks' => $totalBooks,
             'categoriesCount' => $categoriesCount,
             'availableBooks' => $availableBooks,

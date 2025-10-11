@@ -2,12 +2,13 @@
 @section('title', 'Books Management')
 @include ('style.managebookcss')
 @section('content')
-<h2>Manage Books</h2>
-<h3> Book List</h3>
+<h2 class="h2">Manage Books</h2>
+<h3 class="h3"> Book List</h3>
 <a href="{{ route('books.create') }}" class="addbook">╋ Add Book</a>
 <table border="1">
     <thead>
         <tr>
+            <th>S.no</th>
             <th>Title</th>
             <th>Author</th>
             <th>ISBN</th>
@@ -21,7 +22,8 @@
     </thead>
     <tbody>
         @foreach($books as $book)
-        <tr>
+        <tr> 
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $book->title }}</td>
             <td>{{ $book->author }}</td>
             <td>{{ $book->isbn }}</td>

@@ -14,6 +14,7 @@ class book_issue extends Model
     protected $fillable = [
         'user_id',
         'book_id',
+        'issued_id',
         'issue_date',
         'return_date',
         'status',
@@ -36,4 +37,8 @@ class book_issue extends Model
     {
         return $this->belongsTo(Book::class, 'book_id');
     }
+    public function issuedUser() { 
+        return $this->belongsTo(User::class, 'issued_id'); 
+    }
+
 }

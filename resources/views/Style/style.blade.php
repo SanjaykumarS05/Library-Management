@@ -1,13 +1,5 @@
 <style> 
-body {
-  background-color: #e9e1cf; /* soft beige like library paper */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
-}
+
 
 /* === Main Container === */
 .container {

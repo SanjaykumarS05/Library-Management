@@ -8,7 +8,7 @@
 <table border="1">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>S.no</th>
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
@@ -18,19 +18,20 @@
     <tbody>
         @foreach($users as $user)
         <tr>
-            <td>{{ $user->id }}</td>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->role }}</td>
             <td>
-                <a href="{{ route('users.edit', $user->id) }}">Edit</a>
                 @if($user->id !== Auth::id())
+                <a href="{{ route('users.edit', $user->id) }}">Edit</a>
                 <form action="{{ route('users.delete', $user->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('Are you sure you want to delete this user?');">Remove</button>
                 </form>
                 @else
+                Can't Edit/Delete Self
                 @endif
             </td>
         </tr>

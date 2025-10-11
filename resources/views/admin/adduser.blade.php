@@ -1,11 +1,9 @@
 @extends('layout.template')
 @section('title', 'Add Member')
-@include('Style.admincss')
-@section('header')
-    <h1>Add Member</h1>
-@endsection
+@include('Style.addcss')
 
 @section('content')
+<h1 class ="h1">Add Member</h1>
 
 <form action="{{ route('users.store') }}" class="form" method="POST">
     @csrf
@@ -31,18 +29,8 @@
             
         </select>
         <div>
-    <button type="submit">Add Member</button>
+    <button type="submit" class ="button1">Add Member</button>
     </div>
-    <script>
-           @if(session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
-        @if(session('error'))
-            toastr.error("{{ session('error') }}");
-        @endif
-        @foreach ($errors->all() as $error)
-            toastr.error("{{ $error }}");
-        @endforeach
-    </script>
+</form>
 @endsection
 

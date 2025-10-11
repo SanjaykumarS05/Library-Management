@@ -1,12 +1,11 @@
 @extends('layout.template')
 @section('title', 'Edit Category')
-@section('header')
-    <h1>Edit Category</h1>
-@endsection
+@include('style.editcss')
 
 @section('content')
+<h1 class="h1">Edit Category</h1>
 
- <form action="{{ route('categories.update', $category->id) }}" method="post">
+ <form action="{{ route('categories.update', $category->id) }}" method="post" class="form">
         @csrf
         @method('PUT')
         <label for="name">Category Name:</label>
@@ -14,7 +13,7 @@
 
         <label for="description">Description:</label>
         <textarea id="description" name="description" required>{{ $category->description }}</textarea>
-        <button type="submit">Update</button>
+        <button type="submit" class="button1">Update</button>
     </form>
 
 @endsection

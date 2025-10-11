@@ -1,12 +1,12 @@
 @extends('layout.template')
 @section('title', 'Edit Books')
-@section('header')
-    <h1>Edit Books</h1>
-@endsection
+@include('style.editcss')
 @section('content')
-<p> Edit Book Details</p>
-<form action="{{route('books.update', $book->id)}}" method="post" enctype="multipart/form-data">
+<h1 class="h1">Edit Books</h1>
+<p class="p"> Current Book Details</p>
+<form action="{{route('books.update', $book->id)}}" method="post" class="form" enctype="multipart/form-data">
     @csrf
+    
     @method('PUT')
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" value="{{$book->title}}" required>
@@ -44,7 +44,7 @@
         <p>Current Image: <img src="{{ asset('storage/' . $book->cover_image) }}" alt="Cover Image" width="100"></p>
     @endif
 
-    <button type="submit">Update Book</button>
+    <button type="submit" class="button1">Update Book</button>
 
 </form>
 @endsection

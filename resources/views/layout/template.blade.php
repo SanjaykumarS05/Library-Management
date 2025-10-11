@@ -40,7 +40,7 @@
                 <li><a href="{{ route('overallbook.index') }}">Overall Issued Books</a></li>
                 <li><a href="{{ route('books.issue_return') }}">Issue / Return Books</a></li>
                 <li><a href="{{ route('barcode.index') }}">Barcode</a></li>
-                <li><a href="}">Reports</a></li>
+                <li><a href="{{ route('reports.index') }}">Reports</a></li>
                 <li><a href="">Settings</a></li>
                 
             </ul>

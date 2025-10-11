@@ -1,12 +1,5 @@
 <style>
-/* === General Page Layout === */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f6f7fb;
-    margin: 0;
-    padding: 20px;
-    color: #333;
-}
+
 
 .h2 {
     text-align: center;

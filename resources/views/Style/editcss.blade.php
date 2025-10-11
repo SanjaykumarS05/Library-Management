@@ -1,22 +1,25 @@
 <style>
- .h1 {
+
+
+/* === Headings === */
+.h1 {
     text-align: center;
     color: #2c2c54;
     margin-top: 30px;
-    font-size: 28px;
 }
- .p {
+
+.p {
     text-align: center;
     color: #555;
     font-size: 15px;
     margin-bottom: 20px;
 }
 
-/* === Main Form Card === */
+/* === Main Form Container === */
 .form {
     background-color: #ffffff;
     max-width: 900px;
-    margin: 30px auto 60px auto;
+    margin: 0 auto 50px auto;
     padding: 30px 40px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -25,7 +28,7 @@
     gap: 20px 30px;
 }
 
-/* === Labels === */
+/* === Labels and Inputs === */
 label {
     font-weight: 600;
     color: #333;
@@ -33,12 +36,10 @@ label {
     margin-bottom: 6px;
 }
 
-/* === Inputs, Selects, and Textareas === */
 input[type="text"],
-input[type="email"],
-input[type="password"],
 input[type="number"],
 input[type="file"],
+input[type="email"],
 select,
 textarea {
     width: 100%;
@@ -46,62 +47,50 @@ textarea {
     font-size: 15px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    background-color: #fafafa;
     transition: 0.2s ease-in-out;
+    background-color: #fafafa;
     resize: vertical;
 }
 
-input:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
 select:focus,
+input[type="file"]:focus,
 textarea:focus {
     border-color: #6a5acd;
-    box-shadow: 0 0 6px rgba(106, 90, 205, 0.3);
+    box-shadow: 0 0 5px rgba(106, 90, 205, 0.3);
     outline: none;
 }
 
-/* === Checkbox === */
-input[type="checkbox"] {
-    margin-top: 8px;
-    accent-color: #6a5acd;
-}
+textarea{
+    min-height: 100px;
 
-/* === File Upload Preview === */
-img {
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    margin-top: 10px;
 }
 
 /* === Submit Button === */
-.button1,
- {
+.button1[type="submit"] {
     grid-column: span 2;
-    display: block;
-    margin: 20px auto 0 auto;
     background-color: #6a5acd;
-    color: #fff;
+    color: white;
     font-size: 16px;
     font-weight: 600;
-    padding: 12px 40px;
+    padding: 12px 0;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s ease;
 }
 
-.button1:hover,
-[type="submit"]:hover {
+.button1[type="submit"]:hover {
     background-color: #5747a3;
 }
 
-/* === Responsive Design === */
+/* === Responsive === */
 @media (max-width: 768px) {
     .form {
         grid-template-columns: 1fr;
         padding: 25px;
-    }
-    .button1 {
-        width: 100%;
     }
 }
 </style>

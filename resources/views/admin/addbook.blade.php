@@ -1,12 +1,10 @@
 @extends('layout.template')
-@include('Style.admincss')
 @section('title', 'Add Books')
 @include('style.addcss')
-
 @section('content')
 <h1>Add Books</h1>
 
-<form action="{{ route('books.add') }}"  class =form method="POST">
+<form action="{{ route('books.add') }}"  class ="form" method="POST">
     @csrf
     <div>
         <label for="title">Title:</label>
@@ -43,26 +41,13 @@
         <label for="stock">Stock:</label>
         <input type="number" id="stock" name="stock" value="{{ old('stock') }}" required min="0">
     </div>
-    <form action="{{ route('books.add') }}" method="POST" enctype="multipart/form-data">
-    @csrf
     <div>
         <label for="image_path">Image:</label>
         <input type="file" id="image_path" name="image_path" accept="image/*">
     </div>
+    <button type="submit" class="button1">Add Book</button>
     </form>
-
-    <button type="submit">Add Book</button>
+    
     </div>
-    <script>
-           @if(session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
-        @if(session('error'))
-            toastr.error("{{ session('error') }}");
-        @endif
-        @foreach ($errors->all() as $error)
-            toastr.error("{{ $error }}");
-        @endforeach
-    </script>
 @endsection
 

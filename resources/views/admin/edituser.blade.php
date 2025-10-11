@@ -1,12 +1,10 @@
 @extends('layout.template')
 @section('title', 'Edit Member')
-@section('header')
-    <h1>Edit Member</h1>
-@endsection
+@include('style.editcss')
 
 @section('content')
-
- <form action="{{ route('users.update', $user->id) }}" method="post">
+<h1 class="h1">Edit Member</h1>
+ <form action="{{ route('users.update', $user->id) }}" method="post" class="form">
         @csrf
         @method('PUT')
         <label for="name">Name:</label>
@@ -22,7 +20,7 @@
             <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
         </select>
 
-        <button type="submit">Update</button>
+        <button type="submit" class="button1">Update</button>
     </form>
 
 @endsection
