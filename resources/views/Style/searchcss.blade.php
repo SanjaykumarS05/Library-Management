@@ -2,7 +2,6 @@
  /* === Container === */
 .container.book-search {
     max-width: 100%;
-    margin: 40px auto;
     padding: 20px;
     background: #fdfdfd;
     border-radius: 12px;

@@ -1,7 +1,22 @@
-<style> 
+<style>
+  form {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
+/* === Center Form on Page === */
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f3ec;
+  margin: 0;
+}
 
-/* === Main Container === */
+/* === Form Container === */
 .container {
   background-color: #fffdf6;
   width: 400px;
@@ -101,8 +116,6 @@ a:hover {
   text-decoration: underline;
 }
 
-
-
 /* === Responsive Design === */
 @media (max-width: 480px) {
   .container {
@@ -110,4 +123,5 @@ a:hover {
     padding: 25px;
   }
 }
+
 </style>

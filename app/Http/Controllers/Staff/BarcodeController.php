@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
@@ -9,31 +9,30 @@ use App\Models\User;
 use App\Models\Book_issue;
 use Picqer\Barcode\BarcodeGeneratorHTML;
 
-class OverallbookController extends Controller
+class BarcodeController extends Controller
 {
     public function index(Request $request)
     {
-        $books = Book::latest()->get();
-        $categories = Category::latest()->get();
-        $issuedbook = Book_issue::where('status', 'issued')->count();
-        $users = User::latest()->get();
+        $books = Book::all();
+        $categories = Category::all();
+        $users = User::all();
         $bookModel = Book::find($request->input('book_id'));
-        $totalBooks = Book_issue::all()->count();
+
         $book_issues_only = Book_issue::with(['book.category', 'user'])
             ->where('status', 'issued')
             ->get();
-        $book_issues = Book_issue::latest()->with(['book.category', 'user'])
-            ->get();
+
+        $issued_id = auth()->id();
         $book_issues_count = $book_issues_only->count();
-        
+
         $generator = new BarcodeGeneratorHTML();
         $barcodes = [];
-        $issued_id = auth()->id();
-        foreach ($book_issues as $book_issue) {
+
+        foreach ($book_issues_only as $book_issue) {
 
             $barcodeText = (string) $book_issue->id;
-
             $barcodeHtml = $generator->getBarcode($barcodeText, $generator::TYPE_CODE_128);
+
             $issuedUser = User::find($book_issue->issued_id);
             $barcodes[] = [
                 'barcode'        => $barcodeHtml,
@@ -53,7 +52,37 @@ class OverallbookController extends Controller
                 'status'         => $book_issue->status,
             ];
         }
-        return view('admin.overallbook', compact('barcodes', 'books', 'categories', 'users', 'bookModel','book_issues_count', 'totalBooks','issuedbook'));
+
+        return view('staff.barcode', compact('barcodes', 'books', 'categories', 'users', 'bookModel', 'book_issues_count'));
     }
 
+    public function getBookInfo($barcode)
+    {
+        $book_issue = Book_issue::with(['book.category', 'user'])->where('id', $barcode)->first();
+
+        if (!$book_issue) {
+            return response()->json(['success' => false, 'message' => 'Book not found']);
+        }
+
+        $generator = new BarcodeGeneratorHTML();
+        $barcodeHtml = $generator->getBarcode($book_issue->id, $generator::TYPE_CODE_128);
+
+        $issuedUser = User::find($book_issue->issued_id);
+
+        return response()->json([
+            'success' => true,
+            'book' => [
+                'title' => $book_issue->book->title ?? 'UNKNOWN',
+                'isbn' => $book_issue->book->isbn ?? 'UNKNOWN',
+                'author' => $book_issue->book->author ?? 'UNKNOWN',
+                'category' => $book_issue->book->category->name ?? 'UNKNOWN',
+                'publish_year' => $book_issue->book->publish_year ?? 'UNKNOWN',
+                'issued_id' => $book_issue->issued_id ?? 'UNKNOWN',
+                'user_name' => $book_issue->user->name ?? 'UNKNOWN',
+                'issue_date' => $book_issue->issue_date ?? 'UNKNOWN',
+                'status' => $book_issue->status ?? 'UNKNOWN',
+                'barcode' => $barcodeHtml,
+            ],
+        ]);
+    }
 }

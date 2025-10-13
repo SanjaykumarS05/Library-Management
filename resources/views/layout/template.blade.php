@@ -15,6 +15,21 @@
     <header>
         <div class="box" style="display: flex; justify-content: center; align-items: center;">
             <h1>Library Management System</h1>
+            @if(auth()->user()->role === 'admin')
+            <div class="search-container">
+                <input type="text" placeholder="Search">
+                <button title="Search"><span class="material-icons">search</span></button>
+                <a href="{{ route('barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
+                </div>
+            @endif  
+
+            @if(auth()->user()->role === 'staff')
+            <div class="search-container">
+                <input type="text" placeholder="Search">
+                <button title="Search"><span class="material-icons">search</span></button>
+                <a href="{{ route('staff.barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
+                </div>
+            @endif
             <form method="POST" style="margin-left: auto;">
                 @csrf
                 <button type="submit" formaction="{{ route('logout') }}" style="margin-left: 20px; padding: 8px 16px; background-color: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
@@ -41,8 +56,22 @@
                 <li><a href="{{ route('books.issue_return') }}">Issue / Return Books</a></li>
                 <li><a href="{{ route('barcode.index') }}">Barcode</a></li>
                 <li><a href="{{ route('reports.index') }}">Reports</a></li>
-                <li><a href="">Settings</a></li>
+                <li><a href="{{ route('settings') }}">Settings</a></li>
                 
+            </ul>
+            @endif
+
+            @if(auth()->user()->role === 'staff')
+            <ul>
+                <li><a href="{{ route('staff.dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ route('staff.search') }}">Search Books</a></li>
+                <li><a href="{{ route('staff.books') }}">Manage Books</a></li>
+                <li><a href="{{ route('staff.categories.index') }}">Manage Categories</a></li>
+                <li><a href="{{ route('staff.overallbook.index') }}">Overall Issued Books</a></li>
+                <li><a href="{{ route('staff.books.issue_return') }}">Issue / Return Books</a></li>
+                <li><a href="{{ route('staff.barcode.index') }}">Barcode</a></li>
+                <li><a href="{{ route('staff.reports.index') }}">Reports</a></li>
+                <li><a href="">Settings</a></li>
             </ul>
             @endif
     </aside>

@@ -25,7 +25,6 @@ class RoleMiddleware
                 default: return redirect()->route('user.dashboard');
             }
         }
-
         return $next($request);
     }
 }

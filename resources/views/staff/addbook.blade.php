@@ -4,7 +4,7 @@
 @section('content')
 <h1>Add Books</h1>
 
-<form action="{{ route('books.add') }}"  class ="form" method="POST">
+<form action="{{ route('staff.books.add') }}"  class ="form" method="POST">
     @csrf
     <div>
         <label for="title">Title:</label>
@@ -25,7 +25,6 @@
         <select id="category_id" name="category_id" required>
             <option value="" disabled selected>Select category</option>
             @foreach($categories as $category)
-                
                 <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
             @endforeach
         </select>

@@ -1,4 +1,5 @@
 @extends('layout.template')
+
 @section('title', 'Search Books')
 @include('style.searchcss')
 
@@ -14,7 +15,8 @@
                 @foreach($categories as $category)
                     <option 
                         value="{{ $category->name }}" 
-                        {{ request('category') == $category->name ? 'selected' : '' }}>{{ $category->name }}
+                        {{ request('category') == $category->name ? 'selected' : '' }}>
+                        {{ $category->name }}
                     </option>
                 @endforeach
             </select>
@@ -26,8 +28,9 @@
             </select>
         </div>
     </form>
+
     <div class="book-results" id="book-results">
-        @include('admin.search_results', ['books' => $books])
+        @include('staff.search_results', ['books' => $books])
     </div>
 </div>
 @endsection
@@ -41,14 +44,14 @@ $(document).ready(function() {
         var availability = $('#search-availability').val();
 
         $.ajax({
-            url: "{{ route('search') }}",
+            url: "{{ route('staff.search') }}",
             method: "GET",
             data: { query: query, category: category, availability: availability },
             success: function(response) {
                 $('#book-results').html(response);
             },
             error: function() {
-                toastr.error('Error fetching books');
+                alert('Error fetching books');
             }
         });
     }

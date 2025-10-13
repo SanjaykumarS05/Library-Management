@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -42,9 +42,9 @@ class SearchController extends Controller
 
         // Return AJAX partial
         if ($request->ajax()) {
-            return view('admin.search_results', compact('books'))->render();
+            return view('staff.search_results', compact('books'))->render();
         }
 
-        return view('admin.search', compact('books', 'categories', 'query', 'category', 'availability'));
+        return view('staff.search', compact('books', 'categories', 'query', 'category', 'availability'));
     }
 }

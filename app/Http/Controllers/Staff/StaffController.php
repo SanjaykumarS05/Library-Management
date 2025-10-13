@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\Book_issue;
 
-class AdminController extends Controller
+class StaffController extends Controller
 {
     public function index()
     {
@@ -16,14 +16,11 @@ class AdminController extends Controller
 
         $categoriesCount = Category::count();
 
-        $booksCount = Book::count();
-
         $availableBooks = Book::where('availability', 'Yes')->count();
         $issuedBooks = Book_issue::where('status', 'issued')->count();
 
         $outOfStockBooks = Book::where('stock', '<=', 0)->count();
 
-        $activeStaff = User::where('role', 'staff')->count();
         $activeUsers = User::where('role', 'user')->count();
         
         $issuedPercentage = $totalBooks > 0
@@ -45,15 +42,13 @@ class AdminController extends Controller
                 ];
             });
 
-        return view('admin.dashboard', [
+        return view('staff.dashboard', [
             'admin' => auth()->user(),  
-            'booksCount' => $booksCount,
             'totalBooks' => $totalBooks,
             'categoriesCount' => $categoriesCount,
             'availableBooks' => $availableBooks,
             'issuedBooks' => $issuedBooks,
             'outOfStockBooks' => $outOfStockBooks,
-            'activeStaff' => $activeStaff,
             'activeUsers' => $activeUsers,
             'issuedPercentage' => $issuedPercentage,
             'lowStockBooks' => $lowStockBooks,

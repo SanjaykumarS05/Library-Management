@@ -1,6 +1,5 @@
 <style>
 
-    /* === Reset & Base === */
 * {
     margin: 0;
     padding: 0;
@@ -15,7 +14,9 @@ body {
     color: #333;
 }
 
-/* === Header === */
+/* =========================
+   Header Styles
+========================= */
 header {
     position: fixed;
     top: 0;
@@ -24,7 +25,9 @@ header {
     background-color: #4a76a8;
     color: #fff;
     padding: 15px 30px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     z-index: 1000;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
@@ -33,6 +36,57 @@ header h1 {
     font-size: 24px;
 }
 
+/* Search container in header */
+header .search-container {
+    display: flex;
+    gap: 10px;
+}
+
+header input[type="text"] {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    width: 200px;
+}
+
+header .search-container button,
+header .search-container a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #2980b9;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+header .search-container button:hover,
+header .search-container a:hover {
+    background-color: #1c5980;
+}
+
+/* Logout button */
+header form button {
+    background-color: #e74c3c;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+header form button:hover {
+    background-color: #c0392b;
+}
+
+/* =========================
+   Sidebar Styles
+========================= */
 aside {
     position: fixed;
     top: 60px;
@@ -42,6 +96,7 @@ aside {
     background-color: #2c3e50;
     color: #fff;
     padding: 20px;
+    overflow-y: auto;
 }
 
 aside h2 {
@@ -71,6 +126,7 @@ aside p {
 aside nav ul {
     list-style: none;
     margin-top: 15px;
+    padding-left: 0;
 }
 
 aside nav ul li {
@@ -90,10 +146,12 @@ aside nav ul li a:hover {
     background-color: #4a76a8;
 }
 
-/* === Main Content === */
+/* =========================
+   Main Content Styles
+========================= */
 main {
-    margin-left: 240px;
-    margin-top: 50px;
+    margin-left: 260px;
+    margin-top: 60px;
     padding: 20px;
     flex: 1;
     width: 100%;
@@ -106,8 +164,9 @@ main {
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-
-/* === Buttons & Links === */
+/* =========================
+   Buttons & Links
+========================= */
 a {
     color: #4a76a8;
     text-decoration: none;
@@ -131,7 +190,9 @@ button:hover {
     background-color: #3a5f87;
 }
 
-/* === Scrollbar Styling === */
+/* =========================
+   Scrollbar Styling
+========================= */
 aside::-webkit-scrollbar {
     width: 6px;
 }
@@ -145,19 +206,35 @@ aside::-webkit-scrollbar-thumb {
     border-radius: 3px;
 }
 
-/* === Responsive === */
+
+.box{
+    position: relative;
+    left:550px;
+}
+
+
+/* =========================
+   Responsive Styles
+========================= */
 @media (max-width: 768px) {
     aside {
         width: 180px;
         padding: 15px;
     }
+
     main {
-        margin-left: 240px;
+        margin-left: 200px;
         margin-top: 70px;
         padding: 15px;
     }
+
     header h1 {
         font-size: 20px;
     }
+
+    header .search-container input[type="text"] {
+        width: 140px;
+    }
 }
+
 </style>

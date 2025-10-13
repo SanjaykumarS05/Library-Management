@@ -90,6 +90,9 @@
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 
+    .no-print {
+        display: none !important;
+    }
     .barcode-card {
         page-break-inside: avoid;
         border: 1px solid #aaa;

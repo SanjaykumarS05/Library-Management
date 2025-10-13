@@ -1,7 +1,7 @@
 @extends('layout.template')
 @include('style.admincss')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Staff Dashboard')
 
 @section('content')
 <div class="dashboard-container">
@@ -24,21 +24,9 @@
         </div>
 
         <div class="stat-card">
-            <h3>Books Count</h3>
-            <p>{{ $booksCount }}</p>
-            <p class="sub">Books currently issued</p>
-        </div>
-
-        <div class="stat-card">
             <h3>Out of Stock Books</h3>
             <p>{{ $outOfStockBooks }}</p>
             <p class="sub">Need restocking</p>
-        </div>
-
-        <div class="stat-card">
-            <h3>Active Staff</h3>
-            <p>{{ $activeStaff }}</p>
-            <p class="sub">Managing library operations</p>
         </div>
 
         <div class="stat-card">

@@ -1,31 +1,44 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\BookController;
-use App\Http\Controllers\Admin\ManageUserController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\TemplateController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\SearchController;
-use App\Http\Controllers\Admin\BookIssueController;
-use App\Http\Controllers\Admin\BarcodeController;
-use App\Http\Controllers\Admin\OverallbookController;
-use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TemplateController;
 
+// ================= ADMIN CONTROLLERS =================
+use App\Http\Controllers\Admin\BookController as AdminBookController;
+use App\Http\Controllers\Admin\ManageUserController as AdminManageUserController;
+use App\Http\Controllers\Admin\AdminController as AdminDashboardController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\SearchController as AdminSearchController;
+use App\Http\Controllers\Admin\BookIssueController as AdminBookIssueController;
+use App\Http\Controllers\Admin\BarcodeController as AdminBarcodeController;
+use App\Http\Controllers\Admin\OverallbookController as AdminOverallbookController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 
-// Template routes
+// ================= STAFF CONTROLLERS =================
+use App\Http\Controllers\Staff\StaffController;
+use App\Http\Controllers\Staff\BookController as StaffBookController;
+use App\Http\Controllers\Staff\ManageUserController as StaffManageUserController;
+use App\Http\Controllers\Staff\CategoryController as StaffCategoryController;
+use App\Http\Controllers\Staff\SearchController as StaffSearchController;
+use App\Http\Controllers\Staff\BookIssueController as StaffBookIssueController;
+use App\Http\Controllers\Staff\BarcodeController as StaffBarcodeController;
+use App\Http\Controllers\Staff\OverallbookController as StaffOverallbookController;
+use App\Http\Controllers\Staff\ReportController as StaffReportController;
+
+// ================= TEMPLATE ROUTES =================
 Route::get('/template', [TemplateController::class, 'index'])->name('template');
 Route::post('/logout', [TemplateController::class, 'logout'])->name('logout');
 
-// Authentication
+// ================= AUTHENTICATION =================
 Route::get('/login', [UserController::class, 'index'])->name('login');
 Route::post('/login', [UserController::class, 'submit'])->name('submit');
 Route::get('/register', [UserController::class, 'Registerindex'])->name('register');
 Route::post('/register', [UserController::class, 'Registerstore'])->name('store');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-// Dashboard redirect based on role
+// ================= DASHBOARD REDIRECT BASED ON ROLE =================
 Route::get('/dashboard', function() {
     $role = auth()->user()->role;
     switch ($role) {
@@ -35,64 +48,121 @@ Route::get('/dashboard', function() {
     }
 })->middleware('auth')->name('dashboard');
 
-// Role-specific dashboards
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-});
-Route::middleware(['auth', 'role:staff'])->group(function () {
-    Route::get('/staff', function() { return view('staff.dashboard'); })->name('staff.dashboard');
-});
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/user', function() { return view('user.dashboard'); })->name('user.dashboard');
-});
 
-// Admin routes
+
+// ================= ADMIN ROUTES =================
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
-    // Users
-    Route::get('/manage_users', [ManageUserController::class, 'index'])->name('users');
-    Route::get('/manage_users/create', [ManageUserController::class, 'create'])->name('users.create');
-    Route::post('/manage_users', [ManageUserController::class, 'store'])->name('users.store');
-    Route::get('/manage_users/{id}/edit', [ManageUserController::class, 'edit'])->name('users.edit');
-    Route::put('/manage_users/{id}', [ManageUserController::class, 'update'])->name('users.update');
-    Route::delete('/manage_users/{id}', [ManageUserController::class, 'delete'])->name('users.delete');
+    // Dashboard
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Manage Users
+    Route::get('/manage_users', [AdminManageUserController::class, 'index'])->name('users');
+    Route::get('/manage_users/create', [AdminManageUserController::class, 'create'])->name('users.create');
+    Route::post('/manage_users', [AdminManageUserController::class, 'store'])->name('users.store');
+    Route::get('/manage_users/{id}/edit', [AdminManageUserController::class, 'edit'])->name('users.edit');
+    Route::put('/manage_users/{id}', [AdminManageUserController::class, 'update'])->name('users.update');
+    Route::delete('/manage_users/{id}', [AdminManageUserController::class, 'delete'])->name('users.delete');
 
     // Books
-    Route::get('/books', [BookController::class, 'index'])->name('books');
-    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
-    Route::post('/books', [BookController::class, 'store'])->name('books.add');
-    Route::get('/books/{id}/edit', [BookController::class, 'edit'])->name('books.edit');
-    Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
-    Route::delete('/books/{id}', [BookController::class, 'delete'])->name('books.delete');
+    Route::get('/books', [AdminBookController::class, 'index'])->name('books');
+    Route::get('/books/create', [AdminBookController::class, 'create'])->name('books.create');
+    Route::post('/books', [AdminBookController::class, 'store'])->name('books.add');
+    Route::get('/books/{id}/edit', [AdminBookController::class, 'edit'])->name('books.edit');
+    Route::put('/books/{book}', [AdminBookController::class, 'update'])->name('books.update');
+    Route::delete('/books/{id}', [AdminBookController::class, 'delete'])->name('books.delete');
 
     // Categories
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{id}', [CategoryController::class, 'delete'])->name('categories.delete');
+    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [AdminCategoryController::class, 'delete'])->name('categories.delete');
 
-    // Search
-    Route::get('/search', [SearchController::class, 'index'])->name('search');
+    // Search & Reports
+    Route::get('/search', [AdminSearchController::class, 'index'])->name('search');
+    Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+    Route::get('/get-users-by-role', [AdminReportController::class, 'getUsersByRole'])->name('reports.getUsersByRole');
 
-     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-     Route::get('/get-users-by-role', [App\Http\Controllers\ReportController::class, 'getUsersByRole'])->name('reports.getUsersByRole');
+    // Issue/Return Books
+    Route::get('/issue-return', [AdminBookIssueController::class, 'showIssueReturnForm'])->name('books.issue_return');
+    Route::get('/books/issue-return/{bookId?}', [AdminBookIssueController::class, 'issueReturn'])->name('books.issue_return1');
+    Route::post('/issue-book', [AdminBookIssueController::class, 'issueBook'])->name('book.issue');
+    Route::post('/return-book', [AdminBookIssueController::class, 'returnBook'])->name('book.return');
 
-    // Book Issue/Return
-    Route::get('/issue-return', [BookIssueController::class, 'showIssueReturnForm'])->name('books.issue_return');
-    Route::get('/books/issue-return/{bookId?}', [BookIssueController::class, 'issueReturn'])->name('books.issue_return1');
-    Route::post('/issue-book', [BookIssueController::class, 'issueBook'])->name('book.issue');
-    Route::post('/return-book', [BookIssueController::class, 'returnBook'])->name('book.return');
+    // Barcode Actions
+    Route::get('/books/issue/{issueId}', [AdminBookIssueController::class, 'issueFromBarcode'])->name('books.issue_from_barcode');
+    Route::get('/books/return/{issueId}', [AdminBookIssueController::class, 'returnFromBarcode'])->name('books.return_from_barcode');
+    // Redirect to book info by barcode (for scanning)
 
-    Route::get('/books/issue/{issueId}', [BookIssueController::class, 'issueFromBarcode'])->name('books.issue_from_barcode');
-    Route::get('/books/return/{issueId}', [BookIssueController::class, 'returnFromBarcode'])->name('books.return_from_barcode');
-    // Overall Book and Reports
-    Route::get('/overallbook', [OverallbookController::class, 'index'])->name('overallbook.index');
-   
+
+    // Overall Book & Barcode
+    Route::get('/overallbook', [AdminOverallbookController::class, 'index'])->name('overallbook.index');
+    Route::get('/barcode', [AdminBarcodeController::class, 'index'])->name('barcode.index');
+    Route::get('/barcode/book-info/{barcode}', [AdminBarcodeController::class, 'getBookInfo'])->name('barcode.book.info');
+
+    // Settings
+    Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings');
+    Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+    Route::put('/settings', [AdminSettingController::class, 'library'])->name('library.update');
+});
+
+// ================= STAFF ROUTES =================
+Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
+
+    // Dashboard
+    Route::get('/', [StaffController::class, 'index'])->name('staff.dashboard');
+
+    // Manage Users
+    Route::get('/manage_users', [StaffManageUserController::class, 'index'])->name('staff.users');
+    Route::get('/manage_users/create', [StaffManageUserController::class, 'create'])->name('staff.users.create');
+    Route::post('/manage_users', [StaffManageUserController::class, 'store'])->name('staff.users.store');
+    Route::get('/manage_users/{id}/edit', [StaffManageUserController::class, 'edit'])->name('staff.users.edit');
+    Route::put('/manage_users/{id}', [StaffManageUserController::class, 'update'])->name('staff.users.update');
+    Route::delete('/manage_users/{id}', [StaffManageUserController::class, 'delete'])->name('staff.users.delete');
+
+    // Books
+    Route::get('/books', [StaffBookController::class, 'index'])->name('staff.books');
+    Route::get('/books/create', [StaffBookController::class, 'create'])->name('staff.books.create');
+    Route::post('/books', [StaffBookController::class, 'store'])->name('staff.books.add');
+    Route::get('/books/{id}/edit', [StaffBookController::class, 'edit'])->name('staff.books.edit');
+    Route::put('/books/{book}', [StaffBookController::class, 'update'])->name('staff.books.update');
+    Route::delete('/books/{id}', [StaffBookController::class, 'delete'])->name('staff.books.delete');
+
+    // Categories
+    Route::get('/categories', [StaffCategoryController::class, 'index'])->name('staff.categories.index');
+    Route::get('/categories/create', [StaffCategoryController::class, 'create'])->name('staff.categories.create');
+    Route::post('/categories', [StaffCategoryController::class, 'store'])->name('staff.categories.store');
+    Route::get('/categories/{id}/edit', [StaffCategoryController::class, 'edit'])->name('staff.categories.edit');
+    Route::put('/categories/{id}', [StaffCategoryController::class, 'update'])->name('staff.categories.update');
+    Route::delete('/categories/{id}', [StaffCategoryController::class, 'delete'])->name('staff.categories.delete');
+
+    // Search & Reports
+    Route::get('/search', [StaffSearchController::class, 'index'])->name('staff.search');
+    Route::get('/reports', [StaffReportController::class, 'index'])->name('staff.reports.index');
+    Route::get('/get-users-by-role', [StaffReportController::class, 'getUsersByRole'])->name('staff.reports.getUsersByRole');
+
+    // Issue/Return Books
+    Route::get('/issue-return', [StaffBookIssueController::class, 'showIssueReturnForm'])->name('staff.books.issue_return');
+    Route::get('/books/issue-return/{bookId?}', [StaffBookIssueController::class, 'issueReturn'])->name('staff.books.issue_return1');
+    Route::post('/issue-book', [StaffBookIssueController::class, 'issueBook'])->name('staff.book.issue');
+    Route::post('/return-book', [StaffBookIssueController::class, 'returnBook'])->name('staff.book.return');
+
+    // Barcode Actions
+    Route::get('/books/issue/{issueId}', [StaffBookIssueController::class, 'issueFromBarcode'])->name('staff.books.issue_from_barcode');
+    Route::get('/books/return/{issueId}', [StaffBookIssueController::class, 'returnFromBarcode'])->name('staff.books.return_from_barcode');
+
+    // Overall Book & Barcode
+    Route::get('/overallbook', [StaffOverallbookController::class, 'index'])->name('staff.overallbook.index');
+    Route::get('/barcode', [StaffBarcodeController::class, 'index'])->name('staff.barcode.index');
+    Route::get('/barcode/book-info/{barcode}', [StaffBarcodeController::class, 'getBookInfo'])->name('staff.barcode.book.info');
 
 });
 
-// Barcode scanner routes (frontend)
-Route::get('/barcode', [BarcodeController::class, 'index'])->name('barcode.index');
-Route::get('/barcode/book-info/{barcode}', [BarcodeController::class, 'getBookInfo'])->name('barcode.book.info');
+// ================= USER ROUTE =================
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/user', function () { 
+        return view('user.dashboard'); 
+    })->name('user.dashboard');
+});

@@ -9,7 +9,7 @@
 
     <div class="issue-book">
         <h3 class="h3">Issue a Book</h3>
-        <form action="{{ route('book.issue') }}" method="POST">
+        <form action="{{ route('staff.book.issue') }}" method="POST">
             @csrf
 
             {{-- Select User --}}
@@ -24,6 +24,7 @@
                     @endforeach
                 </select>
             </div>
+
             <div>
                 <label for="book_id">Select Book:</label>
                 <select name="book_id" id="book_id" required>
@@ -39,7 +40,8 @@
                 </select>
             </div>
 
-            <input type="hidden" name="issue_date" id="issue_date" value="{{ date('Y-m-d') }}" required>
+            {{-- Hidden Date --}}
+            <input type="date" name="issue_date" id="issue_date" value="{{ date('Y-m-d') }}" required hidden>
 
             <button type="submit">Issue Book</button>
         </form>
@@ -49,10 +51,8 @@
 
     <div class="return-book">
         <h3 class="h3">Return a Book</h3>
-        <form action="{{ route('book.return') }}" method="POST">
+        <form action="{{ route('staff.book.return') }}" method="POST">
             @csrf
-
-            {{-- Select User --}}
             <div>
                 <label for="user_id_return">Select User:</label>
                 <select name="user_id_return" id="user_id_return" required>
@@ -64,8 +64,6 @@
                     @endforeach
                 </select>
             </div>
-
-            {{-- Select Issued Book --}}
             <div>
                 <label for="issue_id">Select Issued Book:</label>
                 <select name="issue_id" id="issue_id" required>
@@ -79,6 +77,7 @@
                 </select>
             </div>
 
+            {{-- Hidden Return Date --}}
             <input type="hidden" name="return_date" id="return_date" value="{{ date('Y-m-d') }}" required>
 
             <button type="submit">Return Book</button>
@@ -96,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     userSelect.addEventListener('change', function() {
         const selectedUser = this.value;
         issueSelect.innerHTML = '<option value="" disabled selected>Select issued book</option>';
+
         allOptions.forEach(option => {
             if (option.dataset.user === selectedUser) {
                 issueSelect.appendChild(option);

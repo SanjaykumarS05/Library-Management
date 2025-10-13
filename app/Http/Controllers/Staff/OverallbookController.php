@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
@@ -31,7 +31,7 @@ class OverallbookController extends Controller
         $issued_id = auth()->id();
         foreach ($book_issues as $book_issue) {
 
-            $barcodeText = (string) $book_issue->id;
+            $barcodeText = (string) ($book_issue->id ?? $book_issue->book_id ?? 'UNKNOWN');
 
             $barcodeHtml = $generator->getBarcode($barcodeText, $generator::TYPE_CODE_128);
             $issuedUser = User::find($book_issue->issued_id);
@@ -53,7 +53,7 @@ class OverallbookController extends Controller
                 'status'         => $book_issue->status,
             ];
         }
-        return view('admin.overallbook', compact('barcodes', 'books', 'categories', 'users', 'bookModel','book_issues_count', 'totalBooks','issuedbook'));
+        return view('staff.overallbook', compact('barcodes', 'books', 'categories', 'users', 'bookModel','book_issues_count', 'totalBooks','issuedbook'));
     }
 
 }
