@@ -41,7 +41,7 @@
 
             <input type="hidden" name="issue_date" id="issue_date" value="{{ date('Y-m-d') }}" required>
 
-            <button type="submit">Issue Book</button>
+            <button type="submit" class="button1">Issue Book</button>
         </form>
     </div>
 
@@ -72,8 +72,7 @@
                     <option value="" disabled selected>Select issued book</option>
                     @foreach($book_issues1 as $issue)
                         <option value="{{ $issue->id }}" data-user="{{ $issue->user_id }}">
-                            {{ $issue->book->title ?? 'Unknown Title' }} 
-                            (Issued by: {{ $issue->user->name ?? 'Unknown User' }})
+                            {{ $issue->book->title ?? 'Unknown Title' }}
                         </option>
                     @endforeach
                 </select>

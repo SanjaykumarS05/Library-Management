@@ -20,6 +20,7 @@ class profile extends Model
         'phone',
         'address',
         'qualification',
+        'theme',
     ];
     public function user()
     {

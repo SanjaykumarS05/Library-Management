@@ -1,6 +1,6 @@
 @extends('layout.template')
 @section('title', 'Settings')
-@include('style.addcss')
+@include('style.settingcss')
 
 {{-- CSRF meta for AJAX --}}
 @section('head')
@@ -17,7 +17,7 @@
 
 <div class="container setting">
 
-    {{-- ================= PROFILE FORM ================= --}}
+    {{-- ==================== PROFILE FORM ==================== --}}
     <form id="profile-form" action="{{ route('settings.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -25,11 +25,13 @@
 
         {{-- Profile Image --}}
         <div>
-            <img id="profilePreview" src="{{ $admin->profile->profile_image_path ? asset('storage/'.$admin->profile->profile_image_path) : asset('default.png') }}" alt="Profile Image" width="120">
+            <img id="profilePreview"
+                 src="{{ Auth::user()->profile?->profile_image_path ? asset('storage/' . Auth::user()->profile->profile_image_path) : asset('images/default.png') }}"
+                 class="profile-image" alt="Profile">
             <input type="file" name="profile_image" id="profile_image" accept="image/*">
         </div>
 
-        {{-- User Fields --}}
+        {{-- User Info --}}
         <div>
             <label>Name:</label>
             <input type="text" name="name" value="{{ old('name', $admin->name) }}" required>
@@ -43,7 +45,7 @@
             <input type="email" name="email" value="{{ old('email', $admin->email) }}" required>
         </div>
 
-        {{-- Profile Fields --}}
+        {{-- Profile Info --}}
         <div>
             <label>Secondary Email:</label>
             <input type="email" name="secondary_email" value="{{ old('secondary_email', $admin->profile->secondary_email ?? '') }}">
@@ -53,7 +55,9 @@
             <select name="blood_group">
                 <option value="">Select Blood Group</option>
                 @foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $bg)
-                    <option value="{{ $bg }}" {{ (old('blood_group', $admin->profile->blood_group ?? '') == $bg) ? 'selected' : '' }}>{{ $bg }}</option>
+                    <option value="{{ $bg }}" {{ (old('blood_group', $admin->profile->blood_group ?? '') == $bg) ? 'selected' : '' }}>
+                        {{ $bg }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -66,7 +70,9 @@
             <select name="gender">
                 <option value="">Select gender</option>
                 @foreach(['male','female','other'] as $gender)
-                    <option value="{{ $gender }}" {{ (old('gender', $admin->profile->gender ?? '') == $gender) ? 'selected' : '' }}>{{ ucfirst($gender) }}</option>
+                    <option value="{{ $gender }}" {{ (old('gender', $admin->profile->gender ?? '') == $gender) ? 'selected' : '' }}>
+                        {{ ucfirst($gender) }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -87,10 +93,10 @@
             <input type="text" name="qualification" value="{{ old('qualification', $admin->profile->qualification ?? '') }}">
         </div>
 
-        <button type="submit">Update Profile</button>
+        <button type="submit" class="button1">Update Profile</button>
     </form>
 
-    {{-- ================= LIBRARY FORM ================= --}}
+    {{-- ==================== LIBRARY FORM ==================== --}}
     <form id="library-form" action="{{ route('library.update') }}" method="POST" enctype="multipart/form-data" style="display:none;">
         @csrf
         @method('PUT')
@@ -114,7 +120,7 @@
         </div>
         <div>
             <label>Website:</label>
-            <input type="text" name="web_site" value="{{ $settings->website ?? '' }}">
+            <input type="text" name="website" value="{{ $settings->website ?? '' }}">
         </div>
         <div>
             <label>Instagram:</label>
@@ -141,7 +147,7 @@
             <input type="text" name="working_hours" value="{{ $settings->working_hours ?? '' }}" required>
         </div>
 
-        <button type="submit">Update Library</button>
+        <button type="submit" class="button1">Update Library</button>
     </form>
 
 </div>
@@ -150,35 +156,48 @@
 @section('scripts')
 <script>
 $(document).ready(function() {
-    // CSRF setup
+
+    // ===== CSRF Setup =====
     $.ajaxSetup({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
     });
 
-    // Toggle Forms
-    $('#toggle-profile').change(function() {
-        $('#profile-form').slideToggle(this.checked);
-        if(this.checked) { $('#toggle-library').prop('checked', false); $('#library-form').slideUp(); }
+    // ===== Toggle Forms =====
+    $('#toggle-profile').on('change', function() {
+        if(this.checked){
+            $('#library-form').slideUp();
+            $('#toggle-library').prop('checked', false);
+            $('#profile-form').slideDown();
+        } else {
+            $('#profile-form').slideUp();
+        }
     });
 
-    $('#toggle-library').change(function() {
-        $('#library-form').slideToggle(this.checked);
-        if(this.checked) { $('#toggle-profile').prop('checked', false); $('#profile-form').slideUp(); }
+    $('#toggle-library').on('change', function() {
+        if(this.checked){
+            $('#profile-form').slideUp();
+            $('#toggle-profile').prop('checked', false);
+            $('#library-form').slideDown();
+        } else {
+            $('#library-form').slideUp();
+        }
     });
 
-    // Profile Image Preview
-    $('#profile_image').change(function() {
+    // ===== Profile Image Preview =====
+    $('#profile_image').on('change', function() {
         const [file] = this.files;
         if(file) {
             $('#profilePreview').attr('src', URL.createObjectURL(file));
         }
     });
 
-    // AJAX Form Submission
-    function ajaxSubmit(form) {
-        form.on('submit', function(e) {
+    // ===== AJAX Form Submission Helper =====
+    function ajaxSubmit(formId) {
+        $(formId).on('submit', function(e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            const form = $(this);
+            const formData = new FormData(this);
+
             $.ajax({
                 url: form.attr('action'),
                 method: form.attr('method'),
@@ -186,11 +205,11 @@ $(document).ready(function() {
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    toastr.success(response.message);
+                    toastr.success(response.message || 'Saved successfully!');
                 },
                 error: function(xhr) {
-                    console.log(xhr.responseText); // Debug exact error
-                    if(xhr.status === 422) {
+                    console.log(xhr.responseText);
+                    if(xhr.status === 422 && xhr.responseJSON.errors) {
                         $.each(xhr.responseJSON.errors, function(key, value) {
                             toastr.error(value[0]);
                         });
@@ -202,8 +221,9 @@ $(document).ready(function() {
         });
     }
 
-    ajaxSubmit($('#profile-form'));
-    ajaxSubmit($('#library-form'));
+    // Apply AJAX to all forms
+    ajaxSubmit('#profile-form');
+    ajaxSubmit('#library-form');
 });
 </script>
 @endsection

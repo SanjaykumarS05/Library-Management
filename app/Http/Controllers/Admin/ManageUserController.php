@@ -22,6 +22,10 @@ class ManageUserController extends Controller
 
     public function store(UserRequest $request)
     {
+        if(User::where('email', $request->email)->exists()){
+            return redirect()->back()->withErrors(['email' => 'Email already exists.'])->withInput();
+        }
+        
         User::create($request->validated());
         return redirect()->route('users')->with('success', 'User created successfully.');
     }

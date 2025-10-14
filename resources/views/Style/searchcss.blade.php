@@ -1,5 +1,5 @@
 <style>
- /* === Container === */
+    /* === Container === */
 .container.book-search {
     max-width: 100%;
     padding: 20px;
@@ -8,6 +8,7 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* === Page Title === */
@@ -15,6 +16,7 @@
     text-align: center;
     margin-bottom: 25px;
     color: #2e3a59;
+    transition: color 0.3s ease;
 }
 
 /* === Search Form === */
@@ -33,13 +35,12 @@
     border-radius: 6px;
     font-size: 14px;
     min-width: 180px;
-    transition: 0.3s ease;
-    position: relative;
+    transition: all 0.3s ease;
 }
-input[type="text"]
-{   
-    width:100%;
-    margin-bottom:10px;
+
+input[type="text"] {   
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 .search-form input[type="text"]:focus,
@@ -49,6 +50,7 @@ input[type="text"]
     box-shadow: 0 0 6px rgba(0,123,255,0.3);
 }
 
+/* === Search Button === */
 .search-form button {
     padding: 8px 18px;
     border: none;
@@ -57,7 +59,7 @@ input[type="text"]
     color: white;
     font-size: 14px;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: 0.3s ease, transform 0.3s ease;
 }
 
 .search-form button:hover {
@@ -93,22 +95,26 @@ input[type="text"]
     color: #007bff;
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
+    transition: color 0.3s ease;
 }
 
 .book-card p {
     font-size: 14px;
     margin: 4px 0;
+    transition: color 0.3s ease;
 }
 
 /* === Availability Status === */
 .available {
     color: #28a745;
     font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .unavailable {
     color: #dc3545;
     font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 /* === Issue Book Link === */
@@ -120,7 +126,7 @@ input[type="text"]
     color: white;
     border-radius: 6px;
     text-decoration: none;
-    transition: 0.3s ease;
+    transition: 0.3s ease, transform 0.3s ease;
 }
 
 .book-card a:hover {
@@ -138,6 +144,51 @@ input[type="text"]
     .book-results {
         grid-template-columns: 1fr;
     }
+}
+
+/* === DARK THEME === */
+body.dark-mode .container.book-search {
+    background-color: #1e1e2f;
+    color: #ccc;
+}
+
+body.dark-mode .book-card {
+    background-color: #2a2a3d;
+    border-color: #555;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    color: #eee;
+}
+
+body.dark-mode .book-card h4 {
+    color: #3b82f6;
+}
+
+body.dark-mode .book-card p {
+    color: #ccc;
+}
+
+body.dark-mode .available {
+    color: #22c55e;
+}
+
+body.dark-mode .unavailable {
+    color: #f87171;
+}
+
+body.dark-mode .book-card a {
+    background-color: #2563eb;
+}
+
+body.dark-mode .book-card a:hover {
+    background-color: #1d4ed8;
+}
+
+body.dark-mode .search-form button {
+    background-color: #2563eb;
+}
+
+body.dark-mode .search-form button:hover {
+    background-color: #1d4ed8;
 }
 
 </style>

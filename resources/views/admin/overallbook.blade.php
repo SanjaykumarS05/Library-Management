@@ -29,8 +29,8 @@
                     <p><strong>Issued By:</strong> {{ $item['issued_name'] }} ({{ $item['issue_role'] }})</p>
                     <p><strong>Issued To:</strong> {{ $item['user_name'] }}</p>
                     <p><strong>Issue Date:</strong> {{ $item['issue_date'] }}</p>
-                    <p><strong>Status:</strong> {{ $item['status'] }}</p><br>
-                    <center><span class="barcode1">{!! $item['barcode'] !!}</span></center>
+                    <p><strong>Status:</strong> {{ $item['status'] }}</p>
+                    <span class="barcode1">{!! $item['barcode'] !!}</span>
 
                     <!-- Hidden during printing -->
                     <div class="no-print" style="margin-top:10px;">

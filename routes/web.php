@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\BarcodeController as AdminBarcodeController;
 use App\Http\Controllers\Admin\OverallbookController as AdminOverallbookController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 
 // ================= STAFF CONTROLLERS =================
 use App\Http\Controllers\Staff\StaffController;
@@ -82,8 +83,11 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     // Search & Reports
     Route::get('/search', [AdminSearchController::class, 'index'])->name('search');
+
+
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
-    Route::get('/get-users-by-role', [AdminReportController::class, 'getUsersByRole'])->name('reports.getUsersByRole');
+    Route::get('/reports/fetch', [AdminReportController::class, 'fetch'])->name('reports.fetch');
+    Route::get('/reports/users-by-role', [AdminReportController::class, 'fetchUsersByRole'])->name('reports.usersByRole');
 
     // Issue/Return Books
     Route::get('/issue-return', [AdminBookIssueController::class, 'showIssueReturnForm'])->name('books.issue_return');
@@ -104,8 +108,16 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     // Settings
     Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings');
-    Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
-    Route::put('/settings', [AdminSettingController::class, 'library'])->name('library.update');
+    Route::put('/settings/profile', [AdminSettingController::class, 'updateProfile'])->name('settings.update');
+    Route::put('/settings/library', [AdminSettingController::class, 'updateLibrary'])->name('library.update');
+    Route::post('/settings/theme', [AdminSettingController::class, 'updateTheme'])->name('settings.updateTheme');
+    Route::put('/settings/theme', [AdminSettingController::class, 'updateTheme'])->name('settings.updateTheme');
+
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
+    Route::post('/notification/store', [AdminNotificationController::class, 'store'])->name('notification.store');
+
+
+
 });
 
 // ================= STAFF ROUTES =================

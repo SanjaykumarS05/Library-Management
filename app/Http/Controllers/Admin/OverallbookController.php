@@ -22,17 +22,14 @@ class OverallbookController extends Controller
         $book_issues_only = Book_issue::with(['book.category', 'user'])
             ->where('status', 'issued')
             ->get();
-        $book_issues = Book_issue::latest()->with(['book.category', 'user'])
-            ->get();
+        $book_issues = Book_issue::latest()->with(['book.category', 'user'])->get();
         $book_issues_count = $book_issues_only->count();
         
         $generator = new BarcodeGeneratorHTML();
         $barcodes = [];
         $issued_id = auth()->id();
         foreach ($book_issues as $book_issue) {
-
             $barcodeText = (string) $book_issue->id;
-
             $barcodeHtml = $generator->getBarcode($barcodeText, $generator::TYPE_CODE_128);
             $issuedUser = User::find($book_issue->issued_id);
             $barcodes[] = [

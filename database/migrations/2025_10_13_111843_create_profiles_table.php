@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('qualification')->nullable();
+            $table->string('theme')->default('light');
 
             $table->timestamps();
         });

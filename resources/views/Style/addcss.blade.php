@@ -1,11 +1,20 @@
 <style>
- .h1 {
+    /* === Base Styles (Light Theme) === */
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* === Headings & Paragraphs === */
+.h1 {
     text-align: center;
     color: #2c2c54;
     margin-top: 30px;
     font-size: 28px;
 }
- .p {
+.p {
     text-align: center;
     color: #555;
     font-size: 15px;
@@ -23,6 +32,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px 30px;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 /* === Labels === */
@@ -33,7 +43,7 @@ label {
     margin-bottom: 6px;
 }
 
-/* === Inputs, Selects, and Textareas === */
+/* === Inputs, Selects, Textareas === */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -47,7 +57,8 @@ textarea {
     border-radius: 8px;
     border: 1px solid #ccc;
     background-color: #fafafa;
-    transition: 0.2s ease-in-out;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
     resize: vertical;
 }
 
@@ -73,8 +84,7 @@ img {
 }
 
 /* === Submit Button === */
-.button1,
- {
+.button1 {
     grid-column: span 2;
     display: block;
     margin: 20px auto 0 auto;
@@ -86,7 +96,7 @@ img {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: background-color 0.3s;
 }
 
 .button1:hover,
@@ -104,4 +114,59 @@ img {
         width: 100%;
     }
 }
+
+/* === Dark Theme Overrides === */
+body.dark-mode {
+    background-color: #1e1e2f;
+    color: #ddd;
+}
+
+body.dark-mode .h1 {
+    color: #fff;
+}
+
+body.dark-mode .p {
+    color: #ccc;
+}
+
+body.dark-mode .form {
+    background-color: #2a2a3d;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode label {
+    color: #ddd;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"],
+body.dark-mode input[type="number"],
+body.dark-mode input[type="file"],
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: #3a3a4d;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+    border-color: #8c82ff;
+    box-shadow: 0 0 6px rgba(140, 130, 255, 0.3);
+}
+
+body.dark-mode .button1 {
+    background-color: #8c82ff;
+}
+
+body.dark-mode .button1:hover {
+    background-color: #6a5acd;
+}
+
+body.dark-mode img {
+    border: 1px solid #555;
+}
+
 </style>

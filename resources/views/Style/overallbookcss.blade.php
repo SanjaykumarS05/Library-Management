@@ -1,15 +1,16 @@
 <style>
 
-
 .h2 {
     text-align: center;
     color: #2e3a59;
     margin-bottom: 20px;
+    transition: color 0.3s ease;
 }
 
 .h3 {
     text-align: center;
     color: #444;
+    transition: color 0.3s ease;
 }
 
 /* === Buttons === */
@@ -22,7 +23,7 @@
     margin: 10px 5px;
     border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: 0.3s ease, transform 0.3s ease;
 }
 
 .buttons:hover {
@@ -30,6 +31,7 @@
     transform: translateY(-2px);
 }
 
+/* === Barcode Grid === */
 .barcode {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -59,20 +61,31 @@
     margin-bottom: 8px;
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
+    transition: color 0.3s ease;
 }
 
 .barcode-card p {
     font-size: 14px;
     margin: 4px 0;
     color: #555;
+    transition: color 0.3s ease;
 }
 
+.barcode1 {
+    display: inline-block;
+    background: #fff;
+    border: 1px dashed #6a5acd;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
 
 .count {
     background: #28a745;
     color: white;
     padding: 5px 10px;
     border-radius: 20px;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* === Print Styles === */
@@ -93,6 +106,7 @@
     .no-print {
         display: none !important;
     }
+
     .barcode-card {
         page-break-inside: avoid;
         border: 1px solid #aaa;
@@ -109,4 +123,37 @@
 center {
     text-align: center;
 }
+
+/* === DARK THEME === */
+body.dark-mode .barcode-card {
+    background-color: #2a2a3d;
+    border-color: #555;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    color: #eee;
+}
+
+body.dark-mode .barcode-card h4 {
+    color: #3b82f6;
+}
+
+body.dark-mode .barcode-card p {
+    color: #ccc;
+}
+
+body.dark-mode .buttons {
+    background-color: #2563eb;
+}
+
+body.dark-mode .buttons:hover {
+    background-color: #1d4ed8;
+}
+body.dark-mode .barcode1 {
+    background-color: #42425c;
+    border-color: #6a5acd;
+}
+body.dark-mode .count {
+    background-color: #22c55e;
+    color: #fff;
+}
+
 </style>

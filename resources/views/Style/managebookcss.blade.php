@@ -1,15 +1,14 @@
 <style>
-    /* === Body & Container === */
-
-
+/* === Headings === */
 .h2 {
     text-align: center;
     font-size: 25px;
     margin-bottom: 20px;
+    transition: color 0.3s ease;
 }
 
 /* === Add Book Link === */
-a[href*="books.create"] {
+a[href*="books.create"], .addbook {
     display: inline-block;
     margin-bottom: 15px;
     padding: 8px 16px;
@@ -17,10 +16,10 @@ a[href*="books.create"] {
     color: white;
     border-radius: 6px;
     text-decoration: none;
-    transition: 0.3s ease;
+    transition: 0.3s ease, transform 0.3s ease;
 }
 
-a[href*="books.create"]:hover {
+a[href*="books.create"]:hover, .addbook:hover {
     background-color: #218838;
     transform: translateY(-1px);
 }
@@ -33,11 +32,13 @@ table {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 thead {
     background-color: #007bff;
     color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 thead th {
@@ -48,6 +49,7 @@ thead th {
 tbody td {
     padding: 10px;
     border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 tbody tr:hover {
@@ -77,11 +79,12 @@ td img {
     max-width: 100px;
     border-radius: 6px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
 }
 
 /* === Action Buttons === */
 td a,
-td button {
+td .button1 {
     display: inline-block;
     margin: 2px 2px 2px 0;
     padding: 6px 12px;
@@ -90,7 +93,7 @@ td button {
     cursor: pointer;
     font-size: 13px;
     text-decoration: none;
-    transition: 0.3s ease;
+    transition: 0.3s ease, transform 0.3s ease;
 }
 
 td a {
@@ -103,12 +106,12 @@ td a:hover {
     transform: translateY(-1px);
 }
 
-td button {
+td .button1 {
     background-color: #dc3545;
     color: white;
 }
 
-td button:hover {
+td .button1:hover {
     background-color: #c82333;
     transform: translateY(-1px);
 }
@@ -147,27 +150,53 @@ td button:hover {
         max-width: 80px;
     }
 }
-.addbook{
-   display: inline-block;
-    margin: 2px 2px 2px 0;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    text-decoration: none;
-    transition: 0.3s ease;
-    background-color: #17a2b8;
-    color: white;
-    position: relative;
-    left: 1030px;
-    bottom:20px;
-    scale:1.4;
+
+/* === DARK THEME OVERRIDES === */
+body.dark-mode table {
+    background-color: #2a2a3d;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    color: #eee;
 }
 
-.addbook:hover {
-    background-color: #117a8b;
-    transform: translateY(-1px);
+body.dark-mode thead {
+    background-color: #1f2a4d;
+    color: #fff;
 }
+
+body.dark-mode tbody td {
+    border-bottom: 1px solid #444;
+    color: #ddd;
+}
+
+body.dark-mode tbody tr:hover {
+    background-color: #3a3a50;
+}
+
+body.dark-mode td a {
+    background-color: #3b82f6;
+}
+
+body.dark-mode td a:hover {
+    background-color: #2563eb;
+}
+
+body.dark-mode td .button1 {
+    background-color: #ef4444;
+}
+
+body.dark-mode td .button1:hover {
+    background-color: #dc2626;
+}
+
+body.dark-mode a[href*="books.create"], 
+body.dark-mode .addbook {
+    background-color: #2563eb;
+}
+
+body.dark-mode a[href*="books.create"]:hover,
+body.dark-mode .addbook:hover {
+    background-color: #1d4ed8;
+}
+
 
 </style>

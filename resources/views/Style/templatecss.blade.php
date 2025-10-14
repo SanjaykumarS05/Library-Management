@@ -1,5 +1,41 @@
 <style>
+    /* =========================
+   CSS Variables for Theme
+========================= */
+:root {
+    --bg-color: #f5f6fa;
+    --header-bg: #4a76a8;
+    --header-text: #fff;
+    --sidebar-bg: #2c3e50;
+    --sidebar-text: #fff;
+    --main-bg: #fff;
+    --main-text: #333;
+    --button-bg: #4a76a8;
+    --button-hover: #3a5f87;
+    --search-bg: #fff;
+    --search-text: #333;
+    --hr-color: #4a76a8;
+}
 
+/* Dark Mode Variables */
+body.dark-mode {
+    --bg-color: #1e1e2f;
+    --header-bg: #111227;
+    --header-text: #f0f0f0;
+    --sidebar-bg: #111227;
+    --sidebar-text: #ddd;
+    --main-bg: #1a1a2e;
+    --main-text: #eee;
+    --button-bg: #6a5acd;
+    --button-hover: #5747a3;
+    --search-bg: #2a2a3b;
+    --search-text: #fff;
+    --hr-color: #6a5acd;
+}
+
+/* =========================
+   Global Styles
+========================= */
 * {
     margin: 0;
     padding: 0;
@@ -10,20 +46,21 @@
 body {
     display: flex;
     min-height: 100vh;
-    background-color: #f5f6fa;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--main-text);
 }
 
 /* =========================
-   Header Styles
+   Header
 ========================= */
 header {
+    
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #4a76a8;
-    color: #fff;
+    background-color: var(--header-bg);
+    color: var(--header-text);
     padding: 15px 30px;
     display: flex;
     align-items: center;
@@ -36,18 +73,20 @@ header h1 {
     font-size: 24px;
 }
 
-/* Search container in header */
 header .search-container {
     display: flex;
     gap: 10px;
 }
 
 header input[type="text"] {
+    margin-left: 20px;
     padding: 6px 10px;
     border-radius: 4px;
     border: none;
     outline: none;
-    width: 200px;
+    width: clamp(290px, 4vw, 500px);
+    background-color: var(--search-bg);
+    color: var(--search-text);
 }
 
 header .search-container button,
@@ -56,7 +95,7 @@ header .search-container a {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background-color: #2980b9;
+    background-color: var(--button-bg);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -67,13 +106,13 @@ header .search-container a {
 
 header .search-container button:hover,
 header .search-container a:hover {
-    background-color: #1c5980;
+    background-color: var(--button-hover);
+    transform: scale(1.1);
 }
 
-/* Logout button */
 header form button {
     background-color: #e74c3c;
-    padding: 8px 16px;
+    padding: 10px 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -85,7 +124,7 @@ header form button:hover {
 }
 
 /* =========================
-   Sidebar Styles
+   Sidebar
 ========================= */
 aside {
     position: fixed;
@@ -93,8 +132,8 @@ aside {
     left: 0;
     width: 260px;
     height: calc(100% - 60px);
-    background-color: #2c3e50;
-    color: #fff;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
     padding: 20px;
     overflow-y: auto;
 }
@@ -108,7 +147,7 @@ aside h2 {
 
 aside hr {
     border: 0;
-    border-top: 1px solid #4a76a8;
+    border-top: 1px solid var(--hr-color);
     margin: 10px 0;
 }
 
@@ -119,7 +158,7 @@ aside h3 {
 
 aside p {
     font-size: 14px;
-    color: #dcdcdc;
+    color: var(--sidebar-text);
     margin-bottom: 10px;
 }
 
@@ -134,7 +173,7 @@ aside nav ul li {
 }
 
 aside nav ul li a {
-    color: #fff;
+    color: var(--sidebar-text);
     text-decoration: none;
     display: block;
     padding: 8px 12px;
@@ -143,11 +182,25 @@ aside nav ul li a {
 }
 
 aside nav ul li a:hover {
-    background-color: #4a76a8;
+    background-color: var(--header-bg);
+}
+
+/* Scrollbar */
+aside::-webkit-scrollbar {
+    width: 6px;
+}
+
+aside::-webkit-scrollbar-track {
+    background: var(--sidebar-bg);
+}
+
+aside::-webkit-scrollbar-thumb {
+    background-color: var(--header-bg);
+    border-radius: 3px;
 }
 
 /* =========================
-   Main Content Styles
+   Main Content
 ========================= */
 main {
     margin-left: 260px;
@@ -158,17 +211,46 @@ main {
 }
 
 .content {
-    background-color: #fff;
+    background-color: var(--main-bg);
+    color: var(--main-text);
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 /* =========================
+   Profile Header
+========================= */
+.profile-header {
+    display: flex;
+    align-items: center;
+}
+
+.profile-logo {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 2px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.profile-info p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* =========================
    Buttons & Links
 ========================= */
 a {
-    color: #4a76a8;
+    color: var(--button-bg);
     text-decoration: none;
 }
 
@@ -177,7 +259,7 @@ a:hover {
 }
 
 button {
-    background-color: #4a76a8;
+    background-color: var(--button-bg);
     color: #fff;
     border: none;
     padding: 8px 16px;
@@ -187,34 +269,11 @@ button {
 }
 
 button:hover {
-    background-color: #3a5f87;
+    background-color: var(--button-hover);
 }
 
 /* =========================
-   Scrollbar Styling
-========================= */
-aside::-webkit-scrollbar {
-    width: 6px;
-}
-
-aside::-webkit-scrollbar-track {
-    background: #2c3e50;
-}
-
-aside::-webkit-scrollbar-thumb {
-    background-color: #4a76a8;
-    border-radius: 3px;
-}
-
-
-.box{
-    position: relative;
-    left:550px;
-}
-
-
-/* =========================
-   Responsive Styles
+   Responsive
 ========================= */
 @media (max-width: 768px) {
     aside {
@@ -236,5 +295,4 @@ aside::-webkit-scrollbar-thumb {
         width: 140px;
     }
 }
-
 </style>

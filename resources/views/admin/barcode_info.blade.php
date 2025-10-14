@@ -1,14 +1,11 @@
 @extends('layout.template')
-
+@include('style.barcode_infocss')
 @section('title', 'Book Info')
-@section('header')
-    <h1>Book Details & Issue/Return</h1>
-@endsection
-
 @section('content')
+ <h1>Book Details & Issue/Return</h1>
 <div class="container">
     <center>
-        <h3>Book Information</h3>
+        <h3 class="h3">Book Information</h3>
 
         <div class="barcode-card" style="max-width:500px; margin-top:20px;">
             <h4>{{ $bookData['title'] }}</h4>
@@ -72,9 +69,7 @@
                         <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->role }})</option>
                     @endforeach
                 </select>
-
-                <label for="issue_date"><strong>Issue Date:</strong></label>
-                <input type="date" name="issue_date" value="{{ date('Y-m-d') }}" required>
+                <input type="date" name="issue_date" value="{{ date('Y-m-d') }}" hidden>
 
                 <button type="submit" class="buttons" style="background-color:#4CAF50; margin-left:10px;">Issue Book</button>
             </form>

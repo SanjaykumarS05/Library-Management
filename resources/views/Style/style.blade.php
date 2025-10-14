@@ -1,5 +1,5 @@
 <style>
-  form {
+form {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -14,6 +14,7 @@ body {
   align-items: center;
   background-color: #f4f3ec;
   margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* === Form Container === */
@@ -37,6 +38,7 @@ h1 {
   font-size: 26px;
   margin-bottom: 30px;
   font-weight: 700;
+  transition: color 0.3s ease;
 }
 
 /* === Input Group === */
@@ -52,6 +54,7 @@ h1 {
   display: block;
   margin-bottom: 5px;
   font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .input-group i.material-icons {
@@ -60,6 +63,7 @@ h1 {
   top: 34px;
   color: #7b6f50;
   font-size: 22px;
+  transition: color 0.3s ease;
 }
 
 /* === Input Fields === */
@@ -71,7 +75,8 @@ input[type="password"] {
   border: 1px solid #b9ae90;
   border-radius: 8px;
   background-color: #fff;
-  transition: 0.3s;
+  color: #2b2a1e;
+  transition: 0.3s ease;
 }
 
 input[type="text"]:focus,
@@ -104,12 +109,14 @@ button.submit:hover {
 p {
   font-size: 14px;
   color: #3b372d;
+  transition: color 0.3s ease;
 }
 
 a {
   color: #1b3a57;
   font-weight: 600;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 a:hover {
@@ -122,6 +129,48 @@ a:hover {
     width: 90%;
     padding: 25px;
   }
+}
+
+/* ==============================
+   DARK THEME
+============================== */
+body.dark-mode {
+  background-color: #1e1f28;
+  color: #ccc;
+}
+
+body.dark-mode .container {
+  background-color: #2a2a3d;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.6);
+}
+
+body.dark-mode h1 {
+  color: #fff;
+}
+
+body.dark-mode .input-group label,
+body.dark-mode .input-group i.material-icons {
+  color: #ccc;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="password"] {
+  background-color: #1f1f2e;
+  color: #eee;
+  border-color: #555;
+}
+
+body.dark-mode button.submit {
+  background-color: #2563eb;
+}
+
+body.dark-mode button.submit:hover {
+  background-color: #1d4ed8;
+}
+
+body.dark-mode p,
+body.dark-mode a {
+  color: #ccc;
 }
 
 </style>

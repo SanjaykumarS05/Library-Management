@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Book_issue;
+use App\MOdels\Profile;
 
 class AdminController extends Controller
 {
@@ -27,8 +28,7 @@ class AdminController extends Controller
         $activeUsers = User::where('role', 'user')->count();
         
         $issuedPercentage = $totalBooks > 0
-            ? round(($issuedBooks / ($totalBooks + $issuedBooks)) * 100, 2)
-            : 0;
+            ? round(($issuedBooks / ($totalBooks + $issuedBooks)) * 100, 2): 0;
 
         $lowStockBooks = Book::where('stock', '<', 5)->get();
 

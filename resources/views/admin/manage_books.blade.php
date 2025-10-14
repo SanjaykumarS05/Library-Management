@@ -33,7 +33,7 @@
             <td>{{ $book->stock }}</td>
             <td>
                 @if($book->image_path)
-                    <img src="{{ asset($book->image_path) }}" alt="Book Image" width="100">
+                    <img src="{{ asset('storage/' . $book->image_path) }}" alt="Book Image" width="100">
                 @endif
             </td>
             <td>
@@ -41,7 +41,7 @@
                 <form action="{{ route('books.delete', $book->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" onclick="return confirm('Are you sure you want to delete this book?');">Remove</button>
+                    <button type="submit" class="button1" onclick="return confirm('Are you sure you want to delete this book?');">Remove</button>
                 </form>
             </td>
         </tr>
