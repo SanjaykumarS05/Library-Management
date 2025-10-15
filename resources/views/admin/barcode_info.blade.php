@@ -37,7 +37,7 @@
         </div>
         <div>
         <label for="issue_date"><strong>Issue Date:</strong></label>
-        <input type="text" id="issue_date" value="{{ $bookData['issue_date'] }}" readonly >
+        <input type="text" id="issue_date" value="{{ $bookData['issue_date']->format('Y-m-d') }}" readonly >
         </div>
         @endif
         <div>

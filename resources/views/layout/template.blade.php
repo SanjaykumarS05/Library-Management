@@ -22,8 +22,10 @@
             <h1>{{ $library->library_name ?? 'Library Management System' }}</h1>
             @if(auth()->user()->role === 'admin')
             <div class="search-container">
-                <input type="text" id="searchBox" placeholder="Search" autocomplete="off" spellcheck="false">
-                <button type="button" title="Search"><span class="material-icons">search</span></button>
+                <form id="headerSearchForm" method="GET" style="display:flex; align-items:center;">
+                    <input type="text" name="query" id="searchBox" placeholder="Search">
+                    <button type="submit"><span class="material-icons">search</span></button>
+                </form>
                 <a href="{{ route('barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
                 <button type="button" title="Notifications"><a href="{{ route('notifications') }}"><span class="material-icons">notifications</span></a></button>
                 <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
@@ -36,10 +38,17 @@
             {{-- Staff Search Bar --}}
             @if(auth()->user()->role === 'staff')
             <div class="search-container">
-                <input type="text" id="searchBoxStaff" placeholder="Search" autocomplete="off" spellcheck="false">
-                <button type="button" title="Search"><span class="material-icons">search</span></button>
-                <a href="{{ route('staff.barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
-                <button type="button" title="Notifications"><span class="material-icons">notifications</span></button>
+                <form id="headerSearchForm1" method="GET" style="display:flex; align-items:center;">
+                    <input type="text" name="query" id="searchBox" placeholder="Search">
+                    <button type="submit"><span class="material-icons">search</span></button>
+                </form>
+                <a href="{{ route('barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
+                <button type="button" title="Notifications"><a href="{{ route('notifications') }}"><span class="material-icons">notifications</span></a></button>
+                <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
+                    <span class="material-icons">
+                        {{ (Auth::user()->profile->theme ?? 'light') === 'dark' ? 'light_mode' : 'dark_mode' }}
+                    </span>
+                </button>
             </div>
             @endif
 
@@ -112,6 +121,8 @@
 
     {{-- ================= Scripts ================= --}}
     <script>
+
+        
         // Prevent Enter reload in search
         const adminSearch = document.getElementById('searchBox');
         const staffSearch = document.getElementById('searchBoxStaff');
@@ -144,6 +155,90 @@
             }).fail(function(){
                 toastr.error('Failed to update theme');
             });
+        });
+
+
+        // 🖨️ Print Report
+        function printReport() {
+    let tableClone = document.getElementById('report-table').cloneNode(true);
+
+    // Remove 'Actions' column before printing
+    tableClone.querySelectorAll('.no-export').forEach(el => el.remove());
+
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Book Report</title>
+                <style>
+                    table { border-collapse: collapse; width: 100%; }
+                    th, td { border: 1px solid #333; padding: 6px; text-align: left; }
+                    h2 { text-align: center; }
+                </style>
+            </head>
+            <body>
+                <h2>Library Book Report</h2>
+                ${tableClone.innerHTML}
+            </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+        // 📊 Export to Excel
+        function exportToExcel() {
+            let tableClone = document.getElementById('report-table').cloneNode(true);
+            tableClone.querySelectorAll('.no-export').forEach(el => el.remove());
+
+            const tableHTML = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                    xmlns:x="urn:schemas-microsoft-com:office:excel" 
+                    xmlns="http://www.w3.org/TR/REC-html40">
+                <head><meta charset="utf-8"></head>
+                <body>${tableClone.innerHTML}</body>
+                </html>`;
+
+            const a = document.createElement('a');
+            a.href = 'data:application/vnd.ms-excel,' + encodeURIComponent(tableHTML);
+            a.download = 'book_report.xls';
+            a.click();
+        }
+        document.getElementById('headerSearchForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            const query = document.getElementById('searchBox').value.toLowerCase().trim();
+            let url = "{{ route('search') }}"; // default action
+
+            // Conditional routing based on query keywords
+            if(query.includes("dashboard")) {
+                url = "{{ route('dashboard') }}";
+            } else if(query.includes("manage books")) {
+                url = "{{ route('books') }}";
+            } else if(query.includes("manage users")) {
+                url = "{{ route('users') }}";
+            } else if(query.includes("manage categories")) {
+                url = "{{ route('categories.index') }}";
+            } else if(query.includes("add book")) {
+                url = "{{ route('books.create') }}";
+            } else if(query.includes("add user")) {
+                url = "{{ route('users.create') }}";
+            } else if(query.includes("add category")) {
+                url = "{{ route('categories.create') }}";
+            } else if(query.includes("overall issued books")) {
+                url = "{{ route('overallbook.index') }}";
+            } else if(query.includes("issue return")) {
+                url = "{{ route('books.issue_return') }}";
+            } else if(query.includes("barcode")) {
+                url = "{{ route('barcode.index') }}";
+            } else if(query.includes("reports")) {
+                url = "{{ route('reports.index') }}";
+            } else if(query.includes("settings")) {
+                url = "{{ route('settings') }}";
+            } else if(query.includes("notification")) {
+                url = "{{ route('notifications') }}";
+            }
+            // Redirect to the chosen URL with the query as GET parameter if needed
+            window.location.href = url + (url === "{{ route('search') }}" ? "?query=" + encodeURIComponent(query) : "");
         });
         // Toastr notifications
         @if(session('success')) toastr.success("{{ session('success') }}"); @endif

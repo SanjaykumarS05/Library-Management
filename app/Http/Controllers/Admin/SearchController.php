@@ -24,6 +24,7 @@ class SearchController extends Controller
                 $q->where('title', 'LIKE', "%{$query}%")
                   ->orWhere('author', 'LIKE', "%{$query}%")
                   ->orWhere('isbn', 'LIKE', "%{$query}%")
+                  ->orWhere('publish_year', 'LIKE', "%{$query}%")
                   ->orWhereHas('category', fn($q2) => $q2->where('name', 'LIKE', "%{$query}%"));
             });
         }

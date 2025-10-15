@@ -1,27 +1,3 @@
-@extends('layout.template')
-@section('title', 'Books Management')
-@include('style.managebookcss')
-
-@section('content')
-<h2 class="h2">Manage Books</h2>
-
-<!-- Search Bar -->
-<div class="search-bar" style="margin:10px 0;">
-    <input type="text" id="search" placeholder="Search by Title, Author, ISBN, Category, Published Year, Availability" style="width:300px; padding:5px;">
-</div>
-
-<a href="{{ route('books.create') }}" class="addbook">╋ Add Book</a>
-
-        <div style="margin-top:10px;">
-    <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
-    <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
-</div>
-<br>
-
-<!-- Table -->
-<div id="report-table">
-<div id="books-table">
-
 <table border="1">
     <thead>
         <tr>
@@ -33,9 +9,8 @@
             <th>Published Year</th>
             <th>Availability</th>
             <th>Stock</th>
-            <th class="no-export">Cover Image</th>
-            <th class="no-export">Actions</th>
-
+            <th>Cover Image</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -49,12 +24,12 @@
             <td>{{ $book->publish_year }}</td>
             <td>{{ $book->availability }}</td>
             <td>{{ $book->stock }}</td>
-            <td class="no-export">
+            <td>
                 @if($book->image_path)
                     <img src="{{ asset('storage/' . $book->image_path) }}" alt="Book Image" width="100">
                 @endif
             </td>
-            <td class="no-export">
+            <td>
                 <a href="{{ route('books.edit', $book->id) }}">Edit</a>
                 <form action="{{ route('books.delete', $book->id) }}" method="POST" style="display:inline;">
                     @csrf
@@ -70,27 +45,3 @@
         @endforelse
     </tbody>   
 </table>
-</div>
-</div>
-@endsection
-
-@section('scripts')
-<script>
-$(document).ready(function() {
-    // 🔍 Live Search
-    $('#search').on('keyup', function() {
-        let query = $(this).val();
-        $.ajax({
-            url: "{{ route('books') }}", // make sure this returns a partial view for table
-            type: 'GET',
-            data: { search: query },
-            success: function(response) {
-                $('#report-table').html(response);
-            }
-        });
-    });
-});
-
-
-</script>
-@endsection

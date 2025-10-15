@@ -1,6 +1,6 @@
 <style>
-    /* =========================
-   CSS Variables for Theme
+   /* =========================
+   Root Variables
 ========================= */
 :root {
     --bg-color: #f5f6fa;
@@ -15,11 +15,15 @@
     --search-bg: #fff;
     --search-text: #333;
     --hr-color: #4a76a8;
+    --table-header-bg: #3498db;
+    --table-header-text: #fff;
+    --table-row-hover: #ecf0f1;
+    --table-row-even: #f9f9f9;
 }
 
-/* Dark Mode Variables */
+/* Dark Mode */
 body.dark-mode {
-    --bg-color: #1e1e2f;
+    --bg-color: #121212;
     --header-bg: #111227;
     --header-text: #f0f0f0;
     --sidebar-bg: #111227;
@@ -31,6 +35,10 @@ body.dark-mode {
     --search-bg: #2a2a3b;
     --search-text: #fff;
     --hr-color: #6a5acd;
+    --table-header-bg: #5dade2;
+    --table-header-text: #fff;
+    --table-row-hover: #3a3a50;
+    --table-row-even: #2c2c3e;
 }
 
 /* =========================
@@ -54,14 +62,14 @@ body {
    Header
 ========================= */
 header {
-    
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: 60px;
     background-color: var(--header-bg);
     color: var(--header-text);
-    padding: 15px 30px;
+    padding: 0 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -70,21 +78,22 @@ header {
 }
 
 header h1 {
-    font-size: 24px;
+    font-size: 22px;
+    font-weight: 600;
 }
 
 header .search-container {
     display: flex;
+    align-items: center;
     gap: 10px;
 }
 
 header input[type="text"] {
-    margin-left: 20px;
-    padding: 6px 10px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
     border: none;
     outline: none;
-    width: clamp(290px, 4vw, 500px);
+    width: clamp(200px, 25vw, 400px);
     background-color: var(--search-bg);
     color: var(--search-text);
 }
@@ -98,25 +107,27 @@ header .search-container a {
     background-color: var(--button-bg);
     color: #fff;
     border: none;
-    border-radius: 4px;
-    padding: 6px 10px;
-    transition: 0.3s;
+    border-radius: 6px;
+    padding: 6px 12px;
+    transition: all 0.3s ease;
     text-decoration: none;
 }
 
 header .search-container button:hover,
 header .search-container a:hover {
     background-color: var(--button-hover);
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 header form button {
     background-color: #e74c3c;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 4px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    border: none;
+    transition: all 0.3s ease;
 }
 
 header form button:hover {
@@ -138,11 +149,29 @@ aside {
     overflow-y: auto;
 }
 
-aside h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+aside .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+aside .profile-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 2px solid #ccc;
+}
+
+aside .profile-info h2 {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+aside .profile-info p {
+    font-size: 14px;
+    color: var(--sidebar-text);
 }
 
 aside hr {
@@ -151,25 +180,14 @@ aside hr {
     margin: 10px 0;
 }
 
-aside h3 {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-aside p {
-    font-size: 14px;
-    color: var(--sidebar-text);
-    margin-bottom: 10px;
-}
-
 aside nav ul {
     list-style: none;
-    margin-top: 15px;
+    margin-top: 10px;
     padding-left: 0;
 }
 
 aside nav ul li {
-    margin: 10px 0;
+    margin: 8px 0;
 }
 
 aside nav ul li a {
@@ -178,26 +196,22 @@ aside nav ul li a {
     display: block;
     padding: 8px 12px;
     border-radius: 6px;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
 aside nav ul li a:hover {
     background-color: var(--header-bg);
 }
 
+body.dark-mode aside nav ul li a:hover {
+    background-color: #3498db;
+}
 /* Scrollbar */
 aside::-webkit-scrollbar {
     width: 6px;
 }
-
-aside::-webkit-scrollbar-track {
-    background: var(--sidebar-bg);
-}
-
-aside::-webkit-scrollbar-thumb {
-    background-color: var(--header-bg);
-    border-radius: 3px;
-}
+aside::-webkit-scrollbar-track { background: var(--sidebar-bg); }
+aside::-webkit-scrollbar-thumb { background-color: var(--header-bg); border-radius: 3px; }
 
 /* =========================
    Main Content
@@ -207,92 +221,125 @@ main {
     margin-top: 60px;
     padding: 20px;
     flex: 1;
-    width: 100%;
 }
 
 .content {
     background-color: var(--main-bg);
     color: var(--main-text);
-    padding: 20px;
+    padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 /* =========================
-   Profile Header
+   Filter Section
 ========================= */
-.profile-header {
+.filter-section {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-.profile-logo {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-    border: 2px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.filter-section > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 200px;
 }
 
-.profile-info h2 {
-    margin: 0;
-    font-size: 16px;
+.filter-section label {
+    font-weight: 600;
+    margin-bottom: 6px;
 }
 
-.profile-info p {
-    margin: 0;
-    font-size: 14px;
+.filter-section select,
+.filter-section input[type="text"],
+.filter-section input[type="date"] {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.filter-section select:focus,
+.filter-section input[type="text"]:focus,
+.filter-section input[type="date"]:focus {
+    border-color: var(--button-bg);
+    box-shadow: 0 0 6px rgba(74,118,168,0.3);
 }
 
 /* =========================
-   Buttons & Links
+   Total Count
 ========================= */
-a {
+#total-count-wrapper {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#total-count {
     color: var(--button-bg);
-    text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
-button {
-    background-color: var(--button-bg);
-    color: #fff;
-    border: none;
+/* =========================
+   Buttons
+========================= */
+button.btn, a.btn {
     padding: 8px 16px;
     border-radius: 6px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    border: none;
+    margin-right: 6px;
+    transition: all 0.3s ease;
 }
 
-button:hover {
-    background-color: var(--button-hover);
+button.btn-primary { background: linear-gradient(45deg,#3498db,#2980b9); color: #fff; }
+button.btn-success { background: linear-gradient(45deg,#2ecc71,#27ae60); color: #fff; }
+button.btn-warning { background: linear-gradient(45deg,#f39c12,#e67e22); color: #fff; }
+a.btn-secondary { background: linear-gradient(45deg,#95a5a6,#7f8c8d); color: #fff; }
+
+button.btn:hover, a.btn:hover { transform: translateY(-2px); }
+
+/* =========================
+   Table Styles
+========================= */
+.table-responsive { overflow-x: auto; }
+
+table.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    min-width: 800px;
 }
+
+table.table th, table.table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ecf0f1;
+    text-align: left;
+}
+
+table.table th {
+    background-color: var(--table-header-bg);
+    color: var(--table-header-text);
+    font-weight: 700;
+}
+
+table.table tr:nth-child(even) { background-color: var(--table-row-even); }
+table.table tr:hover { background-color: var(--table-row-hover); }
 
 /* =========================
    Responsive
 ========================= */
 @media (max-width: 768px) {
-    aside {
-        width: 180px;
-        padding: 15px;
-    }
-
-    main {
-        margin-left: 200px;
-        margin-top: 70px;
-        padding: 15px;
-    }
-
-    header h1 {
-        font-size: 20px;
-    }
-
-    header .search-container input[type="text"] {
-        width: 140px;
-    }
+    aside { width: 180px; }
+    main { margin-left: 180px; padding: 15px; }
+    .filter-section { flex-direction: column; }
+    table.table { font-size: 14px; }
+    header h1 { font-size: 18px; }
+    header input[type="text"] { width: 140px; }
 }
+     
 </style>

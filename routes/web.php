@@ -86,8 +86,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
 
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/fetch', [AdminReportController::class, 'fetch'])->name('reports.fetch');
-    Route::get('/reports/users-by-role', [AdminReportController::class, 'fetchUsersByRole'])->name('reports.usersByRole');
+    Route::get('reports/export/csv', [AdminReportController::class, 'exportCSV'])->name('reports.exportCSV');
+    Route::get('reports/export/pdf', [AdminReportController::class, 'exportPDF'])->name('reports.exportPDF');
+    Route::get('/reports/users-by-role', [AdminReportController::class, 'usersByRole'])->name('reports.usersByRole');
 
     // Issue/Return Books
     Route::get('/issue-return', [AdminBookIssueController::class, 'showIssueReturnForm'])->name('books.issue_return');
@@ -103,6 +104,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     // Overall Book & Barcode
     Route::get('/overallbook', [AdminOverallbookController::class, 'index'])->name('overallbook.index');
+    Route::get('/overallbooks/search', [AdminOverallbookController::class, 'search'])->name('overallbooks.search');
     Route::get('/barcode', [AdminBarcodeController::class, 'index'])->name('barcode.index');
     Route::get('/barcode/book-info/{barcode}', [AdminBarcodeController::class, 'getBookInfo'])->name('barcode.book.info');
 
@@ -112,6 +114,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/settings/library', [AdminSettingController::class, 'updateLibrary'])->name('library.update');
     Route::post('/settings/theme', [AdminSettingController::class, 'updateTheme'])->name('settings.updateTheme');
     Route::put('/settings/theme', [AdminSettingController::class, 'updateTheme'])->name('settings.updateTheme');
+    Route::put('/settings/password', [AdminSettingController::class, 'updatePassword'])->name('settings.password');
 
     Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
     Route::post('/notification/store', [AdminNotificationController::class, 'store'])->name('notification.store');

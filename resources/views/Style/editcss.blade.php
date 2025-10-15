@@ -1,10 +1,22 @@
 <style>
-/* === Headings === */
+    /* === Headings === */
 .h1 {
     text-align: center;
     color: #2c2c54;
     margin-top: 30px;
     transition: color 0.3s ease;
+}
+
+.h3 {
+    grid-column: span 2;
+    color: #2c2c54;
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 6px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .p {
@@ -42,6 +54,7 @@ input[type="text"],
 input[type="number"],
 input[type="file"],
 input[type="email"],
+input[type="date"],
 select,
 textarea {
     width: 100%;
@@ -65,7 +78,7 @@ input[type="file"]:focus {
 }
 
 /* === Textarea Min Height === */
-textarea{
+textarea {
     min-height: 100px;
 }
 
@@ -93,10 +106,15 @@ textarea{
         grid-template-columns: 1fr;
         padding: 25px;
     }
+
+    .h3 {
+        grid-column: span 1;
+    }
 }
 
 /* === DARK THEME OVERRIDES === */
 body.dark-mode .h1,
+body.dark-mode .h3,
 body.dark-mode .p,
 body.dark-mode label {
     color: #ddd;
@@ -104,7 +122,7 @@ body.dark-mode label {
 
 body.dark-mode .form {
     background-color: #2a2a3d;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 body.dark-mode input,
@@ -119,7 +137,7 @@ body.dark-mode input:focus,
 body.dark-mode select:focus,
 body.dark-mode textarea:focus {
     border-color: #6a5acd;
-    box-shadow: 0 0 6px rgba(106,90,205,0.6);
+    box-shadow: 0 0 6px rgba(106, 90, 205, 0.6);
 }
 
 body.dark-mode .button1[type="submit"] {
@@ -129,6 +147,10 @@ body.dark-mode .button1[type="submit"] {
 
 body.dark-mode .button1[type="submit"]:hover {
     background-color: #5747a3;
+}
+
+body.dark-mode .h3 {
+    border-color: #555;
 }
 
 </style>

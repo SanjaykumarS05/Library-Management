@@ -7,11 +7,27 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        $categories = Category::all();
-        return view('admin.manage_category', compact('categories'));
+    public function index(Request $request)
+{
+    $categories = Category::query();
+
+    if ($request->ajax()) {
+        if ($request->search) {
+            $search = $request->search;
+            $categories->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $categories = $categories->get();
+        return view('admin.categories_table', compact('categories'))->render();
     }
+
+    $categories = $categories->get();
+    return view('admin.manage_category', compact('categories'));
+}
+
     public function create()
     {
         return view('admin.addcategory');

@@ -4,10 +4,10 @@
 
 @section('content')
 <div class="container book-search">
-    <h2>📚 Search Books</h2>
+    <h2 class="h2">📚 Search Books</h2>
     <form method="GET" action="{{ route('search') }}" class="search-form" id="book-search-form">
         <div class="form-group">
-            <input type="text" name="query" id="search-query" placeholder="Search by title, author, or ISBN" value="{{ request('query') }}">
+            <input type="text" name="query" id="search-query" placeholder="Search by title, author, Published Year ,or ISBN" value="{{ request('query') }}">
 
             <select name="category" id="search-category">
                 <option value="">All Categories</option>

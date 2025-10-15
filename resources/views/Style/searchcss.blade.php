@@ -62,11 +62,6 @@ input[type="text"] {
     transition: 0.3s ease, transform 0.3s ease;
 }
 
-.search-form button:hover {
-    background-color: #0056b3;
-    transform: translateY(-1px);
-}
-
 /* === Book Results Grid === */
 .book-results {
     display: grid;
@@ -152,6 +147,9 @@ body.dark-mode .container.book-search {
     color: #ccc;
 }
 
+body.dark-mode .h2 {
+    color: #fff;
+}
 body.dark-mode .book-card {
     background-color: #2a2a3d;
     border-color: #555;

@@ -129,10 +129,54 @@ form select:focus {
         width: 100%;
     }
 }
+#password-form input[type="password"] {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fafafa;
+    color: #333;
+    transition: border-color 0.3s, background 0.3s, color 0.3s;
+}
+
+#password-form input[type="password"]:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Buttons inside password form */
+#password-form .button1 {
+    background-color: #3498db; /* Different color to distinguish */
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#password-form .button1:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+}
 
 /* ==============================
    DARK THEME
 ============================== */
+
+body.dark-mode #password-form input[type="password"] {
+    background-color: #2a2a3d;
+    color: #eee;
+    border-color: #555;
+}
+
+body.dark-mode #password-form .button1 {
+    background-color: #3498db;
+}
+
+body.dark-mode #password-form .button1:hover {
+    background-color: #2980b9;
+}
 body.dark-mode .container.setting {
     background-color: #1f1f2e;
     color: #ccc;

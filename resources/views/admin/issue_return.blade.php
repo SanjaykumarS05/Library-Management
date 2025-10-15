@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="container issue-return">
-    <h2 class="h2">📖 Issue / Return Books</h2>
+   <h2 class="h2">📖 Issue / Return Books</h2>
 
     <div class="issue-book">
         <h3 class="h3">Issue a Book</h3>
@@ -32,7 +32,7 @@
                         @if($book->stock > 0)
                             <option value="{{ $book->id }}" 
                                 {{ (isset($selectedBook) && $selectedBook->id == $book->id) ? 'selected' : '' }}>
-                                {{ $book->title }} by {{ $book->author }} ({{ $book->stock }} available)
+                                {{ $book->title }} by {{ $book->author }}-{{$book->isbn}} ({{ $book->stock }} available) 
                             </option>
                         @endif
                     @endforeach
@@ -80,7 +80,7 @@
 
             <input type="hidden" name="return_date" id="return_date" value="{{ date('Y-m-d') }}" required>
 
-            <button type="submit">Return Book</button>
+            <button type="submit" class="button1">Return Book</button>
         </form>
     </div>
 </div>

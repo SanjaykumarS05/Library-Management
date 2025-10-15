@@ -1,130 +1,163 @@
 <style>
+/* === Container === */
+.container.issued-books {
+    max-width: 100%;
+    padding: 20px;
+    background: #fdfdfd;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    transition: background 0.3s ease, color 0.3s ease;
+}
 
-.h2 {
+/* === Page Title === */
+.container.issued-books h2 {
     text-align: center;
+    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: 600;
     color: #2e3a59;
-    margin-bottom: 20px;
-    transition: color 0.3s ease;
 }
 
-.h3 {
-    text-align: center;
-    color: #444;
-    transition: color 0.3s ease;
+/* === Filter Bar === */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
 }
 
-/* === Buttons === */
-.buttons {
-    display: inline-block;
-    background: #007bff;
-    color: #fff;
+.filter-bar input[type="text"],
+.filter-bar select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.filter-bar input[type="text"]:focus,
+.filter-bar select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0,123,255,0.3);
+}
+
+/* === Filter Buttons === */
+.filter-bar .buttons,
+.filter-bar .btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
     border: none;
-    padding: 10px 18px;
-    margin: 10px 5px;
-    border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s ease, transform 0.3s ease;
+    transition: 0.3s ease, transform 0.2s ease;
 }
 
-.buttons:hover {
-    background: #0056b3;
-    transform: translateY(-2px);
+.filter-bar .buttons {
+    background-color: #28a745;
+    color: #fff;
 }
 
-/* === Barcode Grid === */
+.filter-bar .buttons:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.filter-bar .btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.filter-bar .btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* === Overall Stats === */
+.count {
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* === Barcode Cards Grid === */
 .barcode {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
-    margin-top: 20px;
 }
 
 /* === Barcode Card === */
 .barcode-card {
     background: #fff;
-    border: 2px solid #e0e0e0;
+    border: 1px solid #e0e0e0;
     border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 15px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
     position: relative;
 }
 
 .barcode-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
 .barcode-card h4 {
-    color: #007bff;
     font-size: 18px;
-    margin-bottom: 8px;
+    color: #007bff;
+    margin-bottom: 10px;
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
-    transition: color 0.3s ease;
 }
 
 .barcode-card p {
     font-size: 14px;
     margin: 4px 0;
-    color: #555;
-    transition: color 0.3s ease;
 }
 
-.barcode1 {
-    display: inline-block;
-    background: #fff;
-    border: 1px dashed #6a5acd;
-    padding: 12px 18px;
-    border-radius: 8px;
-    margin-top: 10px;
-}
-
-.count {
-    background: #28a745;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    transition: background 0.3s ease, color 0.3s ease;
-}
-
-/* === Print Styles === */
-@media print {
-    body {
-        background: white;
-        color: black;
-    }
-
-    .buttons {
-        display: none !important;
-    }
-
-    .barcode {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-
-    .no-print {
-        display: none !important;
-    }
-
-    .barcode-card {
-        page-break-inside: avoid;
-        border: 1px solid #aaa;
-        box-shadow: none;
-        margin-bottom: 10px;
-    }
-}
-
-.barcode-card.highlight {
-    border-color: #4CAF50 !important;
-    box-shadow: 0 0 15px rgba(76, 175, 80, 0.5) !important;
-}
-
-center {
+/* === Barcode Image === */
+.barcode-card .barcode1 {
+    display: block;
+    margin: 10px 0;
     text-align: center;
 }
 
-/* === DARK THEME === */
+/* === Card Buttons === */
+.barcode-card .buttons.small-btn {
+    background-color: #17a2b8;
+    color: #fff;
+    padding: 6px 14px;
+    font-size: 13px;
+    border-radius: 6px;
+}
+
+.barcode-card .buttons.small-btn:hover {
+    background-color: #117a8b;
+    transform: translateY(-1px);
+}
+
+/* === Responsive Adjustments === */
+@media screen and (max-width: 600px) {
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-bar input[type="text"],
+    .filter-bar select,
+    .filter-bar .buttons,
+    .filter-bar .btn {
+        width: 100%;
+    }
+}
+
+/* === Dark Mode === */
+body.dark-mode .container.issued-books {
+    background-color: #1e1e2f;
+    color: #ccc;
+}
+
 body.dark-mode .barcode-card {
     background-color: #2a2a3d;
     border-color: #555;
@@ -140,20 +173,42 @@ body.dark-mode .barcode-card p {
     color: #ccc;
 }
 
-body.dark-mode .buttons {
-    background-color: #2563eb;
+body.dark-mode .count {
+    color: #22c55e;
 }
 
-body.dark-mode .buttons:hover {
-    background-color: #1d4ed8;
+body.dark-mode .buttons,
+body.dark-mode .buttons.small-btn,
+body.dark-mode .btn-warning {
+    box-shadow: none;
 }
-body.dark-mode .barcode1 {
-    background-color: #42425c;
-    border-color: #6a5acd;
-}
-body.dark-mode .count {
-    background-color: #22c55e;
+
+body.dark-mode .buttons {
+    background-color: #2563eb;
     color: #fff;
 }
 
+body.dark-mode .buttons:hover,
+body.dark-mode .buttons.small-btn:hover {
+    background-color: #1d4ed8;
+}
+
+/* === Print Styles === */
+@media print {
+    body {
+        background: #fff;
+        color: #000;
+    }
+    .filter-bar,
+    .buttons,
+    .btn-warning,
+    .no-export {
+        display: none !important;
+    }
+    .barcode-card {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+}
 </style>

@@ -1,5 +1,5 @@
 <style>
-    /* === Base Styles (Light Theme) === */
+/* === Base Styles (Light Theme) === */
 body {
     background-color: #f5f5f5;
     color: #333;
@@ -14,6 +14,19 @@ body {
     margin-top: 30px;
     font-size: 28px;
 }
+
+.h3 {
+    grid-column: span 2;
+    display: block;
+    width: 100%;
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c2c54;
+    margin: 20px 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #6a5acd;
+}
+
 .p {
     text-align: center;
     color: #555;
@@ -49,6 +62,7 @@ input[type="email"],
 input[type="password"],
 input[type="number"],
 input[type="file"],
+input[type="date"],
 select,
 textarea {
     width: 100%;
@@ -125,6 +139,11 @@ body.dark-mode .h1 {
     color: #fff;
 }
 
+body.dark-mode .h3 {
+    color: #ddd;
+    border-bottom-color: #8c82ff;
+}
+
 body.dark-mode .p {
     color: #ccc;
 }
@@ -143,6 +162,7 @@ body.dark-mode input[type="email"],
 body.dark-mode input[type="password"],
 body.dark-mode input[type="number"],
 body.dark-mode input[type="file"],
+body.dark-mode input[type="date"],
 body.dark-mode select,
 body.dark-mode textarea {
     background-color: #3a3a4d;
@@ -168,5 +188,4 @@ body.dark-mode .button1:hover {
 body.dark-mode img {
     border: 1px solid #555;
 }
-
 </style>

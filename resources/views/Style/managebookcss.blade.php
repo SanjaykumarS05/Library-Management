@@ -151,6 +151,50 @@ td .button1:hover {
     }
 }
 
+
+/* === Search Form === */
+.search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.search-bar input[type="text"],
+.search-bar select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 180px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"] {   
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.search-bar input[type="text"]:focus,
+.search-bar select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0,123,255,0.3);
+}
+
+/* === Search Button === */
+.search-bar button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s ease, transform 0.3s ease;
+}
+
 /* === DARK THEME OVERRIDES === */
 body.dark-mode table {
     background-color: #2a2a3d;

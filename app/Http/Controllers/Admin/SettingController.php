@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Profile;
 use App\Models\Library;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
@@ -31,21 +32,22 @@ class SettingController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'profile_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'secondary_email' => 'nullable|email',
-            'blood_group' => 'nullable|string',
+            'email' => 'required|email|max:255',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'secondary_email' => 'nullable|email|max:255',
+            'blood_group' => 'nullable|string|max:5',
             'dob' => 'nullable|date',
-            'gender' => 'nullable|string',
-            'designation' => 'nullable|string',
+            'gender' => 'nullable|string|in:male,female,other',
+            'designation' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'qualification' => 'nullable|string',
-            'theme' => 'nullable|string',
+            'address' => 'nullable|string|max:255',
+            'qualification' => 'nullable|string|max:255',
+            'theme' => 'nullable|string|in:light,dark',
         ]);
 
         $user = Auth::user();
 
+        // Handle profile image
         $profileImagePath = $user->profile->profile_image_path ?? null;
         if ($request->hasFile('profile_image')) {
             if ($profileImagePath && Storage::disk('public')->exists($profileImagePath)) {
@@ -74,7 +76,6 @@ class SettingController extends Controller
             ]
         );
 
-        // Return JSON for AJAX
         return response()->json(['message' => 'Profile updated successfully!']);
     }
 
@@ -85,40 +86,69 @@ class SettingController extends Controller
     {
         $request->validate([
             'library_name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'contact_email' => 'required|email',
-            'contact_phone' => 'required|string|max:15',
-            'website' => 'nullable|string',
-            'instagram' => 'nullable|string',
-            'facebook' => 'nullable|string',
-            'twitter' => 'nullable|string',
-            'linkedin' => 'nullable|string',
-            'youtube' => 'nullable|string',
-            'working_hours' => 'required|string',
+            'address' => 'required|string|max:255',
+            'contact_email' => 'required|email|max:255',
+            'contact_phone' => 'required|string|max:20',
+            'website' => 'nullable|string|max:255',
+            'instagram' => 'nullable|string|max:255',
+            'facebook' => 'nullable|string|max:255',
+            'twitter' => 'nullable|string|max:255',
+            'linkedin' => 'nullable|string|max:255',
+            'youtube' => 'nullable|string|max:255',
+            'working_hours' => 'required|string|max:50',
         ]);
 
-        // Store or update library settings
         Library::updateOrCreate([], $request->only([
             'library_name', 'address', 'contact_email', 'contact_phone', 'website',
             'instagram', 'facebook', 'twitter', 'linkedin', 'youtube', 'working_hours'
         ]));
 
-        // Return JSON for AJAX
         return response()->json(['message' => 'Library settings updated successfully!']);
     }
 
+    // =====================
+    // Update Theme (AJAX)
+    // =====================
     public function updateTheme(Request $request)
+    {
+        $request->validate([
+            'theme' => 'required|string|in:light,dark'
+        ]);
+
+        $user = Auth::user();
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            ['theme' => $request->theme]
+        );
+
+        return response()->json(['message' => 'Theme updated successfully!']);
+    }
+
+    // =====================
+    // Update Password (AJAX)
+    // =====================
+   public function updatePassword(Request $request)
 {
     $request->validate([
-        'theme' => 'required|string|in:light,dark'
+        'current_password' => 'required|string',
+        'new_password' => 'required|string|min:8|confirmed', // confirmed expects new_password_confirmation
     ]);
 
     $user = Auth::user();
-    $user->profile()->updateOrCreate(
-        ['user_id' => $user->id],
-        ['theme' => $request->theme]
-    );
 
-    return response()->json(['message' => 'Theme updated successfully!']);
+    // Check if current password matches
+    if (!Hash::check($request->current_password, $user->password)) {
+        return response()->json(['message' => 'Current password is incorrect.'], 422);
+    }
+
+    // Prevent using the same password
+    if (Hash::check($request->new_password, $user->password)) {
+        return response()->json(['message' => 'New password cannot be the same as the current password.'], 422);
+    }
+
+    // Update password
+    $user->update(['password' => Hash::make($request->new_password)]);
+
+    return response()->json(['message' => 'Password updated successfully!']);
 }
 }

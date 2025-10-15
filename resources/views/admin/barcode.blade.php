@@ -42,6 +42,7 @@
         <h2>Issued Books</h2>
         @if($book_issues_count)
             <h3>Total Issued Books: <span class="count">{{ $book_issues_count }}</span></h3>
+            <br>
             <div class="barcode" id="barcode-cards">
                 @foreach($barcodes as $item)
                     <div class="barcode-card" id="card-{{ $item['barcodeText'] }}">
@@ -52,7 +53,7 @@
                         <p><strong>Publisher:</strong> {{ $item['book_publisher'] }}</p>
                         <p><strong>Issued Name:</strong> {{ $item['issued_name']}} ({{ $item['issue_role'] }})</p>
                         <p><strong>Issued To:</strong> {{ $item['user_name'] }}</p>
-                        <p><strong>Issue Date:</strong> {{ $item['issue_date'] }}</p>
+                        <p><strong>Issue Date:</strong> {{ $item['issue_date']->format('Y-m-d') }}</p>
                         <p><strong>Status:</strong> {{ $item['status'] }}</p><br>
                         <center><span class="barcode1">{!! $item['barcode'] !!}</span></center>
 

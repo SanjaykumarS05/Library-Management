@@ -11,12 +11,32 @@ use App\Models\Category;
 
 class BookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::paginate(100);
-        $book_issues = book_issue::all();
-        $categories = Category::all();
-        return view('admin.manage_books', compact('books', 'book_issues', 'categories'));
+        $books = Book::with('category');
+
+        // AJAX Search Filter
+        if ($request->ajax()) {
+            if ($request->search) {
+                $search = $request->search;
+                $books->where(function($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhere('author', 'like', "%{$search}%")
+                      ->orWhere('isbn', 'like', "%{$search}%")
+                      ->orWhereHas('category', function($q2) use ($search) {
+                          $q2->where('name', 'like', "%{$search}%")
+                        ->orwhere('publish_year', 'like', "%{$search}%")
+                        ->orwhere('availability', 'like', "%{$search}%");
+                      });
+                });
+            }
+            $books = $books->get();
+            return view('admin.books_table', compact('books'))->render(); // partial table
+        }
+
+        // Normal page load
+        $books = $books->get();
+        return view('admin.manage_books', compact('books'));
     }
 
     public function create()

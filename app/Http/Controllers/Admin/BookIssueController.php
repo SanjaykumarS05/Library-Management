@@ -54,7 +54,7 @@ class BookIssueController extends Controller
         Book_issue::create([
             'book_id' => $book->id,
             'user_id' => $request->user_id,
-            'issued_id' => Auth::id(),
+            'issued_id' => Auth::user()->id,
             'issue_date' => $request->issue_date,
             'status' => 'Issued',
         ]);
@@ -62,7 +62,7 @@ class BookIssueController extends Controller
         $book->decrement('stock');
         $book->update(['availability' => $book->stock > 0 ? 'Yes' : 'No']);
 
-        return back()->with('success', 'Book issued successfully!');
+        return redirect()->route('barcode.index')->with('success', 'Book issued successfully!');
     }
 
     /**
@@ -97,7 +97,7 @@ class BookIssueController extends Controller
         $book->increment('stock');
         $book->update(['availability' => $book->stock > 0 ? 'Yes' : 'No']);
 
-        return back()->with('success', 'Book returned successfully!');
+        return redirect()->route('barcode.index')->with('success', 'Book returned successfully!');
     }
 
     public function issueReturn($bookId = null)
