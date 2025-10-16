@@ -50,17 +50,6 @@ input[type="text"] {
     box-shadow: 0 0 6px rgba(0,123,255,0.3);
 }
 
-/* === Search Button === */
-.search-form button {
-    padding: 8px 18px;
-    border: none;
-    border-radius: 6px;
-    background-color: #007bff;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.3s ease, transform 0.3s ease;
-}
 
 /* === Book Results Grid === */
 .book-results {

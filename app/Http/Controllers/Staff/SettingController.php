@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,8 +10,6 @@ use App\Models\Library;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
-use Carbon\Carbon;
 
 class SettingController extends Controller
 {
@@ -22,60 +20,46 @@ class SettingController extends Controller
     {
         $admin = Auth::user();
         $profile = $admin->profile;
-        $settings = Library::first();
+        $settings = Library::first(); // fetch library settings from DB
 
-        return view('admin.setting', compact('admin', 'profile', 'settings'));
+        return view('staff.setting', compact('admin', 'profile', 'settings'));
     }
 
     // =====================
-    // Update Profile
+    // Update Profile (AJAX)
     // =====================
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
-
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => 'required|email|max:255',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'secondary_email' => [
-                'required',
-                'email',
-                'different:email',
-                Rule::unique('profiles', 'secondary_email')->ignore($user->id, 'user_id')
-            ],
+            'secondary_email' => 'nullable|email|max:255',
             'blood_group' => 'nullable|string|max:5',
-            'dob' => [
-                'required',
-                'date',
-                function ($attribute, $value, $fail) {
-                    $age = Carbon::parse($value)->age;
-                    if ($age < 10) {
-                        $fail('User must be at least 10 years old.');
-                    }
-                },
-            ],
-            'gender' => 'required|string|in:male,female,other',
-            'designation' => 'required|string|max:255',
-            'phone' => 'required|string|min:10|max:20',
-            'address' => 'required|string|min:10|max:255',
-            'qualification' => 'required|string|max:255',
+            'dob' => 'nullable|date',
+            'gender' => 'nullable|string|in:male,female,other',
+            'designation' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'qualification' => 'nullable|string|max:255',
             'theme' => 'nullable|string|in:light,dark',
         ]);
 
+        $user = Auth::user();
+
         // Handle profile image
-        $profileImagePath = optional($user->profile)->profile_image_path;
+        $profileImagePath = $user->profile->profile_image_path ?? null;
         if ($request->hasFile('profile_image')) {
             if ($profileImagePath && Storage::disk('public')->exists($profileImagePath)) {
-                Storage::disk('public')->delete($profileImagePath);
+                Storage::disk('public')->delete($profileImagePath); // delete old image
             }
             $profileImagePath = $request->file('profile_image')->store('Profile', 'public');
         }
 
-        // Update user
+        // Update user basic info
         $user->update($request->only('name', 'email'));
 
-        // Update or create profile
+        // Update or create profile record
         Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
@@ -92,19 +76,19 @@ class SettingController extends Controller
             ]
         );
 
-        return redirect()->back()->with('success', 'Profile updated successfully!');
+        return response()->json(['message' => 'Profile updated successfully!']);
     }
 
     // =====================
-    // Update Library
+    // Update Library (AJAX)
     // =====================
     public function updateLibrary(Request $request)
     {
         $request->validate([
             'library_name' => 'required|string|max:255',
-            'address' => 'required|string|min:10|max:255',
+            'address' => 'required|string|max:255',
             'contact_email' => 'required|email|max:255',
-            'contact_phone' => 'required|string|min:10|max:20',
+            'contact_phone' => 'required|string|max:20',
             'website' => 'nullable|string|max:255',
             'instagram' => 'nullable|string|max:255',
             'facebook' => 'nullable|string|max:255',
@@ -119,11 +103,11 @@ class SettingController extends Controller
             'instagram', 'facebook', 'twitter', 'linkedin', 'youtube', 'working_hours'
         ]));
 
-        return redirect()->back()->with('success', 'Library settings updated successfully!');
+        return response()->json(['message' => 'Library settings updated successfully!']);
     }
 
     // =====================
-    // Update Theme
+    // Update Theme (AJAX)
     // =====================
     public function updateTheme(Request $request)
     {
@@ -139,7 +123,6 @@ class SettingController extends Controller
 
         return response()->json(['message' => 'Theme updated successfully!']);
     }
-
 
     // =====================
     // Update Password (AJAX)

@@ -51,6 +51,7 @@ class OverallbookController extends Controller
                 'book_id'        => $book_issue->book_id,
                 'user_id'        => $book_issue->user_id,
                 'issue_date'     => $book_issue->issue_date ?? 'UNKNOWN',
+                'return_date'    => $book_issue->return_date ?? 'UNKNOWN',
                 'status'         => $book_issue->status,
             ];
         }
@@ -83,7 +84,9 @@ class OverallbookController extends Controller
                     $q2->where('title', 'like', "%{$query}%")
                         ->orWhere('isbn', 'like', "%{$query}%")
                         ->orWhere('author', 'like', "%{$query}%")
-                        ->orWhere('publish_year', 'like', "%{$query}%");
+                        ->orWhere('publish_year', 'like', "%{$query}%")
+                        ->orWhere('issue_date', 'like', "%{$query}%")
+                        ->orWhere('return_date', 'like', "%{$query}%");
                 });
 
                 // 🔍 Match user table fields
@@ -106,7 +109,7 @@ class OverallbookController extends Controller
         ->get();
 
     // ✅ Barcode generation
-    $generator = new \Picqer\Barcode\BarcodeGeneratorHTML();
+    $generator = new BarcodeGeneratorHTML();
     $barcodes = [];
 
     foreach ($book_issues as $book_issue) {
@@ -127,6 +130,7 @@ class OverallbookController extends Controller
             'issued_name'    => $issuedUser->name ?? 'UNKNOWN',
             'issue_role'     => $issuedUser->role ?? 'UNKNOWN',
             'issue_date'     => $book_issue->issue_date ?? 'UNKNOWN',
+            'return_date'    => $book_issue->return_date ?? 'UNKNOWN',
             'status'         => $book_issue->status,
         ];
     }

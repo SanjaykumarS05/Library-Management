@@ -29,7 +29,7 @@
             <i class="material-icons">lock</i>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password">
-            <!-- <input type="checkbox" onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"> Show Password -->
+            <input type="checkbox" onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"> Show Password
         </div>
 
         <div class="input-group">

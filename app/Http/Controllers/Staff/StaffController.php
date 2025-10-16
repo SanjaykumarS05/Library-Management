@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Staff;
+namespace App\Http\Controllers\staff;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Book_issue;
+use App\MOdels\Profile;
 
 class StaffController extends Controller
 {
@@ -16,6 +17,8 @@ class StaffController extends Controller
 
         $categoriesCount = Category::count();
 
+        $booksCount = Book::count();
+
         $availableBooks = Book::where('availability', 'Yes')->count();
         $issuedBooks = Book_issue::where('status', 'issued')->count();
 
@@ -24,14 +27,13 @@ class StaffController extends Controller
         $activeUsers = User::where('role', 'user')->count();
         
         $issuedPercentage = $totalBooks > 0
-            ? round(($issuedBooks / ($totalBooks + $issuedBooks)) * 100, 2)
-            : 0;
+            ? round(($issuedBooks / ($totalBooks + $issuedBooks)) * 100, 2): 0;
 
         $lowStockBooks = Book::where('stock', '<', 5)->get();
 
         $recentActivities = Book_issue::with(['book', 'user'])
             ->latest()
-            ->take(5)
+            ->take(10)
             ->get()
             ->map(function ($issue) {
                 return (object)[
@@ -44,6 +46,7 @@ class StaffController extends Controller
 
         return view('staff.dashboard', [
             'admin' => auth()->user(),  
+            'booksCount' => $booksCount,
             'totalBooks' => $totalBooks,
             'categoriesCount' => $categoriesCount,
             'availableBooks' => $availableBooks,

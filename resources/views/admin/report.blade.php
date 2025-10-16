@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="h1">📊 Customizable Report</h1>
+    <h1 class="h1">📊 Advance Customizable Report</h1>
 
     <!-- Filters Form -->
     <form id="report-filter-form" method="GET" action="{{ route('reports.index') }}">
@@ -62,7 +62,10 @@
                 <label for="isbn">ISBN:</label>
                 <input type="text" name="isbn" value="{{ request('isbn') }}">
             </div>
-
+            <div>
+                <label for="author">Author:</label>
+                <input type="text" name="author" value="{{ request('author') }}">
+            </div>
             <div>
                 <label for="issue_by">Issued By :</label>
                 <select id="issue_by" name="issue_by">
@@ -212,28 +215,5 @@ function toggleDarkMode() {
     localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
 }
 
-// Print
-function printReport() {
-    var printContents = document.getElementById('report-table').innerHTML;
-    var originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-    location.reload();
-}
-
-// Export Excel
-function exportToExcel() {
-    var table = document.getElementById('report-table').innerHTML;
-    var a = document.createElement('a');
-    var dataType = 'application/vnd.ms-excel';
-    var tableHTML = `<html xmlns:o="urn:schemas-microsoft-com:office:office" 
-                          xmlns:x="urn:schemas-microsoft-com:office:excel" 
-                          xmlns="http://www.w3.org/TR/REC-html40">
-                     <head><meta charset="utf-8"></head><body>${table}</body></html>`;
-    a.href = 'data:' + dataType + ', ' + encodeURIComponent(tableHTML);
-    a.download = 'book_report.xls';
-    a.click();
-}
 </script>
 @endsection

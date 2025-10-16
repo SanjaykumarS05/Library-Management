@@ -34,7 +34,7 @@ class AdminController extends Controller
 
         $recentActivities = Book_issue::with(['book', 'user'])
             ->latest()
-            ->take(5)
+            ->take(10)
             ->get()
             ->map(function ($issue) {
                 return (object)[

@@ -12,23 +12,23 @@
         {{-- Basic Info --}}
         <div>
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+            <input type="text" id="name" name="name" value="{{ old('name') }}">
         </div>
 
         <div>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+            <input type="email" id="email" name="email" value="{{ old('email') }}">
         </div>
 
         <div>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password">
             <input type="checkbox" onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"> Show Password
         </div>
 
         <div>
             <label for="role">Role:</label>
-            <select id="role" name="role" required>
+            <select id="role" name="role">
                 <option value="">Select Role</option>
                 <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                 <option value="staff" {{ old('role') == 'staff' ? 'selected' : '' }}>Staff</option>
@@ -85,7 +85,7 @@
 
         <div>
             <label>Phone:</label>
-            <input type="text" name="phone" value="{{ old('phone') }}">
+            <input type="text" name="phone" value="{{ old('phone') }}" maxlength="10">
         </div>
 
         <div>

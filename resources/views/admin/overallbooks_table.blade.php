@@ -1,4 +1,4 @@
-@foreach($barcodes as $item)
+    @foreach($barcodes as $item)
     <div class="barcode-card" id="card-{{ $item['barcodeText'] }}" style="position:relative;">
         <h4>{{ $item['book_title'] }}</h4>
         <p><strong>ISBN:</strong> {{ $item['book_isbn'] }}</p>
@@ -8,6 +8,7 @@
         <p><strong>Issued By:</strong> {{ $item['issued_name'] }} ({{ $item['issue_role'] }})</p>
         <p><strong>Issued To:</strong> {{ $item['user_name'] }}</p>
         <p><strong>Issue Date:</strong> {{ $item['issue_date']->format('Y-m-d') }}</p>
+        <p><strong>Return Date:</strong> {{ $item['return_date'] ?? '-' }}</p>
         <p><strong>Status:</strong> {{ $item['status'] }}</p>
         <span class="barcode1">{!! $item['barcode'] !!}</span>
 
@@ -15,4 +16,25 @@
             <button class="buttons small-btn" onclick="printSingle('card-{{ $item['barcodeText'] }}')">🖨️ Print This</button>
         </div>
     </div>
+<script>
+    function printSingle(elementId) {
+   const content = document.getElementById(elementId)?.innerHTML;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Issued Books</title>
+                <link rel="stylesheet" href="{{ asset('style/overallbookcss.css') }}" />
+                <style>.no-export { display: none !important; }</style>
+            </head>
+            <body>${content}</body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+}
+
+</script>
 @endforeach

@@ -8,33 +8,36 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Profile;
-use App\Http\Requests\UserRequest;
+use Carbon\Carbon;
 
 class ManageUserController extends Controller
 {
     // List all users
    public function index(Request $request)
-{
-    $users = User::query();
+    {
+        $users = User::query();
 
-    // AJAX Search
-    if ($request->ajax()) {
-        if ($request->search) {
-            $search = $request->search;
+        // AJAX Search / Filter
+        if ($request->ajax()) {
+             if ($request->name) {
+            $search = $request->name;
             $users->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('role', 'like', "%{$search}%");
+                  ->orWhere('email', 'like', "%{$search}%");
             });
+        }
+            if ($request->role) {
+                $users->where('role', $request->role);
+            }
+
+            $users = $users->get();
+            return view('admin.users_table', compact('users'))->render();
         }
 
         $users = $users->get();
-        return view('admin.users_table', compact('users'))->render();
+        return view('admin.manage_users', compact('users'));
     }
 
-    $users = $users->get();
-    return view('admin.manage_users', compact('users'));
-}
 
     // Show Add User form
     public function create()
@@ -45,31 +48,48 @@ class ManageUserController extends Controller
     }
 
     // Store new user + optional profile
-    public function store(UserRequest $request)
+     public function store(Request $request)
     {
-        if (User::where('email', $request->email)->exists()) {
-            return redirect()->back()->withErrors(['email' => 'Email already exists.'])->withInput();
-        }
-
-        // Create User
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'role'     => $request->role,
+        // ✅ Common Validation
+        $validated = $request->validate([
+            'name'             => 'required|string|max:255',
+            'email'            => 'required|email|unique:users,email',
+            'password'         => 'required|string|min:6',
+            'role'             => 'required|in:admin,staff,user',
+            'secondary_email'  => 'required|email|different:email|unique:profiles,secondary_email',
+            'blood_group'      => 'required|string|max:3',
+            'dob'              => ['required', 'date', function ($attribute, $value, $fail) {
+                $age = Carbon::parse($value)->age;
+                if ($age < 10) {
+                    $fail('User must be at least 10 years old.');
+                }
+            }],
+            'gender'           => 'required|in:male,female,other',
+            'designation'      => 'required|string|min:2|max:255',
+            'phone'            => 'required|string|regex:/^[0-9]{10,15}$/',
+            'address'          => 'required|string|min:10|max:500',
+            'qualification'    => 'required|string|min:2|max:255',
         ]);
 
-        // Create Profile (optional fields)
+        // ✅ Create User
+        $user = User::create([
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role'     => $validated['role'],
+        ]);
+
+        // ✅ Create Profile
         Profile::create([
-            'user_id'          => $user->id,
-            'secondary_email'  => $request->secondary_email,
-            'blood_group'      => $request->blood_group,
-            'dob'              => $request->dob,
-            'gender'           => $request->gender,
-            'designation'      => $request->designation,
-            'phone'            => $request->phone,
-            'address'          => $request->address,
-            'qualification'    => $request->qualification,
+            'user_id'         => $user->id,
+            'secondary_email' => $validated['secondary_email'],
+            'blood_group'     => $validated['blood_group'],
+            'dob'             => $validated['dob'],
+            'gender'          => $validated['gender'],
+            'designation'     => $validated['designation'],
+            'phone'           => $validated['phone'],
+            'address'         => $validated['address'],
+            'qualification'   => $validated['qualification'],
         ]);
 
         return redirect()->route('users')->with('success', 'User created successfully.');
@@ -77,7 +97,7 @@ class ManageUserController extends Controller
 
     // Edit User
     public function edit($id)
-    {
+    {   
         $user = User::with('profile')->findOrFail($id);
         return view('admin.edituser', compact('user'));
     }
@@ -85,24 +105,65 @@ class ManageUserController extends Controller
     // Update User
     public function update(Request $request, $id)
     {
-        $data = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'role'  => 'required|in:admin,staff,user',
+        $user = User::findOrFail($id);
+
+        // ✅ Validate everything together
+        $validated = $request->validate([
+            'name'             => 'required|string|max:255',
+            'email'            => 'required|email|unique:users,email,' . $id,
+            'role'             => 'required|in:admin,staff,user',
+            'secondary_email'  => 'required|email|different:email|unique:profiles,secondary_email,' . $user->id . ',user_id',
+            'blood_group'      => 'required|string|max:3',
+            'dob'              => ['required', 'date', function ($attribute, $value, $fail) {
+                if ($value) {
+                    $age = Carbon::parse($value)->age;
+                    if ($age < 10) {
+                        $fail('User must be at least 10 years old.');
+                    }
+                }
+            }],
+            'gender'           => 'required|in:male,female,other',
+            'designation'      => 'required|string|min:2|max:255',
+            'phone'            => 'required|string|regex:/^[0-9]{10,15}$/',
+            'address'          => 'required|string|min:10|max:500',
+            'qualification'    => 'required|string|min:2|max:255',
         ]);
 
-        $user = User::findOrFail($id);
-        $user->update($data);
+        // ✅ Update main user table
+        $user->update([
+            'name'  => $validated['name'],
+            'email' => $validated['email'],
+            'role'  => $validated['role'],
+        ]);
 
+        // ✅ Update or create profile
         if ($user->profile) {
-            $user->profile->update($request->only([
-                'secondary_email', 'blood_group', 'dob', 'gender',
-                'designation', 'phone', 'address', 'qualification'
-            ]));
+            $user->profile->update([
+                'secondary_email' => $validated['secondary_email'] ?? $user->profile->secondary_email,
+                'blood_group'     => $validated['blood_group'] ?? $user->profile->blood_group,
+                'dob'             => $validated['dob'] ?? $user->profile->dob,
+                'gender'          => $validated['gender'] ?? $user->profile->gender,
+                'designation'     => $validated['designation'] ?? $user->profile->designation,
+                'phone'           => $validated['phone'] ?? $user->profile->phone,
+                'address'         => $validated['address'] ?? $user->profile->address,
+                'qualification'   => $validated['qualification'] ?? $user->profile->qualification,
+            ]);
+        } else {
+            $user->profile()->create([
+                'secondary_email' => $validated['secondary_email'] ?? null,
+                'blood_group'     => $validated['blood_group'] ?? null,
+                'dob'             => $validated['dob'] ?? null,
+                'gender'          => $validated['gender'] ?? null,
+                'designation'     => $validated['designation'] ?? null,
+                'phone'           => $validated['phone'] ?? null,
+                'address'         => $validated['address'] ?? null,
+                'qualification'   => $validated['qualification'] ?? null,
+            ]);
         }
 
         return redirect()->route('users')->with('success', 'User updated successfully.');
     }
+
 
     // Delete User
     public function delete($id)

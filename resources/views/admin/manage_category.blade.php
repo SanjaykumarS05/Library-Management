@@ -6,51 +6,27 @@
 <h2 class="h2">Manage Categories</h2>
 
 <!-- Search Bar -->
-<div class="search-bar" style="margin:10px 0;">
-    <input type="text" id="search" placeholder="Search by Category or Description" style="width:300px; padding:5px;">
+<form method="GET" action="" class="search-form" id="book-search-form">
+<div class="form-group" >
+     <input type="text"  id="search-description" placeholder="Search by Description" style="padding:5px; width:150%; position:relative; left:-92px;">
+    <select id="search-name" style="padding:5px; position:relative; left:-92px;">
+        <option value="">All Categories</option>
+        @foreach($allCategories as $cat)
+            <option value="{{ $cat->name }}">{{ $cat->name }}</option>
+        @endforeach
+    </select>
+</div>
+</form>
+<div style="margin-top:10px;">
+    <a href="{{ route('categories.create') }}" class="addbook">╋ Add Category</a>
+    <a href="{{ route('categories.index') }}" class="btn btn-secondary">Reset</a>
+    <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
+    <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
 </div>
 
-<a href="{{ route('categories.create') }}" class="addbook">╋ Add Category</a>
-
-<div style="margin-top:10px;">
-            <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
-            <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
-        </div>
-<br>
 <!-- Categories Table -->
 <div id="report-table">
-<div id="categories-table">
-    <table border="1">
-        <thead>
-            <tr>
-                <th>S.no</th>
-                <th>Categories</th>
-                <th>Description</th>
-                <th class="no-export">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($categories as $category)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $category->name }}</td>
-                <td>{{ $category->description }}</td>
-                <td class="no-export">
-                    <a href="{{ route('categories.edit', $category->id) }}">Edit</a>
-                    <form action="{{ route('categories.delete', $category->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="button1" onclick="return confirm('Are you sure you want to delete this category?');">Remove</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="4" class="text-center">No categories found.</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+    @include('admin.categories_table', ['categories' => $categories])
 </div>
 @endsection
 
@@ -58,17 +34,23 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#search').on('keyup', function() {
-        let query = $(this).val();
+    function fetchCategories() {
+        let name = $('#search-name').val();
+        let description = $('#search-description').val();
+
         $.ajax({
             url: "{{ route('categories.index') }}",
             type: 'GET',
-            data: { search: query },
+            data: { search_name: name, search_description: description },
             success: function(response) {
-                $('#categories-table').html(response);
+                $('#report-table').html(response);
             }
         });
-    });
+    }
+
+    // Trigger AJAX on dropdown change or typing in description
+    $('#search-name').on('change', fetchCategories);
+    $('#search-description').on('keyup', fetchCategories);
 });
 </script>
 @endsection

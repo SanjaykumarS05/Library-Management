@@ -1,17 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\Staff;
+namespace App\Http\Controllers\staff;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        $categories = Category::all();
-        return view('staff.manage_category', compact('categories'));
+    public function index(Request $request)
+{
+    $categories = Category::query();
+
+    if ($request->ajax()) {
+        if ($request->search) {
+            $search = $request->search;
+            $categories->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $categories = $categories->get();
+        return view('staff.categories_table', compact('categories'))->render();
     }
+
+    $categories = $categories->get();
+    return view('staff.manage_category', compact('categories'));
+}
+
     public function create()
     {
         return view('staff.addcategory');

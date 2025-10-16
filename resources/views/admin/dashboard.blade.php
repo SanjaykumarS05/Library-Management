@@ -26,7 +26,7 @@
         <div class="stat-card">
             <h3>Books Count</h3>
             <p>{{ $booksCount }}</p>
-            <p class="sub">Books currently issued</p>
+            <p class="sub">Books in the Library</p>
         </div>
 
         <div class="stat-card">

@@ -28,20 +28,20 @@
 
     <label for="publish_year">Published Year:</label>
     <input type="text" id="publish_year" name="publish_year" value="{{$book->publish_year}}" maxlength="4" pattern="\d{4}" title="Enter a valid year (e.g., 2000)" required>
-
     <label for="availability">Availability:</label>
     <select id="availability" name="availability" required>
         <option value="Yes" {{ $book->availability == 'Yes' ? 'selected' : '' }}>Yes</option>
         <option value="No" {{ $book->availability == 'No' ? 'selected' : '' }}>No</option>
     </select>
+
     <label for="stock">Stock:</label>
     <input type="number" id="stock" name="stock" value="{{$book->stock}}" required min="0">
-    
 
-    <label for="cover_image">Cover Image:</label>
-    <input type="file" id="cover_image" name="cover_image">
-    @if($book->cover_image)
-        <p>Current Image: <img src="{{ asset('storage/' . $book->cover_image) }}" alt="Cover Image" width="100"></p>
+
+    <label for="image_path">Cover Image:</label>
+    <input type="file" id="image_path" name="image_path">
+    @if($book->image_path)
+        <p>Current Image: <img src="{{ asset('storage/' . $book->image_path) }}" alt="Cover Image" width="100"></p>
     @endif
 
     <button type="submit" class="button1">Update Book</button>

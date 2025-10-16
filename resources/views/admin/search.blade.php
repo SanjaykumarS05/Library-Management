@@ -5,7 +5,7 @@
 @section('content')
 <div class="container book-search">
     <h2 class="h2">📚 Search Books</h2>
-    <form method="GET" action="{{ route('search') }}" class="search-form" id="book-search-form">
+    <form method="GET" action="" class="search-form" id="book-search-form">
         <div class="form-group">
             <input type="text" name="query" id="search-query" placeholder="Search by title, author, Published Year ,or ISBN" value="{{ request('query') }}">
 

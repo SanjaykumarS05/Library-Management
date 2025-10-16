@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="container issue-return">
-    <h2 class="h2">📖 Issue / Return Books</h2>
+   <h2 class="h2">📖 Issue / Return Books</h2>
 
     <div class="issue-book">
         <h3 class="h3">Issue a Book</h3>
@@ -24,7 +24,6 @@
                     @endforeach
                 </select>
             </div>
-
             <div>
                 <label for="book_id">Select Book:</label>
                 <select name="book_id" id="book_id" required>
@@ -33,17 +32,16 @@
                         @if($book->stock > 0)
                             <option value="{{ $book->id }}" 
                                 {{ (isset($selectedBook) && $selectedBook->id == $book->id) ? 'selected' : '' }}>
-                                {{ $book->title }} by {{ $book->author }} ({{ $book->stock }} available)
+                                {{ $book->title }} by {{ $book->author }}-{{$book->isbn}} ({{ $book->stock }} available) 
                             </option>
                         @endif
                     @endforeach
                 </select>
             </div>
 
-            {{-- Hidden Date --}}
-            <input type="date" name="issue_date" id="issue_date" value="{{ date('Y-m-d') }}" required hidden>
+            <input type="hidden" name="issue_date" id="issue_date" value="{{ date('Y-m-d') }}" required>
 
-            <button type="submit">Issue Book</button>
+            <button type="submit" class="button1">Issue Book</button>
         </form>
     </div>
 
@@ -53,6 +51,8 @@
         <h3 class="h3">Return a Book</h3>
         <form action="{{ route('staff.book.return') }}" method="POST">
             @csrf
+
+            {{-- Select User --}}
             <div>
                 <label for="user_id_return">Select User:</label>
                 <select name="user_id_return" id="user_id_return" required>
@@ -64,23 +64,23 @@
                     @endforeach
                 </select>
             </div>
+
+            {{-- Select Issued Book --}}
             <div>
                 <label for="issue_id">Select Issued Book:</label>
                 <select name="issue_id" id="issue_id" required>
                     <option value="" disabled selected>Select issued book</option>
                     @foreach($book_issues1 as $issue)
                         <option value="{{ $issue->id }}" data-user="{{ $issue->user_id }}">
-                            {{ $issue->book->title ?? 'Unknown Title' }} 
-                            (Issued by: {{ $issue->user->name ?? 'Unknown User' }})
+                            {{ $issue->book->title ?? 'Unknown Title' }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            {{-- Hidden Return Date --}}
             <input type="hidden" name="return_date" id="return_date" value="{{ date('Y-m-d') }}" required>
 
-            <button type="submit">Return Book</button>
+            <button type="submit" class="button1">Return Book</button>
         </form>
     </div>
 </div>
@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
     userSelect.addEventListener('change', function() {
         const selectedUser = this.value;
         issueSelect.innerHTML = '<option value="" disabled selected>Select issued book</option>';
-
         allOptions.forEach(option => {
             if (option.dataset.user === selectedUser) {
                 issueSelect.appendChild(option);

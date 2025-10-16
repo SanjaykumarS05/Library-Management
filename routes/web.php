@@ -18,15 +18,17 @@ use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 
 // ================= STAFF CONTROLLERS =================
-use App\Http\Controllers\Staff\StaffController;
 use App\Http\Controllers\Staff\BookController as StaffBookController;
 use App\Http\Controllers\Staff\ManageUserController as StaffManageUserController;
+use App\Http\Controllers\Staff\StaffController as StaffDashboardController;
 use App\Http\Controllers\Staff\CategoryController as StaffCategoryController;
 use App\Http\Controllers\Staff\SearchController as StaffSearchController;
 use App\Http\Controllers\Staff\BookIssueController as StaffBookIssueController;
 use App\Http\Controllers\Staff\BarcodeController as StaffBarcodeController;
 use App\Http\Controllers\Staff\OverallbookController as StaffOverallbookController;
 use App\Http\Controllers\Staff\ReportController as StaffReportController;
+use App\Http\Controllers\Staff\SettingController as StaffSettingController;
+use App\Http\Controllers\Staff\NotificationController as StaffNotificationController;
 
 // ================= TEMPLATE ROUTES =================
 Route::get('/template', [TemplateController::class, 'index'])->name('template');
@@ -116,8 +118,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/settings/theme', [AdminSettingController::class, 'updateTheme'])->name('settings.updateTheme');
     Route::put('/settings/password', [AdminSettingController::class, 'updatePassword'])->name('settings.password');
 
-    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
-    Route::post('/notification/store', [AdminNotificationController::class, 'store'])->name('notification.store');
+    Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
+    Route::post('/admin/notifications/send', [AdminNotificationController::class, 'store'])->name('notification.store');
+    Route::post('/admin/notifications/dynamic', [AdminNotificationController::class, 'dynamic'])->name('notification.dynamic');
 
 
 
@@ -126,8 +129,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 // ================= STAFF ROUTES =================
 Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
 
-    // Dashboard
-    Route::get('/', [StaffController::class, 'index'])->name('staff.dashboard');
+   // Dashboard
+    Route::get('/', [StaffDashboardController::class, 'index'])->name('staff.dashboard');
 
     // Manage Users
     Route::get('/manage_users', [StaffManageUserController::class, 'index'])->name('staff.users');
@@ -155,8 +158,12 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
 
     // Search & Reports
     Route::get('/search', [StaffSearchController::class, 'index'])->name('staff.search');
+
+
     Route::get('/reports', [StaffReportController::class, 'index'])->name('staff.reports.index');
-    Route::get('/get-users-by-role', [StaffReportController::class, 'getUsersByRole'])->name('staff.reports.getUsersByRole');
+    Route::get('reports/export/csv', [StaffReportController::class, 'exportCSV'])->name('staff.reports.exportCSV');
+    Route::get('reports/export/pdf', [StaffReportController::class, 'exportPDF'])->name('staff.reports.exportPDF');
+    Route::get('/reports/users-by-role', [StaffReportController::class, 'usersByRole'])->name('staff.reports.usersByRole');
 
     // Issue/Return Books
     Route::get('/issue-return', [StaffBookIssueController::class, 'showIssueReturnForm'])->name('staff.books.issue_return');
@@ -167,12 +174,24 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
     // Barcode Actions
     Route::get('/books/issue/{issueId}', [StaffBookIssueController::class, 'issueFromBarcode'])->name('staff.books.issue_from_barcode');
     Route::get('/books/return/{issueId}', [StaffBookIssueController::class, 'returnFromBarcode'])->name('staff.books.return_from_barcode');
+    // Redirect to book info by barcode (for scanning)
+
 
     // Overall Book & Barcode
     Route::get('/overallbook', [StaffOverallbookController::class, 'index'])->name('staff.overallbook.index');
+    Route::get('/overallbooks/search', [StaffOverallbookController::class, 'search'])->name('staff.overallbooks.search');
     Route::get('/barcode', [StaffBarcodeController::class, 'index'])->name('staff.barcode.index');
     Route::get('/barcode/book-info/{barcode}', [StaffBarcodeController::class, 'getBookInfo'])->name('staff.barcode.book.info');
 
+    // Settings
+    Route::get('/settings', [StaffSettingController::class, 'index'])->name('staff.settings');
+    Route::put('/settings/profile', [StaffSettingController::class, 'updateProfile'])->name('staff.settings.update');
+    Route::post('/settings/theme', [StaffSettingController::class, 'updateTheme'])->name('staff.settings.updateTheme');
+    Route::put('/settings/theme', [StaffSettingController::class, 'updateTheme'])->name('staff.settings.updateTheme');
+    Route::put('/settings/password', [StaffSettingController::class, 'updatePassword'])->name('staff.settings.password');
+
+    Route::get('/notifications', [StaffNotificationController::class, 'index'])->name('staff.notifications');
+    Route::post('/notification/store', [StaffNotificationController::class, 'store'])->name('staff.notification.store');
 });
 
 // ================= USER ROUTE =================

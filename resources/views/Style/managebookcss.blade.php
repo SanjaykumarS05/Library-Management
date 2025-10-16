@@ -1,30 +1,101 @@
 <style>
-/* === Headings === */
+    /* =========================
+   Header & Page Titles
+========================= */
 .h2 {
     text-align: center;
-    font-size: 25px;
+    font-size: 26px;
     margin-bottom: 20px;
-    transition: color 0.3s ease;
+    color: #333;
+    font-weight: 600;
 }
 
-/* === Add Book Link === */
-a[href*="books.create"], .addbook {
+/* =========================
+   Search & Filter Bar
+========================= */
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.search-form input[type="text"],
+.search-form select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 180px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"] {   
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.search-form input[type="text"]:focus,
+.search-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0,123,255,0.3);
+}
+
+
+/* =========================
+   Buttons
+========================= */
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* =========================
+   Add Book Link
+========================= */
+a.addbook {
     display: inline-block;
     margin-bottom: 15px;
     padding: 8px 16px;
     background-color: #28a745;
-    color: white;
+    color: #fff;
     border-radius: 6px;
     text-decoration: none;
     transition: 0.3s ease, transform 0.3s ease;
 }
 
-a[href*="books.create"]:hover, .addbook:hover {
+a.addbook:hover {
     background-color: #218838;
     transform: translateY(-1px);
 }
 
-/* === Table Styles === */
+/* =========================
+   Table Styles
+========================= */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -32,49 +103,33 @@ table {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 thead {
     background-color: #007bff;
-    color: white;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    color: #fff;
 }
 
 thead th {
     padding: 12px 10px;
     text-align: left;
+    font-weight: 600;
 }
 
 tbody td {
     padding: 10px;
     border-bottom: 1px solid #e0e0e0;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    vertical-align: middle;
 }
 
 tbody tr:hover {
     background-color: #f1f1f1;
 }
 
-/* === Availability & Stock === */
-td:nth-child(6) {
-    font-weight: bold;
-}
-
-td:nth-child(6).Available {
-    color: #28a745;
-}
-
-td:nth-child(6).Unavailable {
-    color: #dc3545;
-}
-
-td:nth-child(7) {
-    text-align: center;
-    font-weight: bold;
-}
-
-/* === Cover Image === */
+/* =========================
+   Cover Images
+========================= */
 td img {
     max-width: 100px;
     border-radius: 6px;
@@ -82,17 +137,21 @@ td img {
     transition: box-shadow 0.3s ease;
 }
 
-/* === Action Buttons === */
-td a,
-td .button1 {
+td img:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* =========================
+   Action Buttons in Table
+========================= */
+td a, td .button1 {
     display: inline-block;
     margin: 2px 2px 2px 0;
     padding: 6px 12px;
-    border: none;
     border-radius: 6px;
-    cursor: pointer;
     font-size: 13px;
     text-decoration: none;
+    text-align: center;
     transition: 0.3s ease, transform 0.3s ease;
 }
 
@@ -103,7 +162,6 @@ td a {
 
 td a:hover {
     background-color: #117a8b;
-    transform: translateY(-1px);
 }
 
 td .button1 {
@@ -113,10 +171,24 @@ td .button1 {
 
 td .button1:hover {
     background-color: #c82333;
-    transform: translateY(-1px);
 }
 
-/* === Responsive Table === */
+/* =========================
+   Availability & Stock Highlights
+========================= */
+td.Available {
+    color: #28a745;
+    font-weight: bold;
+}
+
+td.Unavailable {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* =========================
+   Responsive Table & Form
+========================= */
 @media screen and (max-width: 900px) {
     table, thead, tbody, th, td, tr {
         display: block;
@@ -137,7 +209,6 @@ td .button1:hover {
         display: flex;
         justify-content: space-between;
         padding: 6px 10px;
-        border: none;
         border-bottom: 1px dashed #ccc;
     }
 
@@ -151,51 +222,14 @@ td .button1:hover {
     }
 }
 
-
-/* === Search Form === */
-.search-bar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 30px;
+/* =========================
+   Dark Theme
+========================= */
+body.dark-mode {
+    background-color: #1e1e2f;
+    color: #ddd;
 }
 
-.search-bar input[type="text"],
-.search-bar select {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    min-width: 180px;
-    transition: all 0.3s ease;
-}
-
-input[type="text"] {   
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.search-bar input[type="text"]:focus,
-.search-bar select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0,123,255,0.3);
-}
-
-/* === Search Button === */
-.search-bar button {
-    padding: 8px 18px;
-    border: none;
-    border-radius: 6px;
-    background-color: #007bff;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.3s ease, transform 0.3s ease;
-}
-
-/* === DARK THEME OVERRIDES === */
 body.dark-mode table {
     background-color: #2a2a3d;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
@@ -205,11 +239,6 @@ body.dark-mode table {
 body.dark-mode thead {
     background-color: #1f2a4d;
     color: #fff;
-}
-
-body.dark-mode tbody td {
-    border-bottom: 1px solid #444;
-    color: #ddd;
 }
 
 body.dark-mode tbody tr:hover {
@@ -232,15 +261,19 @@ body.dark-mode td .button1:hover {
     background-color: #dc2626;
 }
 
-body.dark-mode a[href*="books.create"], 
-body.dark-mode .addbook {
+body.dark-mode a.addbook {
     background-color: #2563eb;
 }
 
-body.dark-mode a[href*="books.create"]:hover,
-body.dark-mode .addbook:hover {
+body.dark-mode a.addbook:hover {
     background-color: #1d4ed8;
 }
-
+body.dark-mode .search-bar input[type="text"]::placeholder,
+body.dark-mode .search-form input[type="text"]::placeholder {
+    color: #aaa;
+}
+body.dark-mode .h2 {
+    color: #fff;
+}
 
 </style>

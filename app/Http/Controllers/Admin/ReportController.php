@@ -40,6 +40,11 @@ class ReportController extends Controller
                 $q->where('isbn', 'like', '%' . $request->isbn . '%');
             });
         }
+        if($request->author){
+            $bookIssues->whereHas('book', function($q) use ($request) {
+                $q->where('author', 'like', '%' . $request->author . '%');
+            });
+        }
         if ($request->issue_by) {
             $bookIssues->where('issued_id', $request->issue_by);
         }

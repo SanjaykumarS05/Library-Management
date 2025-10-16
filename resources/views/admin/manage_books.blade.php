@@ -5,92 +5,59 @@
 @section('content')
 <h2 class="h2">Manage Books</h2>
 
-<!-- Search Bar -->
-<div class="search-bar" style="margin:10px 0;">
-    <input type="text" id="search" placeholder="Search by Title, Author, ISBN, Category, Published Year, Availability" style="width:300px; padding:5px;">
+<!-- Search & Filters -->
+<form method="GET" action="" class="search-form" id="book-search-form">
+<div class="form-group">
+    <input type="text" id="search" placeholder="Search by Title, Author, ISBN" style="padding:5px;">
+    <select id="category" style="padding:5px;">
+        <option value="">All Categories</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name }}</option>
+        @endforeach
+    </select>
+    <select id="availability" style="padding:5px;">
+        <option value="">All Availability</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
 </div>
-
-<a href="{{ route('books.create') }}" class="addbook">╋ Add Book</a>
-
-        <div style="margin-top:10px;">
+</form>
+    <a href="{{ route('books.create') }}" class="addbook">╋ Add Book</a>
+    <a href="{{ route('books') }}" class="btn btn-secondary">Reset</a>
     <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
     <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
-</div>
-<br>
+
+
 
 <!-- Table -->
 <div id="report-table">
-<div id="books-table">
-
-<table border="1">
-    <thead>
-        <tr>
-            <th>S.no</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>ISBN</th>
-            <th>Category</th>
-            <th>Published Year</th>
-            <th>Availability</th>
-            <th>Stock</th>
-            <th class="no-export">Cover Image</th>
-            <th class="no-export">Actions</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        @forelse($books as $book)
-        <tr> 
-            <td>{{ $loop->iteration }}</td>
-            <td>{{ $book->title }}</td>
-            <td>{{ $book->author }}</td>
-            <td>{{ $book->isbn }}</td>
-            <td>{{ $book->category->name ?? '-' }}</td>
-            <td>{{ $book->publish_year }}</td>
-            <td>{{ $book->availability }}</td>
-            <td>{{ $book->stock }}</td>
-            <td class="no-export">
-                @if($book->image_path)
-                    <img src="{{ asset('storage/' . $book->image_path) }}" alt="Book Image" width="100">
-                @endif
-            </td>
-            <td class="no-export">
-                <a href="{{ route('books.edit', $book->id) }}">Edit</a>
-                <form action="{{ route('books.delete', $book->id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="button1" onclick="return confirm('Are you sure you want to delete this book?');">Remove</button>
-                </form>
-            </td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="10" class="text-center">No books found.</td>
-        </tr>
-        @endforelse
-    </tbody>   
-</table>
-</div>
+    @include('admin.books_table', ['books' => $books])
 </div>
 @endsection
 
 @section('scripts')
 <script>
 $(document).ready(function() {
-    // 🔍 Live Search
-    $('#search').on('keyup', function() {
-        let query = $(this).val();
+    function fetchBooks() {
+        let query = $('#search').val();
+        let category = $('#category').val();
+        let availability = $('#availability').val();
+
         $.ajax({
-            url: "{{ route('books') }}", // make sure this returns a partial view for table
+            url: "{{ route('books') }}",
             type: 'GET',
-            data: { search: query },
+            data: { search: query, category: category, availability: availability },
             success: function(response) {
                 $('#report-table').html(response);
+            },
+            error: function(err) {
+                console.error(err);
             }
         });
-    });
+    }
+
+    // Trigger AJAX on search input or filter change
+    $('#search, #category, #availability').on('keyup change', fetchBooks);
 });
-
-
 </script>
 @endsection

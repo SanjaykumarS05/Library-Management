@@ -16,9 +16,6 @@
         @endforeach
     </select>
 
-    <button class="buttons" onclick="printContent('content-to-print')">🖨️ Print All</button>
-    <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
-
 </div>
 <div id="report-table">
 <div id="content-to-print">
@@ -69,25 +66,6 @@ $(document).ready(function() {
         fetchResults();
     });
 });
-
-function printContent(elementId) {
-    const content = document.getElementById(elementId)?.innerHTML;
-    const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Issued Books</title>
-                <link rel="stylesheet" href="{{ asset('style/overallbookcss.css') }}" />
-                <style>.no-export { display: none !important; }</style>
-            </head>
-            <body>${content}</body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-}
 </script>
 
 @endsection

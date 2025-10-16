@@ -39,7 +39,7 @@
     <div id="printable-content">
         <div id="book-info" style="margin-top:20px;"></div>
 
-        <h2>Issued Books</h2>
+        <h2>Currrent Issued Books</h2>
         @if($book_issues_count)
             <h3>Total Issued Books: <span class="count">{{ $book_issues_count }}</span></h3>
             <br>

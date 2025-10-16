@@ -5,59 +5,27 @@
 @section('content')
 <h2 class="h2">Manage Users</h2>
 
-<!-- Search Bar -->
-<div class="search-bar" style="margin:10px 0;">
-    <input type="text" id="search" placeholder="Search by Name , Email , Role" style="width:300px; padding:5px;">
+<!-- Search & Filters -->
+<form method="GET" action="" class="search-form" id="book-search-form">
+<div class="form-group">
+    <input type="text"  id="search-name" placeholder="Search by Name or Email" style="padding:5px; width:150%; position:relative; left:-92px;">
+
+    <select id="role" style="padding:5px;position:relative; left:-92px;">
+        <option value="">All Roles</option>
+        <option value="admin">Admin</option>
+        <option value="staff">Staff</option>
+        <option value="member">Member</option>
+    </select>
 </div>
-
-<a href="{{ route('users.create') }}" class="addbook">╋ Add Member</a>
-
-<div style="margin-top:10px;">
-            <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
-            <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
-        </div>
-        <br>
+</form>
+    <a href="{{ route('users.create') }}" class="addbook">╋ Add Member</a>
+    <a href="{{ route('users') }}" class="btn btn-secondary">Reset</a>
+    <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
+    <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
 
 <!-- Users Table -->
- <div id="report-table">
-<div id="users-table">
-    <table border="1">
-        <thead>
-            <tr>
-                <th>S.no</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th class="no-export">Actions</th> 
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($users as $user)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->role }}</td>
-                <td class="no-export">
-                    @if($user->id !== Auth::id())
-                    <a href="{{ route('users.edit', $user->id) }}">Edit</a>
-                    <form action="{{ route('users.delete', $user->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="button1" onclick="return confirm('Are you sure you want to delete this user?');">Remove</button>
-                    </form>
-                    @else
-                    Can't Edit/Delete Self
-                    @endif
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="5" class="text-center">No users found.</td>
-            </tr>
-            @endforelse
-        </tbody>   
-    </table>
+<div id="report-table">
+    @include('admin.users_table', ['users' => $users])
 </div>
 @endsection
 
@@ -65,17 +33,26 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#search').on('keyup', function() {
-        let query = $(this).val();
+    function fetchUsers() {
+        let name = $('#search-name').val();
+        let email = $('#search-email').val();
+        let role = $('#role').val();
+
         $.ajax({
             url: "{{ route('users') }}",
             type: 'GET',
-            data: { search: query },
+            data: { name: name, email: email, role: role },
             success: function(response) {
-                $('#users-table').html(response);
+                $('#report-table').html(response);
+            },
+            error: function(err) {
+                console.error(err);
             }
         });
-    });
+    }
+
+    // Trigger AJAX on input or select change
+    $('#search-name, #search-email, #role').on('keyup change', fetchUsers);
 });
 </script>
 @endsection

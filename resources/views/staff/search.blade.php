@@ -1,22 +1,20 @@
 @extends('layout.template')
-
 @section('title', 'Search Books')
 @include('style.searchcss')
 
 @section('content')
 <div class="container book-search">
-    <h2>📚 Search Books</h2>
-    <form method="GET" action="{{ route('search') }}" class="search-form" id="book-search-form">
+    <h2 class="h2">📚 Search Books</h2>
+    <form method="GET" action="{{ route('staff.search') }}" class="search-form" id="book-search-form">
         <div class="form-group">
-            <input type="text" name="query" id="search-query" placeholder="Search by title, author, or ISBN" value="{{ request('query') }}">
+            <input type="text" name="query" id="search-query" placeholder="Search by title, author, Published Year ,or ISBN" value="{{ request('query') }}">
 
             <select name="category" id="search-category">
                 <option value="">All Categories</option>
                 @foreach($categories as $category)
                     <option 
                         value="{{ $category->name }}" 
-                        {{ request('category') == $category->name ? 'selected' : '' }}>
-                        {{ $category->name }}
+                        {{ request('category') == $category->name ? 'selected' : '' }}>{{ $category->name }}
                     </option>
                 @endforeach
             </select>
@@ -28,7 +26,6 @@
             </select>
         </div>
     </form>
-
     <div class="book-results" id="book-results">
         @include('staff.search_results', ['books' => $books])
     </div>
@@ -51,7 +48,7 @@ $(document).ready(function() {
                 $('#book-results').html(response);
             },
             error: function() {
-                alert('Error fetching books');
+                toastr.error('Error fetching books');
             }
         });
     }

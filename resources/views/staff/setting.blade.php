@@ -12,14 +12,13 @@
 
 <div class="setting-toggle">
     <label><input type="checkbox" id="toggle-profile" checked> Profile</label>
-    <label><input type="checkbox" id="toggle-library"> Library</label>
     <label><input type="checkbox" id="toggle-password"> Change Password</label>
 </div>
 
 <div class="container setting">
 
     {{-- ==================== PROFILE FORM ==================== --}}
-    <form id="profile-form" action="{{ route('settings.update') }}" method="POST" enctype="multipart/form-data">
+    <form id="profile-form" action="{{ route('staff.settings.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <h3>Profile Settings</h3>
@@ -33,7 +32,7 @@
 
         <div>
             <label>Name:</label>
-            <input type="text" name="name" value="{{ old('name', $admin->name) }}">
+            <input type="text" name="name" value="{{ old('name', $admin->name) }}" required>
         </div>
         <div>
             <label>User ID:</label>
@@ -41,7 +40,7 @@
         </div>
         <div>
             <label>Email:</label>
-            <input type="email" name="email" value="{{ old('email', $admin->email) }}">
+            <input type="email" name="email" value="{{ old('email', $admin->email) }}" readonly>
         </div>
         <div>
             <label>Secondary Email:</label>
@@ -71,11 +70,11 @@
         </div>
         <div>
             <label>Designation:</label>
-            <input type="text" name="designation" value="{{ old('designation', $admin->profile->designation ?? '') }}">
+            <input type="text" name="designation" value="{{ old('designation', $admin->profile->designation ?? '') }}" readonly>
         </div>
         <div>
             <label>Phone:</label>
-            <input type="text" name="phone" value="{{ old('phone', $admin->profile->phone ?? '') }}" maxlength="10">
+            <input type="text" name="phone" value="{{ old('phone', $admin->profile->phone ?? '') }}">
         </div>
         <div>
             <label>Address:</label>
@@ -83,83 +82,30 @@
         </div>
         <div>
             <label>Qualification:</label>
-            <input type="text" name="qualification" value="{{ old('qualification', $admin->profile->qualification ?? '') }}">
+            <input type="text" name="qualification" value="{{ old('qualification', $admin->profile->qualification ?? '') }}" readonly>
         </div>
 
         <button type="submit" class="button1">Update Profile</button>
     </form>
 
-    {{-- ==================== LIBRARY FORM ==================== --}}
-    <form id="library-form" action="{{ route('library.update') }}" method="POST" enctype="multipart/form-data" style="display:none;">
-        @csrf
-        @method('PUT')
-        <h3>Library Settings</h3>
-
-        <div>
-            <label>Library Name:</label>
-            <input type="text" name="library_name" value="{{ $settings->library_name ?? '' }}">
-        </div>
-        <div>
-            <label>Address:</label>
-            <input type="text" name="address" value="{{ $settings->address ?? '' }}">
-        </div>
-        <div>
-            <label>Contact Email:</label>
-            <input type="email" name="contact_email" value="{{ $settings->contact_email ?? '' }}">
-        </div>
-        <div>
-            <label>Contact Phone:</label>
-            <input type="text" name="contact_phone" value="{{ $settings->contact_phone ?? '' }}" maxlength="10">
-        </div>
-        <div>
-            <label>Website:</label>
-            <input type="text" name="website" value="{{ $settings->website ?? '' }}">
-        </div>
-        <div>
-            <label>Instagram:</label>
-            <input type="text" name="instagram" value="{{ $settings->instagram ?? '' }}">
-        </div>
-        <div>
-            <label>Facebook:</label>
-            <input type="text" name="facebook" value="{{ $settings->facebook ?? '' }}">
-        </div>
-        <div>
-            <label>Twitter:</label>
-            <input type="text" name="twitter" value="{{ $settings->twitter ?? '' }}">
-        </div>
-        <div>
-            <label>LinkedIn:</label>
-            <input type="text" name="linkedin" value="{{ $settings->linkedin ?? '' }}">
-        </div>
-        <div>
-            <label>YouTube:</label>
-            <input type="text" name="youtube" value="{{ $settings->youtube ?? '' }}">
-        </div>
-        <div>
-            <label>Working Hours:</label>
-            <input type="text" name="working_hours" value="{{ $settings->working_hours ?? '' }}">
-        </div>
-
-        <button type="submit" class="button1">Update Library</button>
-    </form>
 
     {{-- ==================== PASSWORD FORM ==================== --}}
-    <form id="password-form" action="{{ route('settings.password') }}" method="POST" style="display:none;">
+    <form id="password-form" action="{{ route('staff.settings.password') }}" method="POST" style="display:none;">
         @csrf
         @method('PUT')
         <h3>Change Password</h3>
 
         <div>
-            <label for="current_password">Current Password:</label>
-            <input type="password" name="current_password">
+            <label>Current Password:</label>
+            <input type="password" name="current_password" required>
         </div>
         <div>
-            <label for="new_password">New Password:</label>
-            <input type="password" name="new_password">
+            <label>New Password:</label>
+            <input type="password" name="new_password" required>
         </div>
         <div>
-            <label for="new_password_confirmation">Confirm New Password:</label>
-            <input type="password" name="new_password_confirmation">
+            <label>Confirm New Password:</label>
+            <input type="password" name="new_password_confirmation" required>
         </div>
 
         <button type="submit" class="button1">Change Password</button>
@@ -179,8 +125,8 @@ $(document).ready(function() {
 
     // ===== Toggle Forms =====
     function toggleForm(showFormId) {
-        const forms = ['#profile-form', '#library-form', '#password-form'];
-        const toggles = ['#toggle-profile', '#toggle-library', '#toggle-password'];
+        const forms = ['#profile-form', '#password-form'];
+        const toggles = ['#toggle-profile', '#toggle-password'];
 
         forms.forEach((form, index) => {
             if(form === showFormId) $(form).slideDown(); else $(form).slideUp();
@@ -192,10 +138,6 @@ $(document).ready(function() {
 
     $('#toggle-profile').on('change', function() {
         if(this.checked) toggleForm('#profile-form'); else $('#profile-form').slideUp();
-    });
-
-    $('#toggle-library').on('change', function() {
-        if(this.checked) toggleForm('#library-form'); else $('#library-form').slideUp();
     });
 
     $('#toggle-password').on('change', function() {
@@ -241,7 +183,6 @@ $(document).ready(function() {
     }
 
     ajaxSubmit('#profile-form');
-    ajaxSubmit('#library-form');
     ajaxSubmit('#password-form');
 });
 </script>

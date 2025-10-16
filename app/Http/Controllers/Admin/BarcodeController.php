@@ -17,6 +17,7 @@ class BarcodeController extends Controller
     {
         $book_issues = Book_issue::with(['book.category', 'user'])
             ->where('status', 'issued')
+            ->orderBy('issue_date', 'desc')
             ->get();
 
         $book_issues_count = $book_issues->count();

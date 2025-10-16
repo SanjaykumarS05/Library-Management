@@ -13,17 +13,17 @@
     {{-- Basic Info --}}
     <div>
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required>
+        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}">
     </div>
 
     <div>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}">
     </div>
 
     <div>
         <label for="role">Role:</label>
-        <select id="role" name="role" required>
+        <select id="role" name="role">
             <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
             <option value="staff" {{ $user->role == 'staff' ? 'selected' : '' }}>Staff</option>
             <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
@@ -74,7 +74,7 @@
 
     <div>
         <label>Phone:</label>
-        <input type="text" name="phone" value="{{ old('phone', $user->profile->phone ?? '') }}">
+        <input type="text" name="phone" value="{{ old('phone', $user->profile->phone ?? '') }}" maxlength="10">
     </div>
 
     <div>

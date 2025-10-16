@@ -9,40 +9,53 @@ use App\Models\Book;
 use App\Models\book_issue;
 use App\Models\Category;
 
+
 class BookController extends Controller
 {
     public function index(Request $request)
     {
-        $books = Book::with('category');
+        $categories = Category::all();
 
-        // AJAX Search Filter
+        // Start query builder
+        $books = Book::with('category')
+            ->withCount(['issues as issued_count' => function($query) {
+                $query->where('status', 'issued');
+            }]);
+
+        // AJAX search/filter
         if ($request->ajax()) {
             if ($request->search) {
-                $search = $request->search;
-                $books->where(function($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                      ->orWhere('author', 'like', "%{$search}%")
-                      ->orWhere('isbn', 'like', "%{$search}%")
-                      ->orWhereHas('category', function($q2) use ($search) {
-                          $q2->where('name', 'like', "%{$search}%")
-                        ->orwhere('publish_year', 'like', "%{$search}%")
-                        ->orwhere('availability', 'like', "%{$search}%");
-                      });
+                $books->where(function($q) use ($request) {
+                    $q->where('title', 'like', "%{$request->search}%")
+                    ->orWhere('author', 'like', "%{$request->search}%")
+                    ->orWhere('isbn', 'like', "%{$request->search}%");
                 });
             }
-            $books = $books->get();
-            return view('admin.books_table', compact('books'))->render(); // partial table
+
+            if ($request->category) {
+                $books->where('category_id', $request->category);
+            }
+
+            if ($request->availability) {
+                $books->where('availability', $request->availability);
+            }
+
+            $books = $books->get(); // execute query
+            return view('admin.books_table', compact('books'))->render();
         }
 
         // Normal page load
-        $books = $books->get();
-        return view('admin.manage_books', compact('books'));
+        $books = $books->get(); // execute query
+        return view('admin.manage_books', compact('books', 'categories'));
     }
+
+
+
 
     public function create()
     {
         $categories = Category::all();
-        return view('admin.addbook', compact('categories'));
+        return view('admin.addbook', compact('categories',));
     }
 
     public function store(BooksRequest $request)
