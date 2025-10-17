@@ -1,5 +1,5 @@
 <style>
-/* === Container === */
+   /* === Container === */
 .container.issued-books {
     max-width: 100%;
     padding: 20px;
@@ -29,13 +29,15 @@
     margin-bottom: 25px;
 }
 
+/* === Search Input Styles === */
 .filter-bar input[type="text"],
 .filter-bar select {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    padding: 10px 12px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
     font-size: 14px;
     transition: all 0.3s ease;
+    background-color: #fff;
 }
 
 .filter-bar input[type="text"]:focus,
@@ -43,6 +45,30 @@
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 6px rgba(0,123,255,0.3);
+}
+
+.filter-bar input[type="text"]:hover,
+.filter-bar select:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* === Reset Filters Link === */
+#resetFilters {
+    display: inline-block;
+    margin: 5px 0 15px 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: 500;
+    border: 1px solid #007bff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+#resetFilters:hover {
+    background-color: #007bff;
+    color: #fff;
+    transform: translateY(-1px);
 }
 
 /* === Filter Buttons === */
@@ -150,6 +176,11 @@
     .filter-bar .btn {
         width: 100%;
     }
+
+    #resetFilters {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 /* === Dark Mode === */
@@ -211,4 +242,5 @@ body.dark-mode .buttons.small-btn:hover {
         border: 1px solid #000;
     }
 }
+ 
 </style>

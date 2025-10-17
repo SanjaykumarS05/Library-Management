@@ -225,10 +225,6 @@ td.Unavailable {
 /* =========================
    Dark Theme
 ========================= */
-body.dark-mode {
-    background-color: #1e1e2f;
-    color: #ddd;
-}
 
 body.dark-mode table {
     background-color: #2a2a3d;

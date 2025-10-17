@@ -9,7 +9,7 @@
             <th>Published Year</th>
             <th>Availability</th>
             <th>Total Copies</th>
-            <th>Stock</th>
+            <th>In Stock</th>
             <th class="no-export">Cover Image</th>
             <th class="no-export">Actions</th>
         </tr>

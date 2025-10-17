@@ -21,40 +21,10 @@ class OverallbookController extends Controller
         $issuedbook = Book_issue::where('status', 'issued')->count();
         $totalBooks = Book_issue::count();
 
-        $book_issues_only = Book_issue::with(['book.category', 'user'])
-            ->where('status', 'issued')
-            ->get();
+        $book_issues = Book_issue::with(['book.category', 'user'])->latest()->get();
+        $book_issues_count = $book_issues->count();
 
-        $book_issues_count = $book_issues_only->count();
-        $book_issues = Book_issue::latest()->with(['book.category', 'user'])->get();
-
-        $generator = new BarcodeGeneratorHTML();
-        $barcodes = [];
-
-        foreach ($book_issues as $book_issue) {
-            $barcodeText = (string) $book_issue->id;
-            $barcodeHtml = $generator->getBarcode($barcodeText, $generator::TYPE_CODE_128);
-            $issuedUser = User::find($book_issue->issued_id);
-
-            $barcodes[] = [
-                'barcode'        => $barcodeHtml,
-                'barcodeText'    => $barcodeText,
-                'book_title'     => $book_issue->book->title ?? 'UNKNOWN',
-                'user_name'      => $book_issue->user->name ?? 'UNKNOWN',
-                'book_isbn'      => $book_issue->book->isbn ?? 'UNKNOWN',
-                'book_author'    => $book_issue->book->author ?? 'UNKNOWN',
-                'book_category'  => $book_issue->book->category->name ?? 'UNKNOWN',
-                'book_publisher' => $book_issue->book->publish_year ?? 'UNKNOWN',
-                'issued_id'      => $book_issue->issued_id ?? 'UNKNOWN',
-                'issued_name'    => $issuedUser->name ?? 'UNKNOWN',
-                'issue_role'     => $issuedUser->role ?? 'UNKNOWN',
-                'book_id'        => $book_issue->book_id,
-                'user_id'        => $book_issue->user_id,
-                'issue_date'     => $book_issue->issue_date ?? 'UNKNOWN',
-                'return_date'    => $book_issue->return_date ?? 'UNKNOWN',
-                'status'         => $book_issue->status,
-            ];
-        }
+        $barcodes = $this->prepareBarcodeData($book_issues);
 
         return view('admin.overallbook', compact(
             'barcodes',
@@ -68,77 +38,85 @@ class OverallbookController extends Controller
     }
 
     public function search(Request $request)
-{
-    $query = $request->search;
-    $categoryId = $request->category_id;
+    {
+        $title = $request->input('title');
+        $isbn = $request->input('isbn');
+        $author = $request->input('author');
+        $year = $request->input('year');
+        $categoryId = $request->input('category_id');
+        $status = $request->input('status');
 
-    $book_issues = Book_issue::with(['book.category', 'user'])
-        ->when($query, function ($q) use ($query) {
-            $q->where(function ($inner) use ($query) {
-                // 🔍 Match fields from book_issues table
-                $inner->where('status', 'like', "%{$query}%")
-                      ->orWhere('issued_id', 'like', "%{$query}%");
-
-                // 🔍 Match book table fields
-                $inner->orWhereHas('book', function ($q2) use ($query) {
-                    $q2->where('title', 'like', "%{$query}%")
-                        ->orWhere('isbn', 'like', "%{$query}%")
-                        ->orWhere('author', 'like', "%{$query}%")
-                        ->orWhere('publish_year', 'like', "%{$query}%")
-                        ->orWhere('issue_date', 'like', "%{$query}%")
-                        ->orWhere('return_date', 'like', "%{$query}%");
+        $book_issues = Book_issue::with(['book.category', 'user'])
+            ->when($title, function ($q) use ($title) {
+                $q->whereHas('book', function ($b) use ($title) {
+                    $b->where('title', 'like', "%$title%");
                 });
-
-                // 🔍 Match user table fields
-                $inner->orWhereHas('user', function ($q3) use ($query) {
-                    $q3->where('name', 'like', "%{$query}%");
+            })
+            ->when($isbn, function ($q) use ($isbn) {
+                $q->whereHas('book', function ($b) use ($isbn) {
+                    $b->where('isbn', 'like', "%$isbn%");
                 });
-
-                // 🔍 Match issued_by user (if available)
-                $inner->orWhereHas('issuedBy', function ($q4) use ($query) {
-                    $q4->where('name', 'like', "%{$query}%");
+            })
+            ->when($author, function ($q) use ($author) {
+                $q->whereHas('book', function ($b) use ($author) {
+                    $b->where('author', 'like', "%$author%");
                 });
-            });
-        })
-        ->when($categoryId, function ($q) use ($categoryId) {
-            $q->whereHas('book', function ($q2) use ($categoryId) {
-                $q2->where('category_id', $categoryId);
-            });
-        })
-        ->latest()
-        ->get();
+            })
+            ->when($year, function ($q) use ($year) {
+                $q->whereHas('book', function ($b) use ($year) {
+                    $b->where('publish_year', 'like', "%$year%");
+                });
+            })
+            ->when($categoryId, function ($q) use ($categoryId) {
+                $q->whereHas('book.category', function ($cat) use ($categoryId) {
+                    $cat->where('id', $categoryId);
+                });
+            })
+            ->when($status, function ($q) use ($status) {
+                $q->where('status', $status);
+            })
+            ->latest()
+            ->get();
 
-    // ✅ Barcode generation
-    $generator = new BarcodeGeneratorHTML();
-    $barcodes = [];
+        $barcodes = $this->prepareBarcodeData($book_issues);
+        $countOnPage = $book_issues->count();
 
-    foreach ($book_issues as $book_issue) {
-        $barcodeText = (string) $book_issue->id;
-        $barcodeHtml = $generator->getBarcode($barcodeText, $generator::TYPE_CODE_128);
-        $issuedUser = \App\Models\User::find($book_issue->issued_id);
 
-        $barcodes[] = [
-            'barcode'        => $barcodeHtml,
-            'barcodeText'    => $barcodeText,
-            'book_title'     => $book_issue->book->title ?? 'UNKNOWN',
-            'user_name'      => $book_issue->user->name ?? 'UNKNOWN',
-            'book_isbn'      => $book_issue->book->isbn ?? 'UNKNOWN',
-            'book_author'    => $book_issue->book->author ?? 'UNKNOWN',
-            'book_category'  => $book_issue->book->category->name ?? 'UNKNOWN',
-            'book_publisher' => $book_issue->book->publish_year ?? 'UNKNOWN',
-            'issued_id'      => $book_issue->issued_id ?? 'UNKNOWN',
-            'issued_name'    => $issuedUser->name ?? 'UNKNOWN',
-            'issue_role'     => $issuedUser->role ?? 'UNKNOWN',
-            'issue_date'     => $book_issue->issue_date ?? 'UNKNOWN',
-            'return_date'    => $book_issue->return_date ?? 'UNKNOWN',
-            'status'         => $book_issue->status,
-        ];
+        return view('admin.overallbooks_table', compact('barcodes', 'countOnPage'))->render();
     }
 
-    if ($book_issues->isEmpty()) {
-        return "<p style='text-align:center;'>No results found.</p>";
-    }
 
-    return view('admin.overallbooks_table', compact('barcodes'))->render();
+    /**
+     * Helper to prepare barcode data
+     */
+    private function prepareBarcodeData($book_issues)
+    {
+        $generator = new BarcodeGeneratorHTML();
+        $barcodes = [];
+
+        foreach ($book_issues as $book_issue) {
+            $issuedUser = User::find($book_issue->issued_id);
+            $barcodeText = (string) $book_issue->id;
+            $barcodeHtml = $generator->getBarcode($barcodeText, $generator::TYPE_CODE_128);
+
+            $barcodes[] = [
+                'barcode'        => $barcodeHtml,
+                'barcodeText'    => $barcodeText,
+                'book_title'     => $book_issue->book->title ?? 'UNKNOWN',
+                'user_name'      => $book_issue->user->name ?? 'UNKNOWN',
+                'book_isbn'      => $book_issue->book->isbn ?? 'UNKNOWN',
+                'book_author'    => $book_issue->book->author ?? 'UNKNOWN',
+                'book_category'  => $book_issue->book->category->name ?? 'UNKNOWN',
+                'book_publisher' => $book_issue->book->publish_year ?? 'UNKNOWN',
+                'issued_name'    => $issuedUser->name ?? 'UNKNOWN',
+                'issue_role'     => $issuedUser->role ?? 'UNKNOWN',
+                'issue_date'     => $book_issue->issue_date ?? 'UNKNOWN',
+                'return_date'    => $book_issue->return_date ?? '-',
+                'status'         => ucfirst($book_issue->status ?? 'Issued'),
+            ];
+        }
+
+        return $barcodes;
+    }
 }
-}
+ 

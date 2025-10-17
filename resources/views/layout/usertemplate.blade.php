@@ -18,15 +18,13 @@
     {{-- ================= Header ================= --}}
     <header>
         <div class="box" style="display: flex; justify-content: center; align-items: center;">
-            {{-- Admin Search Bar --}}
+            {{-- User Search Bar --}}
             <h1>{{ $library->library_name ?? 'Library Management System' }}</h1>
-            @if(auth()->user()->role === 'admin')
             <div class="search-container">
                 <form id="headerSearchForm" method="GET" style="display:flex; align-items:center;">
                     <input type="text" name="query" id="searchBox" placeholder="Search">
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
-                <a href="{{ route('barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
                 <a href="{{ route('notifications') }}"><span class="material-icons">notifications</span></a>
                 <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
                     <span class="material-icons">
@@ -34,24 +32,6 @@
                     </span>
                 </button>
             </div>
-            @endif
-            {{-- Staff Search Bar --}}
-            @if(auth()->user()->role === 'staff')
-            <div class="search-container">
-                <form id="headerSearchForm1" method="GET" style="display:flex; align-items:center;">
-                    <input type="text" name="query" id="searchBox" placeholder="Search">
-                    <button type="submit"><span class="material-icons">search</span></button>
-                </form>
-                <a href="{{ route('staff.barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
-                <a href="{{ route('staff.notifications') }}"><span class="material-icons">notifications</span></a>
-                <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
-                    <span class="material-icons">
-                        {{ (Auth::user()->profile->theme ?? 'light') === 'dark' ? 'light_mode' : 'dark_mode' }}
-                    </span>
-                </button>
-            </div>
-            @endif
-
             {{-- Logout --}}
             <form method="POST" style="margin-left: auto;">
                 @csrf
@@ -63,7 +43,7 @@
     {{-- ================= Sidebar ================= --}}
     <aside>
         <div class="profile-header">
-            <a href="{{ route('settings') }}">
+            <a href="{{ route('user.settings') }}">
                 <img src="{{ Auth::user()->profile?->profile_image_path 
                     ? asset('storage/' . Auth::user()->profile->profile_image_path) 
                     : asset('images/default.png') }}" 
@@ -80,34 +60,14 @@
         <hr>
 
         <nav>
-            @if(auth()->user()->role === 'admin')
             <ul>
                 <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ route('search') }}">Search Books</a></li>
-                <li><a href="{{ route('books') }}">Manage Books</a></li>
-                <li><a href="{{ route('users') }}">Manage Users</a></li>
-                <li><a href="{{ route('categories.index') }}">Manage Categories</a></li>
-                <li><a href="{{ route('overallbook.index') }}">Overall Issued Books</a></li>
-                <li><a href="{{ route('books.issue_return') }}">Issue / Return Books</a></li>
-                <li><a href="{{ route('barcode.index') }}">Barcode</a></li>
-                <li><a href="{{ route('reports.index') }}">Reports</a></li>
-                <li><a href="{{ route('settings') }}">Settings</a></li>
+                <li><a href="{{ route('user.browse_library') }}">Browse Library</a></li>
+                <li><a href="{{ route('user.search') }}">Search Books</a></li>
+                <li><a href="{{ route('book-requests.index') }}">Book Request</a></li>
+                <li><a href="{{ route('user.history') }}">My History</a></li>
+                <li><a href="{{ route('user.settings') }}">Settings</a></li>
             </ul>
-            @endif
-
-            @if(auth()->user()->role === 'staff')
-            <ul>
-                <li><a href="{{ route('staff.dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ route('staff.search') }}">Search Books</a></li>
-                <li><a href="{{ route('staff.books') }}">Manage Books</a></li>
-                <li><a href="{{ route('staff.categories.index') }}">Manage Categories</a></li>
-                <li><a href="{{ route('staff.overallbook.index') }}">Overall Issued Books</a></li>
-                <li><a href="{{ route('staff.books.issue_return') }}">Issue / Return Books</a></li>
-                <li><a href="{{ route('staff.barcode.index') }}">Barcode</a></li>
-                <li><a href="{{ route('staff.reports.index') }}">Reports</a></li>
-                <li><a href="{{ route('staff.settings') }}">Settings</a></li>
-            </ul>
-            @endif
         </nav>
     </aside>
 
@@ -121,7 +81,7 @@
 
     {{-- ================= Scripts ================= --}}
     <script>
-         @if(session('success')) toastr.success("{{ session('success') }}"); @endif
+        @if(session('success')) toastr.success("{{ session('success') }}"); @endif
         @if(session('error')) toastr.error("{{ session('error') }}"); @endif
         @foreach ($errors->all() as $error) toastr.error("{{ $error }}"); @endforeach
         
@@ -145,11 +105,7 @@
             const newTheme = isDark ? 'dark' : 'light';
             icon.textContent = isDark ? 'light_mode' : 'dark_mode';
             localStorage.setItem('theme', newTheme);
-
-            
-
-          @if(auth()->user()->role === 'admin')
-            $.post("{{ route('settings.updateTheme') }}", {
+            $.post("{{ route('user.settings.updateTheme') }}", {
                 _token: "{{ csrf_token() }}",
                 theme: newTheme
             }, function(res){
@@ -157,19 +113,7 @@
             }).fail(function(){
                 toastr.error('Failed to update theme');
             });
-            @endif
-            @if(auth()->user()->role === 'staff')
-            $.post("{{ route('staff.settings.updateTheme') }}", {
-                    _token: "{{ csrf_token() }}",
-                    theme: newTheme
-                }, function(res){
-                    toastr.success(res.message);
-                }).fail(function(){
-                    toastr.error('Failed to update theme');
-                });
-            @endif
         });
-
         // 🖨️ Print Report
         function printReport() {
         let tableClone = document.getElementById('report-table').cloneNode(true);
@@ -216,76 +160,31 @@
                 a.download = 'book_report.xls';
                 a.click();
             }
+            
             document.getElementById('headerSearchForm').addEventListener('submit', function(e) {
                 e.preventDefault(); // Prevent default form submission
                 const query = document.getElementById('searchBox').value.toLowerCase().trim();
-                let url = "{{ route('search') }}"; // default action
+                let url = "{{ route('user.search') }}"; // default action
 
                 // Conditional routing based on query keywords
                 if(query.includes("dashboard")) {
-                    url = "{{ route('dashboard') }}";
-                } else if(query.includes("manage books")) {
-                    url = "{{ route('books') }}";
-                } else if(query.includes("manage categories")) {
-                    url = "{{ route('categories.index') }}";
-                } else if(query.includes("add book")) {
-                    url = "{{ route('books.create') }}";
-                } else if(query.includes("add category")) {
-                    url = "{{ route('categories.create') }}";
-                } else if(query.includes("overall issued books")) {
-                    url = "{{ route('overallbook.index') }}";
-                } else if(query.includes("issue return")) {
-                    url = "{{ route('books.issue_return') }}";
-                } else if(query.includes("barcode")) {
-                    url = "{{ route('barcode.index') }}";
-                } else if(query.includes("reports")) {
-                    url = "{{ route('reports.index') }}";
+                    url = "{{ route('user.dashboard') }}";
+                } else if(query.includes("browse library")) {
+                    url = "{{ route('user.browse_library') }}";
+                } else if(query.includes("search")) {
+                    url = "{{ route('user.search') }}";
+                } else if(query.includes("my history")) {
+                    url = "{{ route('user.history') }}";
+                } else if(query.includes("book request")) {
+                    url = "{{ route('book-requests.index') }}";
                 } else if(query.includes("settings")) {
-                    url = "{{ route('settings') }}";
+                    url = "{{ route('user.settings') }}";
                 } else if(query.includes("notification")) {
                     url = "{{ route('notifications') }}";
                 }
                 // Redirect to the chosen URL with the query as GET parameter if needed
-                window.location.href = url + (url === "{{ route('search') }}" ? "?query=" + encodeURIComponent(query) : "");
+                window.location.href = url + (url === "{{ route('user.search') }}" ? "?query=" + encodeURIComponent(query) : "");
             });
-
-
-            
-            document.getElementById('headerSearchForm1').addEventListener('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
-                const query = document.getElementById('searchBox').value.toLowerCase().trim();
-                let url = "{{ route('staff.search') }}"; // default action
-
-                // Conditional routing based on query keywords
-                if(query.includes("dashboard")) {
-                    url = "{{ route('staff.dashboard') }}";
-                } else if(query.includes("manage books")) {
-                    url = "{{ route('staff.books') }}";
-                } else if(query.includes("manage categories")) {
-                    url = "{{ route('staff.categories.index') }}";
-                } else if(query.includes("add book")) {
-                    url = "{{ route('staff.books.create') }}";
-                } else if(query.includes("add category")) {
-                    url = "{{ route('staff.categories.create') }}";
-                } else if(query.includes("overall issued books")) {
-                    url = "{{ route('staff.overallbook.index') }}";
-                } else if(query.includes("issue return")) {
-                    url = "{{ route('staff.books.issue_return') }}";
-                } else if(query.includes("barcode")) {
-                    url = "{{ route('staff.barcode.index') }}";
-                } else if(query.includes("reports")) {
-                    url = "{{ route('staff.reports.index') }}";
-                } else if(query.includes("settings")) {
-                    url = "{{ route('staff.settings') }}";
-                } else if(query.includes("notification")) {
-                    url = "{{ route('staff.notifications') }}";
-                }
-                // Redirect to the chosen URL with the query as GET parameter if needed
-                window.location.href = url + (url === "{{ route('staff.search') }}" ? "?query=" + encodeURIComponent(query) : "");
-            });
-
-            // Toastr notifications
-        
         </script>
     </body>
     </html>

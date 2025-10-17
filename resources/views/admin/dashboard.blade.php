@@ -12,19 +12,19 @@
     </div>
     <div class="stats-grid">
         <div class="stat-card">
-            <h3>Total Books</h3>
+            <h3>Total Book Copies</h3>
             <p>{{ $totalBooks + $issuedBooks }}</p>
             <p class="sub">Across {{ $categoriesCount }} categories</p>
         </div>
 
         <div class="stat-card">
-            <h3>Available Books</h3>
+            <h3>Available Book Copies</h3>
             <p>{{ $totalBooks }}</p>
             <p class="sub">Books currently in stock</p>
         </div>
 
         <div class="stat-card">
-            <h3>Books Count</h3>
+            <h3>Total Books Count</h3>
             <p>{{ $booksCount }}</p>
             <p class="sub">Books in the Library</p>
         </div>

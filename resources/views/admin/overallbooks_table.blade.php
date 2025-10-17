@@ -1,4 +1,5 @@
-    @foreach($barcodes as $item)
+<!-- <h4 class="h4">Number of Details Fetched: <span class="count">{{ $countOnPage ?? count($barcodes) }}</span></h4> -->
+@foreach($barcodes as $item)
     <div class="barcode-card" id="card-{{ $item['barcodeText'] }}" style="position:relative;">
         <h4>{{ $item['book_title'] }}</h4>
         <p><strong>ISBN:</strong> {{ $item['book_isbn'] }}</p>
@@ -16,25 +17,4 @@
             <button class="buttons small-btn" onclick="printSingle('card-{{ $item['barcodeText'] }}')">🖨️ Print This</button>
         </div>
     </div>
-<script>
-    function printSingle(elementId) {
-   const content = document.getElementById(elementId)?.innerHTML;
-    const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Issued Books</title>
-                <link rel="stylesheet" href="{{ asset('style/overallbookcss.css') }}" />
-                <style>.no-export { display: none !important; }</style>
-            </head>
-            <body>${content}</body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-}
-
-</script>
 @endforeach

@@ -30,6 +30,15 @@ use App\Http\Controllers\Staff\ReportController as StaffReportController;
 use App\Http\Controllers\Staff\SettingController as StaffSettingController;
 use App\Http\Controllers\Staff\NotificationController as StaffNotificationController;
 
+
+
+use App\Http\Controllers\User\DashboardController as DashboardController;
+use App\Http\Controllers\User\SearchController as UserSearchController;
+use App\Http\Controllers\User\BrowseLibraryController as BrowseLibraryController;
+use App\Http\Controllers\User\SettingController as UserSettingController;
+use App\Http\Controllers\User\MyhistoryController as UserMyhistoryController;
+use App\Http\Controllers\User\BookrequestController as UserBookRequestController;
+
 // ================= TEMPLATE ROUTES =================
 Route::get('/template', [TemplateController::class, 'index'])->name('template');
 Route::post('/logout', [TemplateController::class, 'logout'])->name('logout');
@@ -156,7 +165,7 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
     Route::put('/categories/{id}', [StaffCategoryController::class, 'update'])->name('staff.categories.update');
     Route::delete('/categories/{id}', [StaffCategoryController::class, 'delete'])->name('staff.categories.delete');
 
-    // Search & Reports
+    // Search
     Route::get('/search', [StaffSearchController::class, 'index'])->name('staff.search');
 
 
@@ -195,8 +204,17 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
 });
 
 // ================= USER ROUTE =================
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/user', function () { 
-        return view('user.dashboard'); 
-    })->name('user.dashboard');
+Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/search', [UserSearchController::class, 'index'])->name('user.search');
+    Route::get('/browselibrary', [BrowseLibraryController::class, 'index'])->name('user.browse_library');
+
+    Route::get('/settings', [UserSettingController::class, 'index'])->name('user.settings');
+    Route::put('/settings/profile', [UserSettingController::class, 'updateProfile'])->name('user.settings.update');
+    Route::post('/settings/theme', [UserSettingController::class, 'updateTheme'])->name('user.settings.updateTheme');
+    Route::put('/settings/theme', [UserSettingController::class, 'updateTheme'])->name('user.settings.updateTheme');
+    Route::put('/settings/password', [UserSettingController::class, 'updatePassword'])->name('user.settings.password');
+    Route::get('/history', [UserMyhistoryController::class, 'borrowingHistory'])->name('user.history');
+    Route::get('/book-requests', [UserBookRequestController::class, 'index'])->name('book-requests.index');
+    Route::post('/book-requests', [UserBookRequestController::class, 'store'])->name('book-requests.store');
 });
