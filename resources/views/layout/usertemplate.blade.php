@@ -169,7 +169,7 @@
                 // Conditional routing based on query keywords
                 if(query.includes("dashboard")) {
                     url = "{{ route('user.dashboard') }}";
-                } else if(query.includes("browse library")) {
+                } else if(query.includes("browse")) {
                     url = "{{ route('user.browse_library') }}";
                 } else if(query.includes("search")) {
                     url = "{{ route('user.search') }}";

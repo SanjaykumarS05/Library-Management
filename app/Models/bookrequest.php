@@ -12,6 +12,7 @@ protected $fillable = [
         'user_id',
         'book_id',
         'status',
+        'Comments'
     ];
 
     public function user()

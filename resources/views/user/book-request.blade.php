@@ -40,6 +40,7 @@
         </div>
     </div>
 
+    @if(!empty($book))
     {{-- Request Form --}}
     <div class="request-form-section">
         <div class="card">
@@ -47,43 +48,44 @@
                 <h3>Request a New Book</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('book-requests.store') }}" method="POST">
+                <form action="{{ route('user.book.request.submit') }}" method="POST">
                     @csrf
                     <div class="form-row">
                         <div class="form-group">
+                            <input type="hidden" name="book_id" value="{{ $book->id }}">
                             <label for="title">Book Title *</label>
-                            <input type="text" id="title" name="title" class="form-control" required>
+                            <input type="text" id="title" name="title" class="form-control" value="{{ $book->title }}" readonly>
                         </div>
                         <div class="form-group">
                             <label for="author">Author *</label>
-                            <input type="text" id="author" name="author" class="form-control" required>
+                            <input type="text" id="author" name="author" class="form-control" value="{{ $book->author }}" readonly>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="category">Category *</label>
-                            <select id="category" name="category" class="form-control" required>
-                                <option value="">Select Category</option>
-                                <option value="Computer Science">Computer Science</option>
-                                <option value="Self-help">Self-help</option>
-                                <option value="Psychology">Psychology</option>
-                                <option value="Fiction">Fiction</option>
-                                <option value="Non-fiction">Non-fiction</option>
-                                <option value="Business">Business</option>
-                                <option value="Science">Science</option>
-                                <option value="History">History</option>
-                            </select>
+                            <input type="text" id="category" name="category" class="form-control" value="{{ $book->category->name }}" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="comments">Comments (Optional)</label>
-                            <textarea id="comments" name="comments" class="form-control" rows="2" placeholder="Any additional information..."></textarea>
+                            <label for="Comments">Comments (optional)</label>
+                            <textarea id="Comments" name="Comments" class="form-control" rows="2" placeholder="Any additional information...">{{ old('Comments') }}</textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit Request</button>
+
+                    <p class="terms-text">
+                        <h3 class="h3" style ="font-size: 1.2em; margin-bottom: 10px;">Terms and Conditions:</h3>
+                        <label>
+                            <input type="checkbox" id="terms" name="terms">
+                            After you receive a book from the library, you can keep it free of charge for 15 days. After that period, a fine of ₹100 will be charged for each additional day.
+                        </label>
+                    </p>
+
+                    <button type="submit" class="btn btn-primary" style =" margin-top: 20px;">Submit Request</button>
                 </form>
             </div>
         </div>
     </div>
+    @endif
 
     {{-- Your Requests Table --}}
     <div class="requests-table-section">
@@ -101,16 +103,16 @@
                                 <th>Category</th>
                                 <th>Request Date</th>
                                 <th>Status</th>
-                                <th>Notes</th>
+                                <th>Comments</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($userRequests as $request)
                             <tr>
-                                <td class="book-title">{{ $request->title }}</td>
-                                <td>{{ $request->author }}</td>
+                                <td class="book-title">{{ $request->book->title }}</td>
+                                <td>{{ $request->book->author }}</td>
                                 <td>
-                                    <span class="category-badge">{{ $request->category }}</span>
+                                    <span class="category-badge">{{ $request->book->category->name }}</span>
                                 </td>
                                 <td class="request-date">
                                     <span class="date-icon">📅</span>
@@ -128,7 +130,7 @@
                                     </span>
                                 </td>
                                 <td class="notes-cell">
-                                    {{ $request->notes ?? '-' }}
+                                    {{ $request->Comments ?? '-' }}
                                 </td>
                             </tr>
                             @empty

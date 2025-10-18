@@ -73,10 +73,10 @@
             </div>
             <div class="book-footer">
                 <p>{{ $book->available_stock }} available</p>
-                @if($book->is_borrowed)
+                @if($book->is_issued)
                     <button class="borrow-btn" disabled>Currently Borrowed</button>
                 @else
-                    <button class="borrow-btn">Borrow Now</button>
+                    <button class="borrow-btn"><a href="{{ route('user.book.request', $book->id) }}">Request Book</a></button>
                 @endif
             </div>
         </div>

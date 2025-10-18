@@ -33,14 +33,15 @@ class BrowseLibraryController extends Controller
             ->take(8)
             ->get();
 
-        // === Mark borrowed books for current user ===
+        // === Mark issued books for current user ===
         foreach ($books as $book) {
-            $book->is_borrowed = Book_issue::where('book_id', $book->id)
+            $book->is_issued = Book_issue::where('book_id', $book->id)
                 ->where('user_id', $userId)
                 ->where('status', 'issued')
                 ->exists();
 
             $book->available_stock = $book->stock ?? 0;
+
         }
 
         // === Send data to view ===

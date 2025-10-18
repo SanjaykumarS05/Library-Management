@@ -17,7 +17,8 @@ class book_issue extends Model
         'user_id',     // received by
         'issued_id',   // issued by
         'issue_date',
-        'status'
+        'status',
+        'fine'
     ];
 
     protected $casts = [
@@ -37,5 +38,24 @@ class book_issue extends Model
     public function book()
     {
         return $this->belongsTo(Book::class, 'book_id');
+    }
+
+    protected $appends = ['fine_amount'];
+
+    public function getFineAmountAttribute()
+    {
+        if (!$this->issue_date) {
+            return 0;
+        }
+
+        $dueDate = Carbon::parse($this->issue_date)->addDays(15);
+        $today = $this->return_date ? Carbon::parse($this->return_date) : Carbon::today();
+
+        if ($today->gt($dueDate)) {
+            $daysLate = $today->diffInDays($dueDate);
+            return $daysLate * 100; // ₹100 per day fine
+        }
+
+        return 0;
     }
 }

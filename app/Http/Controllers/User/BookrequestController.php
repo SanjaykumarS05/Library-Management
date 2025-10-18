@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BookRequest;
+use App\Models\Book;
 use Illuminate\Support\Facades\Auth;
 
 class BookrequestController extends Controller
@@ -25,26 +26,37 @@ class BookrequestController extends Controller
         return view('user.book-request', compact('userRequests', 'stats'));
     }
 
-    public function store(Request $request)
+  public function requestBook($bookId)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'notes' => 'nullable|string|max:500'
-        ]);
+        $book = Book::findOrFail($bookId);
 
-        BookRequest::create([
-            'user_id' => Auth::id(),
-            'title' => $validated['title'],
-            'author' => $validated['author'],
-            'category' => $validated['category'],
-            'notes' => $validated['notes'],
-            'status' => 'pending',
-            'request_date' => now()
-        ]);
+        $stats = [
+            'pending' => BookRequest::where('user_id', Auth::id())->where('status', 'pending')->count(),
+            'approved' => BookRequest::where('user_id', Auth::id())->where('status', 'approved')->count(),
+            'rejected' => BookRequest::where('user_id', Auth::id())->where('status', 'rejected')->count(),
+            'total' => BookRequest::where('user_id', Auth::id())->count()
+        ];
 
-        return redirect()->route('book-requests.index')->with('success', 'Book request submitted successfully!');
+        $userRequests = BookRequest::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('user.book-request', compact('book', 'stats', 'userRequests'));
     }
 
+    public function submitBookRequest(Request $request)
+    {
+        $validated = $request->validate([
+            'book_id' => 'required|exists:books,id',
+            'terms' => 'accepted',
+        ]);
+        BookRequest::create([
+            'user_id' => Auth::id(),
+            'book_id' => $validated['book_id'],
+            'Comments' => $request->input('Comments'),
+            'status' => 'pending'
+        ]);
+
+    return redirect()->route('book-requests.index')->with('success', 'Book request submitted successfully!');
+    }
 }

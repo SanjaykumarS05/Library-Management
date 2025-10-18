@@ -13,7 +13,7 @@
         </p>
 
         @if($book->stock > 0)
-            <a href ="{{ route('staff.books.issue_return1', $book->id) }}">📖 Request Book</a>
+            <a href ="{{ route('user.book.request', $book->id) }}">📖 Request Book</a>
         @endif
     </div>
 @empty
