@@ -125,7 +125,6 @@
                     <th>ISBN</th>
                     <th>Author</th>
                     <th>Category</th>
-                    <th>Published Year</th>
                     <th>Issued By</th>
                     <th>Issue Date</th>
                     <th>Return Date</th>
@@ -142,7 +141,6 @@
                         <td>{{ $item->book->isbn ?? '' }}</td>
                         <td>{{ $item->book->author ?? '' }}</td>
                         <td>{{ $item->book->category->name ?? '' }}</td>
-                        <td>{{ $item->book->publish_year ?? '' }}</td>
                         <td>{{ $item->issuedBy->name ?? 'NOT FOUND' }}</td>
                         <td>{{ $item->issue_date->format('Y-m-d') }}</td>
                         <td>{{ $item->return_date?? '  -' }}</td>

@@ -54,6 +54,7 @@
                     <option value="">All</option>
                     <option value="Issued" {{ request('status')=='Issued'?'selected':'' }}>Issued</option>
                     <option value="Returned" {{ request('status')=='Returned'?'selected':'' }}>Returned</option>
+                    <option value="Overdue" {{ request('status')=='Overdue'?'selected':'' }}>Overdue</option>
                 </select>
             </div>
 
@@ -124,7 +125,6 @@
                     <th>ISBN</th>
                     <th>Author</th>
                     <th>Category</th>
-                    <th>Published Year</th>
                     <th>Issued By</th>
                     <th>Issue Date</th>
                     <th>Return Date</th>
@@ -141,7 +141,6 @@
                         <td>{{ $item->book->isbn ?? '' }}</td>
                         <td>{{ $item->book->author ?? '' }}</td>
                         <td>{{ $item->book->category->name ?? '' }}</td>
-                        <td>{{ $item->book->publish_year ?? '' }}</td>
                         <td>{{ $item->issuedBy->name ?? 'NOT FOUND' }}</td>
                         <td>{{ $item->issue_date->format('Y-m-d') }}</td>
                         <td>{{ $item->return_date?? '  -' }}</td>
@@ -152,6 +151,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="pagination-wrapper" style="margin-top: 20px; text-align: center;">
+            {{ $bookIssues->links('pagination::bootstrap-5') }}
     </div>
 </div>
 
@@ -182,6 +184,25 @@ $(document).ready(function() {
         });
     }
 
+        $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: $('#report-filter-form').serialize(),
+            success: function(response) {
+                let tbody = $(response).find('#report-table tbody').html();
+                $('#report-table tbody').html(tbody);
+
+                let total = $(response).find('#total-count').text();
+                $('#total-count').text(total);
+
+                let pagination = $(response).find('.pagination-wrapper').html();
+                $('.pagination-wrapper').html(pagination);
+            }
+        });
+    });
     // Filter changes
     $('#role').on('change', function() {
         let role = $(this).val();

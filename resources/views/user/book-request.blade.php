@@ -76,7 +76,7 @@
                         <h3 class="h3" style ="font-size: 1.2em; margin-bottom: 10px;">Terms and Conditions:</h3>
                         <label>
                             <input type="checkbox" id="terms" name="terms">
-                            After you receive a book from the library, you can keep it free of charge for 15 days. After that period, a fine of ₹100 will be charged for each additional day.
+                            After you receive a book from the library, you can keep it <b>free of charge for 15 days</b>. After that period, <b>a fine of ₹100 will be charged for each additional day</b>.
                         </label>
                     </p>
 
@@ -98,6 +98,7 @@
                     <table class="requests-table">
                         <thead>
                             <tr>
+                                <th>S.No</th>
                                 <th>Book Title</th>
                                 <th>Author</th>
                                 <th>Category</th>
@@ -109,6 +110,7 @@
                         <tbody>
                             @forelse($userRequests as $request)
                             <tr>
+                                <td>{{ $loop->iteration }}</td>
                                 <td class="book-title">{{ $request->book->title }}</td>
                                 <td>{{ $request->book->author }}</td>
                                 <td>
@@ -140,8 +142,12 @@
                                 </td>
                             </tr>
                             @endforelse
+                            
                         </tbody>
                     </table>
+                </div>
+                <div class="pagination-wrapper mt-4">
+                {{ $userRequests->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>

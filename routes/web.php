@@ -216,6 +216,7 @@ Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
     Route::put('/settings/password', [UserSettingController::class, 'updatePassword'])->name('user.settings.password');
     Route::get('/history', [UserMyhistoryController::class, 'borrowingHistory'])->name('user.history');
     Route::get('/book-requests', [UserBookRequestController::class, 'index'])->name('book-requests.index');
+    Route::post('/browse-library/filter', [BrowseLibraryController::class, 'filterBooks'])->name('user.browse.filter');
     Route::get('/book/request/{bookId}', [UserBookRequestController::class, 'requestBook'])->name('user.book.request');
     Route::post('/book/request/submit', [UserBookRequestController::class, 'submitBookRequest'])->name('user.book.request.submit');
 });

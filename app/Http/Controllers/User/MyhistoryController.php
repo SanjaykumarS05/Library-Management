@@ -13,19 +13,25 @@ class MyhistoryController extends Controller
     {
         $user = Auth::user();
 
-        // Fetch all book issues for this user
+        // Fetch all book issues with book details
         $bookIssues = Book_issue::with('book')
             ->where('user_id', $user->id)
             ->orderBy('issue_date', 'desc')
-            ->get();
+            ->paginate(20);
 
-        // Calculate summary counts
-        $currentlyBorrowed = $bookIssues->where('status','Issued')->count();
-        $overdue = $bookIssues->filter(function ($issue) {
-            return $issue->status === 'Active' && Carbon::parse($issue->due_date)->isPast();
+        // Fetch all issues for summary cards
+        $allIssues = Book_issue::where('user_id', $user->id)->get();
+
+        // Compute counts
+        $currentlyBorrowed = $allIssues->where('status', 'Issued')->count();
+
+        $overdue = $allIssues->filter(function ($issue) {
+            $dueDate = Carbon::parse($issue->issue_date)->addDays(15);
+            return $issue->status === 'Overdue' && now()->greaterThan($dueDate);
         })->count();
-        $returned = $bookIssues->where('status', 'Returned')->count();
-        $totalHistory = $bookIssues->count();
+
+        $returned = $allIssues->where('status', 'Returned')->count();
+        $totalHistory = $allIssues->count();
 
         return view('user.history', compact(
             'bookIssues',

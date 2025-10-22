@@ -21,11 +21,11 @@ class CategoryController extends Controller
                 $categories->where('description', 'like', "%{$request->search_description}%");
             }
 
-            $categories = $categories->get();
+            $categories = $categories->latest()->paginate(25);
             return view('admin.categories_table', compact('categories'))->render();
         }
 
-        $categories = $categories->get();
+        $categories = $categories->latest()->paginate(25);
         return view('admin.manage_category', compact('categories', 'allCategories'));
     }
 

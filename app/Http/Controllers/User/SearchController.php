@@ -5,7 +5,10 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\BookRequest;
 use App\Models\Category;
+use App\Models\Book_issue;
+use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
@@ -14,9 +17,12 @@ class SearchController extends Controller
         $query = $request->input('query');
         $category = $request->input('category');
         $availability = $request->input('availability');
+        $userRequests = BookRequest::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
 
         $categories = Category::all();
-        $books = Book::query();
+        $books = Book::with('category'); // eager load for efficiency
 
         // Search by title, author, ISBN, or category name
         if ($query) {
@@ -41,11 +47,20 @@ class SearchController extends Controller
 
         $books = $books->get();
 
-        // Return AJAX partial
-        if ($request->ajax()) {
-            return view('user.search_results', compact('books'))->render();
+        // ✅ Mark whether the current user has already borrowed this book
+        $userId = Auth::id();
+        foreach ($books as $book) {
+            $book->is_issued = Book_issue::where('book_id', $book->id)
+                ->where('user_id', $userId)
+                ->where('status', 'Issued')
+                ->exists();
         }
 
-        return view('user.search', compact('books', 'categories', 'query', 'category', 'availability'));
+        // Return AJAX partial
+        if ($request->ajax()) {
+            return view('user.partials.search_results', compact('books'))->render();
+        }
+
+        return view('user.search', compact('books', 'categories', 'query', 'category', 'availability', 'userRequests'));
     }
 }

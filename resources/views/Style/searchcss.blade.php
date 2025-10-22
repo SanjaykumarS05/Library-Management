@@ -27,6 +27,20 @@
     gap: 10px;
     margin-bottom: 30px;
 }
+.borrow-btn {
+    background-color: #111827;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.borrow-btn:hover {
+    background-color: #2563eb;
+}
 
 .search-form input[type="text"],
 .search-form select {

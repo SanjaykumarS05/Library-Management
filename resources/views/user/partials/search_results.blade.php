@@ -10,10 +10,14 @@
             <span class="{{ $book->stock > 0 ? 'available' : 'unavailable' }}">
                 {{ $book->stock > 0 ? 'Available' : 'Unavailable' }}
             </span>
-        </p>
+        </p><br>
 
-        @if($book->stock > 0)
-            <a href ="{{ route('user.book.request', $book->id) }}">📖 Request Book</a>
+        @if($book->is_issued)
+            <button class="borrow-btn" disabled>✅ You currently borrowed this book</button>
+        @elseif($book->stock == 0)
+            <button type="submit" class="borrow-btn" disabled>❌ Book Unavailable</button>
+        @elseif($book->stock > 0)
+            <button type="submit"  class="borrow-btn" onclick="window.location.href='{{ route('user.book.request', $book->id) }}'">📖 Request Book</button>
         @endif
     </div>
 @empty

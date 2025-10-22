@@ -40,12 +40,12 @@ class BookController extends Controller
                 $books->where('availability', $request->availability);
             }
 
-            $books = $books->get(); // execute query
+            $books = $books->latest()->paginate(25); // execute query
             return view('admin.books_table', compact('books'))->render();
         }
 
         // Normal page load
-        $books = $books->get(); // execute query
+        $books = $books->latest()->paginate(25); // execute query
         return view('admin.manage_books', compact('books', 'categories'));
     }
 

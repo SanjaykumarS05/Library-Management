@@ -12,6 +12,7 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
+        $perPage = 50;
         $allUsers = User::all();
         $categories = Category::all();
         $staffs = User::whereIn('role', ['admin', 'staff'])->get();
@@ -48,7 +49,7 @@ class ReportController extends Controller
         if ($request->issue_by) {
             $bookIssues->where('issued_id', $request->issue_by);
         }
-
+        
         if ($request->time && $request->time !== 'all') {
             switch ($request->time) {
                 case 'today':
@@ -75,7 +76,7 @@ class ReportController extends Controller
             }
         }
 
-        $bookIssues = $bookIssues->get();
+        $bookIssues = $bookIssues->paginate($perPage)->withQueryString();
 
         return view('admin.report', compact('bookIssues', 'allUsers', 'categories', 'staffs'));
     }

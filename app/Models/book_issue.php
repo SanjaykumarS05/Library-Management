@@ -17,6 +17,7 @@ class book_issue extends Model
         'user_id',     // received by
         'issued_id',   // issued by
         'issue_date',
+        'return_date',
         'status',
         'fine'
     ];

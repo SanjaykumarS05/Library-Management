@@ -51,6 +51,7 @@ class OverallbookController extends Controller
                 $q->whereHas('book', function ($b) use ($title) {
                     $b->where('title', 'like', "%$title%");
                 });
+                $q->orWhere('book_issues.id', 'like', "%$title%");
             })
             ->when($isbn, function ($q) use ($isbn) {
                 $q->whereHas('book', function ($b) use ($isbn) {

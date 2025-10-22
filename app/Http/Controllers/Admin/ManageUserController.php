@@ -30,11 +30,11 @@ class ManageUserController extends Controller
                 $users->where('role', $request->role);
             }
 
-            $users = $users->get();
+            $users = $users->latest()->paginate(25);
             return view('admin.users_table', compact('users'))->render();
         }
 
-        $users = $users->get();
+        $users = $users->latest()->paginate(25);
         return view('admin.manage_users', compact('users'));
     }
 

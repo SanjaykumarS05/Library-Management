@@ -7,7 +7,7 @@
 <h2 class="h2">Overall Issued Books</h2>
 
 <div class="filter-bar" style="margin: 10px 0; display:flex; gap:10px; align-items:center;">
-    <input type="text" id="titleSearch" placeholder="Search by Title " style="width:300px; padding:8px;">
+    <input type="text" id="titleSearch" placeholder="Search by Title or Book Id" style="width:300px; padding:8px;">
     <input type="text" id="isbnSearch" placeholder="Search by  ISBN" maxlength="13" style="width:300px; padding:8px;">
     <input type="text" id="authorSearch" placeholder="Search by Author" style="width:300px; padding:8px;">
     <input type="text" id="yearSearch" placeholder="Search by Published year" maxlength="4" style="width:300px; padding:8px;">
@@ -21,6 +21,7 @@
         <option value="">All Status</option>
         <option value="issued">Issued</option>
         <option value="returned">Returned</option>
+        <option value="overdue">Overdue</option>
     </select>
     <a href="{{ route('overallbook.index') }}" class="btn btn-secondary" >Reset</a>
 </div>

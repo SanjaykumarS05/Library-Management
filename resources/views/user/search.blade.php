@@ -27,7 +27,7 @@
         </div>
     </form>
     <div class="book-results" id="book-results">
-        @include('user.search_results', ['books' => $books])
+        @include('user.partials.search_results', ['books' => $books])
     </div>
 </div>
 @endsection

@@ -14,7 +14,7 @@ class BookrequestController extends Controller
     {
         $userRequests = BookRequest::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(20);
 
         $stats = [
             'pending' => BookRequest::where('user_id', Auth::id())->where('status', 'pending')->count(),
@@ -39,7 +39,7 @@ class BookrequestController extends Controller
 
         $userRequests = BookRequest::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(20);
 
         return view('user.book-request', compact('book', 'stats', 'userRequests'));
     }
