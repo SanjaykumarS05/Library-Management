@@ -1,7 +1,17 @@
 <style>
 /* history.css - Styling for Borrowing History Page */
 
+/* =========================
+   LIGHT MODE (Default)
+========================= */
+
 /* General Styling */
+body {
+    background-color: #f8fafc;
+    color: #1f2937;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -23,12 +33,14 @@
 /* Typography */
 h2.fw-bold {
     font-weight: 700;
-    color: #333;
+    color: #111827;
     margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
 }
 
 .text-muted {
-    color: #6c757d !important;
+    color: #6b7280 !important;
+    transition: color 0.3s ease;
 }
 
 .text-danger {
@@ -43,11 +55,14 @@ h2.fw-bold {
 .card {
     border: none;
     border-radius: 8px;
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
 }
 
 .card:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .shadow-sm {
@@ -61,6 +76,8 @@ h2.fw-bold {
 .card-header {
     padding: 1rem 1.25rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Summary Cards */
@@ -98,21 +115,25 @@ h2.fw-bold {
 
 .card.text-center h5 {
     font-size: 0.9rem;
-    color: #6c757d;
+    color: #6b7280;
     margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
 }
 
 .card.text-center h2 {
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0;
+    color: #111827;
+    transition: color 0.3s ease;
 }
 
 /* Active Loans Section */
 h4 {
     font-weight: 600;
-    color: #333;
+    color: #111827;
     margin-bottom: 1rem;
+    transition: color 0.3s ease;
 }
 
 .col-md-6 {
@@ -140,6 +161,8 @@ h4 {
 .card-body h5.fw-bold {
     font-size: 1.1rem;
     margin-bottom: 0.25rem;
+    color: #111827;
+    transition: color 0.3s ease;
 }
 
 .card-body p.text-muted {
@@ -184,22 +207,25 @@ h4 {
 .table {
     width: 100%;
     margin-bottom: 1rem;
-    color: #212529;
+    color: #1f2937;
     border-collapse: collapse;
+    transition: color 0.3s ease;
 }
 
 .table th,
 .table td {
     padding: 0.75rem;
     vertical-align: top;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid #e5e7eb;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .table thead th {
     vertical-align: bottom;
-    border-bottom: 2px solid #dee2e6;
+    border-bottom: 2px solid #e5e7eb;
     background-color: #f8f9fa;
     font-weight: 600;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .table-light {
@@ -210,30 +236,77 @@ h4 {
     vertical-align: middle !important;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .container {
-        padding: 0 10px;
-    }
-    
-    .card-body {
-        padding: 1rem;
-    }
-    
-    .table {
-        font-size: 0.9rem;
-    }
-    
-    .table th,
-    .table td {
-        padding: 0.5rem;
-    }
+/* =========================
+   DARK MODE
+========================= */
+body.dark-mode {
+    background-color: #0f172a;
+    color: #e2e8f0;
 }
 
-/* Icon styling */
-.bi {
-    margin-right: 0.25rem;
+body.dark-mode h2.fw-bold {
+    color: #f1f5f9;
 }
+
+body.dark-mode .text-muted {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+}
+
+body.dark-mode .card-header {
+    background-color: #1e293b;
+    border-bottom: 1px solid #334155;
+    color: #e2e8f0;
+}
+
+body.dark-mode .card.text-center h5 {
+    color: #cbd5e1;
+}
+
+body.dark-mode .card.text-center h2 {
+    color: #f8fafc;
+}
+
+body.dark-mode h4 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .card-body h5.fw-bold {
+    color: #f1f5f9;
+}
+
+body.dark-mode .table {
+    color: #e2e8f0;
+}
+
+body.dark-mode .table th,
+body.dark-mode .table td {
+    border-top: 1px solid #334155;
+    background-color: #1e293b;
+}
+
+body.dark-mode .table thead th {
+    background-color: #1e293b;
+    border-bottom: 2px solid #334155;
+    color: #e2e8f0;
+}
+
+body.dark-mode .table-light {
+    background-color: #1e293b;
+}
+
+body.dark-mode .border-danger {
+    border: 1px solid #dc3545 !important;
+}
+
+body.dark-mode .border-success {
+    border: 1px solid #198754 !important;
+}
+
 /* =========================
    Pagination Styles
 ========================= */
@@ -278,7 +351,7 @@ h4 {
     border: 1px solid transparent;
 }
 
-/* Page links */
+/* Light Mode Pagination */
 .pagination li a {
     background-color: #f8f9fa;
     color: #3498db;
@@ -292,7 +365,6 @@ h4 {
     transform: translateY(-2px);
 }
 
-/* Active page */
 .pagination li .page-link.active,
 .pagination li .active .page-link {
     background: linear-gradient(45deg, #3498db, #2980b9);
@@ -301,7 +373,6 @@ h4 {
     cursor: default;
 }
 
-/* Disabled pages */
 .pagination li .page-link.disabled,
 .pagination li .disabled .page-link {
     background-color: #f8f9fa;
@@ -319,7 +390,6 @@ h4 {
     transform: none;
 }
 
-/* Previous/Next buttons - Make them arrows */
 .pagination li:first-child a,
 .pagination li:first-child span,
 .pagination li:last-child a,
@@ -328,9 +398,6 @@ h4 {
     font-weight: 700;
 }
 
-
-
-/* Ellipsis */
 .pagination li .page-link:not(.active):not(:hover) {
     background: transparent;
     border: none;
@@ -338,10 +405,57 @@ h4 {
     cursor: default;
 }
 
-/* =========================
-   Responsive Pagination
-========================= */
+/* Dark Mode Pagination */
+body.dark-mode .pagination li a {
+    background-color: #2a2a3f;
+    color: #60a5fa;
+    border: 1px solid #475569;
+}
+
+body.dark-mode .pagination li a:hover {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+body.dark-mode .pagination li .page-link.active,
+body.dark-mode .pagination li .active .page-link {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border: 1px solid #3498db;
+}
+
+body.dark-mode .pagination li .page-link.disabled,
+body.dark-mode .pagination li .disabled .page-link {
+    background-color: #2a2a3f;
+    color: #94a3b8;
+    border: 1px solid #475569;
+}
+
+body.dark-mode .pagination li .page-link:not(.active):not(:hover) {
+    background: transparent;
+    color: #94a3b8;
+}
+
+
 @media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .table {
+        font-size: 0.9rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem;
+    }
+
     .pagination {
         gap: 4px;
     }
@@ -360,6 +474,7 @@ h4 {
     .pagination li:last-child span {
         min-width: 35px;
     }
+
 }
 
 @media (max-width: 480px) {
@@ -383,37 +498,58 @@ h4 {
     }
 }
 
-/* Dark mode pagination */
-body.dark-mode .pagination li a {
-    background-color: #2a2a3f;
-    color: #ddd;
-    border: 1px solid #444;
+/* Icon styling */
+.bi {
+    margin-right: 0.25rem;
 }
 
-body.dark-mode .pagination li a:hover {
-    background-color: #3498db;
-    color: white;
-    border-color: #3498db;
+/* =========================
+   Additional Dark Mode Styles
+========================= */
+body.dark-mode .shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2) !important;
 }
 
-body.dark-mode .pagination li .page-link.active,
-body.dark-mode .pagination li .active .page-link {
-    background: linear-gradient(45deg, #3498db, #2980b9);
-    color: white;
-    border: 1px solid #3498db;
+body.dark-mode .card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-body.dark-mode .pagination li .page-link.disabled,
-body.dark-mode .pagination li .disabled .page-link {
-    background-color: #2a2a3f;
-    color: #888;
-    border: 1px solid #444;
+/* Table row hover effects */
+body.dark-mode .table tbody tr:hover {
+    background-color: #334155;
 }
 
-body.dark-mode .pagination li .page-link:not(.active):not(:hover) {
-    background: transparent;
-    color: #888;
+.table tbody tr:hover {
+    background-color: #f8f9fa;
 }
 
+/* Scrollbar styling for dark mode */
+body.dark-mode ::-webkit-scrollbar {
+    width: 8px;
+}
 
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* Focus states for accessibility */
+button:focus,
+.pagination li a:focus {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+body.dark-mode button:focus,
+body.dark-mode .pagination li a:focus {
+    outline: 2px solid #60a5fa;
+}
 </style>

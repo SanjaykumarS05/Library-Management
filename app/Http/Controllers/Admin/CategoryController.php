@@ -21,14 +21,13 @@ class CategoryController extends Controller
                 $categories->where('description', 'like', "%{$request->search_description}%");
             }
 
-            $categories = $categories->latest()->paginate(25);
+            $categories = $categories->latest()->paginate(10);
             return view('admin.categories_table', compact('categories'))->render();
         }
 
-        $categories = $categories->latest()->paginate(25);
+        $categories = $categories->latest()->paginate(10);
         return view('admin.manage_category', compact('categories', 'allCategories'));
     }
-
 
     public function create()
     {

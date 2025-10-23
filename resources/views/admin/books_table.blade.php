@@ -47,3 +47,8 @@
         @endforelse
     </tbody>
 </table>
+<div class="no-export">
+<div class="pagination-wrapper">
+            {{ $books->links('pagination::bootstrap-5') }}
+</div>
+</div>

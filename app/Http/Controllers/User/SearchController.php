@@ -17,16 +17,18 @@ class SearchController extends Controller
         $query = $request->input('query');
         $category = $request->input('category');
         $availability = $request->input('availability');
-        $userRequests = BookRequest::where('user_id', Auth::id())
+        $userId = Auth::id();
+
+        $userRequests = BookRequest::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
         $categories = Category::all();
-        $books = Book::with('category'); // eager load for efficiency
+        $booksQuery = Book::with('category');
 
-        // Search by title, author, ISBN, or category name
+        // Search by title, author, ISBN, publish year, category
         if ($query) {
-            $books->where(function($q) use ($query) {
+            $booksQuery->where(function ($q) use ($query) {
                 $q->where('title', 'LIKE', "%{$query}%")
                   ->orWhere('author', 'LIKE', "%{$query}%")
                   ->orWhere('isbn', 'LIKE', "%{$query}%")
@@ -37,26 +39,53 @@ class SearchController extends Controller
 
         // Filter by category
         if ($category) {
-            $books->whereHas('category', fn($q) => $q->where('name', $category));
+            $booksQuery->whereHas('category', fn($q) => $q->where('name', $category));
         }
 
         // Filter by availability
         if ($availability) {
-            $books->where('stock', $availability === 'Yes' ? '>' : '=', 0);
+            $booksQuery->where('stock', $availability === 'Yes' ? '>' : '=', 0);
         }
 
-        $books = $books->get();
+        $books = $booksQuery->get();
 
-        // ✅ Mark whether the current user has already borrowed this book
-        $userId = Auth::id();
+        // --- Check each book's status for the current user ---
         foreach ($books as $book) {
+            // Currently borrowed
             $book->is_issued = Book_issue::where('book_id', $book->id)
                 ->where('user_id', $userId)
-                ->where('status', 'Issued')
+                ->whereIn('status', ['Issued','Overdue'])
                 ->exists();
+
+            $book->available_stock = $book->stock ?? 0;
+
+            // Latest request
+            $latestRequest = BookRequest::where('user_id', $userId)
+                ->where('book_id', $book->id)
+                ->latest()
+                ->first();
+
+            if ($book->is_issued) {
+                $book->can_request = false;
+                $book->request_message = 'Currently borrowed';
+            } elseif ($latestRequest) {
+                if ($latestRequest->status === 'rejected') {
+                    $book->can_request = true;
+                    $book->request_message = '';
+                } elseif ($latestRequest->status === 'pending') {
+                    $book->can_request = false;
+                    $book->request_message = 'Pending approval';
+                } elseif ($latestRequest->status === 'approved') {
+                    $book->can_request = false;
+                    $book->request_message = 'Already approved';
+                }
+            } else {
+                $book->can_request = true;
+                $book->request_message = '';
+            }
         }
 
-        // Return AJAX partial
+        // AJAX response
         if ($request->ajax()) {
             return view('user.partials.search_results', compact('books'))->render();
         }

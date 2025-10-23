@@ -21,7 +21,7 @@ class OverallbookController extends Controller
         $issuedbook = Book_issue::where('status', 'issued')->count();
         $totalBooks = Book_issue::count();
 
-        $book_issues = Book_issue::with(['book.category', 'user'])->latest()->get();
+        $book_issues = Book_issue::with(['book.category', 'user'])->latest()->paginate(50);
         $book_issues_count = $book_issues->count();
 
         $barcodes = $this->prepareBarcodeData($book_issues);
@@ -77,7 +77,7 @@ class OverallbookController extends Controller
                 $q->where('status', $status);
             })
             ->latest()
-            ->get();
+            ->paginate(50);
 
         $barcodes = $this->prepareBarcodeData($book_issues);
         $countOnPage = $book_issues->count();

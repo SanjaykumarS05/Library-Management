@@ -13,7 +13,7 @@
         <div class="stat-card">
             <div class="stat-icon">📚</div>
             <div class="stat-content">
-                <h3 class="stat-number">2</h3>
+                <h3 class="stat-number">{{ $readingBook }}</h3>
                 <p class="stat-label">Reading</p>
             </div>
         </div>

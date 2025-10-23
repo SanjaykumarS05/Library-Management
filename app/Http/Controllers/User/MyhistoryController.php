@@ -24,7 +24,8 @@ class MyhistoryController extends Controller
 
         // Compute counts
         $currentlyBorrowed = $allIssues->where('status', 'Issued')->count();
-
+        $allIssues = Book_issue::where('user_id', $user->id)->get();
+        $overalldue = $allIssues->where('status', 'Overdue')->count();
         $overdue = $allIssues->filter(function ($issue) {
             $dueDate = Carbon::parse($issue->issue_date)->addDays(15);
             return $issue->status === 'Overdue' && now()->greaterThan($dueDate);
@@ -38,7 +39,8 @@ class MyhistoryController extends Controller
             'currentlyBorrowed',
             'overdue',
             'returned',
-            'totalHistory'
+            'totalHistory',
+            'overalldue'
         ));
     }
 }

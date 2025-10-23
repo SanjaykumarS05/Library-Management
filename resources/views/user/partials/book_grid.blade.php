@@ -13,21 +13,23 @@
                 <span class="book-tag">{{ $book->publish_year ?? '' }}</span>
             </div>
         </div>
-        <div class="book-footer">
+       <div class="book-footer">
             <p>{{ $book->available_stock }} available</p>
+
             @if($book->is_issued)
                 <button class="borrow-btn" disabled>Currently Borrowed</button>
             @elseif($book->stock == 0)
-            <button class="borrow-btn" disabled>❌ Book Unavailable</button>
+                <button class="borrow-btn" disabled>❌ Book Unavailable</button>
+            @elseif(isset($book->can_request) && !$book->can_request)
+                <button class="borrow-btn" disabled> {{ $book->request_message }}</button>
             @else
                 <button class="borrow-btn" onclick="window.location.href='{{ route('user.book.request', $book->id) }}'">
-                Request Book
-            </button>
+                    Request Book
+                </button>
             @endif
         </div>
     </div>
     @endforeach
-    
     @if($books->isEmpty())
         <div class="no-books">
             <p>No books found matching your criteria.</p>

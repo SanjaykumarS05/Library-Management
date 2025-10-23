@@ -18,7 +18,7 @@
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="card shadow-sm p-3 text-center">
                 <h5>Overdue</h5>
-                <h2 class="text-danger">{{ $overdue }}</h2>
+                <h2 class="text-danger">{{ $overalldue }}</h2>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
@@ -53,7 +53,6 @@
                         <p class="text-muted">{{ $issue->book->author ?? 'Unknown Author' }}</p>
                         <p>📅 Borrowed: {{ $issueDate->format('M d, Y') }}</p>
                         <p>📆 Due: {{ $dueDate->format('M d, Y') }}</p>
-
                         @if($overdueDays > 0)
                             <span class="badge bg-danger">Overdue by {{ $overdueDays }} days</span>
                         @else
@@ -65,7 +64,6 @@
         @endforeach
     </div>
     @endif
-
     {{-- Complete History --}}
     <div class="card shadow-sm mt-4">
         <div class="card-body">

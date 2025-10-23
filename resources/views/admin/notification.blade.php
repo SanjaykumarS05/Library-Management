@@ -7,76 +7,71 @@
 @endsection
 
 @section('content')
-<h1>📩 Notifications</h1>
-
-<div class="setting-toggle">
-    <label><input type="checkbox" id="toggle-requests" checked> Book Requests</label>
-    <label><input type="checkbox" id="toggle-received"> Received Emails</label>
-    <label><input type="checkbox" id="toggle-sent"> Sent Notifications</label>
-</div>
+<h1>📩 Book Requests</h1>
 
 <div class="container setting" id="dynamic-section">
-    {{-- Dynamic content will load here --}}
+    <h3>Book Requests</h3>
+
+    @if($bookRequests->isEmpty())
+        <p>No book requests found.</p>
+    @else
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>User Name</th>
+                    <th>Book Title</th>
+                    <th>Comments</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($bookRequests as $request)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $request->user->name ?? 'N/A' }}</td>
+                    <td>{{ $request->book->title ?? 'N/A' }}</td>
+                    <td>{{ $request->Comments ?? 'N/A' }}</td>
+                    <td>
+                        <form method="post" action="{{ route('bookrequests.updateStatus', $request->id) }}" class="status-form">
+                            @csrf
+                            <select name="status" class="status-select">
+                                @foreach($statusOptions as $status)
+                                    <option value="{{ $status }}" {{ $request->status === $status ? 'selected' : '' }}>
+                                        {{ ucfirst($status) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 </div>
-@endsection
 
-@section('scripts')
+{{-- ✅ Confirmation Script --}}
 <script>
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.status-select').forEach(function(select) {
+        select.addEventListener('change', function() {
+            const selected = this.value.toLowerCase();
 
-    // CSRF Setup
-    $.ajaxSetup({
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-    });
-
-    function loadSection(data) {
-        $.ajax({
-            url: "{{ route('notification.dynamic') }}",
-            method: 'POST',
-            data: data,
-            success: function(response) {
-                $('#dynamic-section').html(response.html);
-            },
-            error: function() {
-                toastr.error('Something went wrong!');
+            if (selected === 'rejected') {
+                const confirmReject = confirm('Are you sure you want to reject this book request?');
+                if (!confirmReject) {
+                    // Reset the dropdown to previous value
+                    this.selectedIndex = [...this.options].findIndex(o => o.defaultSelected);
+                    return;
+                }
             }
+
+            // Submit the form if not cancelled
+            this.form.submit();
         });
-    }
-
-    // Initially load Book Requests
-    loadSection({ book_requests: true });
-
-    function toggleCheckbox(current) {
-        $('#toggle-requests, #toggle-received, #toggle-sent').not(current).prop('checked', false);
-    }
-
-    $('#toggle-requests').on('change', function() {
-        if(this.checked){
-            toggleCheckbox(this);
-            loadSection({ book_requests: true });
-        } else {
-            $('#dynamic-section').html('');
-        }
     });
-
-    $('#toggle-received').on('change', function() {
-        if(this.checked){
-            toggleCheckbox(this);
-            loadSection({ received_emails: true });
-        } else {
-            $('#dynamic-section').html('');
-        }
-    });
-
-    $('#toggle-sent').on('change', function() {
-        if(this.checked){
-            toggleCheckbox(this);
-            loadSection({ sent_notifications: true });
-        } else {
-            $('#dynamic-section').html('');
-        }
-    });
-
 });
 </script>
+
 @endsection

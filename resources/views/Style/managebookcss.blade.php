@@ -221,6 +221,186 @@ td.Unavailable {
         max-width: 80px;
     }
 }
+/* =========================
+   Pagination Styles
+========================= */
+.pagination-wrapper {
+    margin-top: 25px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.pagination {
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination li {
+    display: inline-block;
+    margin: 0;
+}
+
+.pagination li a,
+.pagination li span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+/* Page links */
+.pagination li a {
+    background-color: #f8f9fa;
+    color: #3498db;
+    border: 1px solid #dee2e6;
+}
+
+.pagination li a:hover {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+    transform: translateY(-2px);
+}
+
+/* Active page */
+.pagination li .page-link.active,
+.pagination li .active .page-link {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border: 1px solid #3498db;
+    cursor: default;
+}
+
+/* Disabled pages */
+.pagination li .page-link.disabled,
+.pagination li .disabled .page-link {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.pagination li .page-link.disabled:hover,
+.pagination li .disabled .page-link:hover {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border-color: #dee2e6;
+    transform: none;
+}
+
+/* Previous/Next buttons - Make them arrows */
+.pagination li:first-child a,
+.pagination li:first-child span,
+.pagination li:last-child a,
+.pagination li:last-child span {
+    min-width: 40px;
+    font-weight: 700;
+}
+
+
+
+/* Ellipsis */
+.pagination li .page-link:not(.active):not(:hover) {
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    cursor: default;
+}
+
+/* =========================
+   Responsive Pagination
+========================= */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 4px;
+    }
+    
+    .pagination li a,
+    .pagination li span {
+        min-width: 35px;
+        height: 35px;
+        padding: 0 8px;
+        font-size: 13px;
+    }
+    
+    .pagination li:first-child a,
+    .pagination li:first-child span,
+    .pagination li:last-child a,
+    .pagination li:last-child span {
+        min-width: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination {
+        gap: 2px;
+    }
+    
+    .pagination li a,
+    .pagination li span {
+        min-width: 32px;
+        height: 32px;
+        padding: 0 6px;
+        font-size: 12px;
+    }
+    
+    .pagination li:first-child a,
+    .pagination li:first-child span,
+    .pagination li:last-child a,
+    .pagination li:last-child span {
+        min-width: 32px;
+    }
+}
+
+/* Dark mode pagination */
+body.dark-mode .pagination li a {
+    background-color: #2a2a3f;
+    color: #ddd;
+    border: 1px solid #444;
+}
+
+body.dark-mode .pagination li a:hover {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+body.dark-mode .pagination li .page-link.active,
+body.dark-mode .pagination li .active .page-link {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border: 1px solid #3498db;
+}
+
+body.dark-mode .pagination li .page-link.disabled,
+body.dark-mode .pagination li .disabled .page-link {
+    background-color: #2a2a3f;
+    color: #888;
+    border: 1px solid #444;
+}
+
+body.dark-mode .pagination li .page-link:not(.active):not(:hover) {
+    background: transparent;
+    color: #888;
+}
 
 /* =========================
    Dark Theme
@@ -272,4 +452,15 @@ body.dark-mode .h2 {
     color: #fff;
 }
 
+body.dark-mode .search-form input[type="text"],
+body.dark-mode .search-form select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 180px;
+    background-color: #2a2a3f;
+    transition: all 0.3s ease;
+    color: #eee;
+}
 </style>

@@ -5,7 +5,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Actions</th> 
+            <th class="no-export">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -15,7 +15,7 @@
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->role }}</td>
-            <td>
+            <td class="no-export">
                 @if($user->id !== Auth::id())
                 <a href="{{ route('users.edit', $user->id) }}">Edit</a>
                 <form action="{{ route('users.delete', $user->id) }}" method="POST" style="display:inline;">
@@ -35,3 +35,9 @@
         @endforelse
     </tbody>   
 </table>
+<div class="no-export">
+<div class="pagination-wrapper" >
+            {{ $users->links('pagination::bootstrap-5') }}
+</div>
+
+</div>

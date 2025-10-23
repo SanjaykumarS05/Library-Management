@@ -152,7 +152,7 @@
             </tbody>
         </table>
     </div>
-    <div class="pagination-wrapper" style="margin-top: 20px; text-align: center;">
+    <div class="pagination-wrapper" >
             {{ $bookIssues->links('pagination::bootstrap-5') }}
     </div>
 </div>

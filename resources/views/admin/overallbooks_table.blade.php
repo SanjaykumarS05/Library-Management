@@ -9,6 +9,7 @@
         <p><strong>Issued By:</strong> {{ $item['issued_name'] }} ({{ $item['issue_role'] }})</p>
         <p><strong>Issued To:</strong> {{ $item['user_name'] }}</p>
         <p><strong>Issue Date:</strong> {{ $item['issue_date']->format('Y-m-d') }}</p>
+        <p><strong>Due Date:</strong> {{ $item['issue_date']->addDay(15)->format('Y-m-d') }}</p>
         <p><strong>Return Date:</strong> {{ $item['return_date'] ?? '-' }}</p>
         <p><strong>Status:</strong> {{ $item['status'] }}</p>
         <span class="barcode1">{!! $item['barcode'] !!}</span>

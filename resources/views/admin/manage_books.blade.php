@@ -36,15 +36,18 @@
 @endsection
 
 @section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    function fetchBooks() {
+
+    // ✅ Fetch books via AJAX (used for search/filter/pagination)
+    function fetchBooks(url = "{{ route('books') }}") {
         let query = $('#search').val();
         let category = $('#category').val();
         let availability = $('#availability').val();
 
         $.ajax({
-            url: "{{ route('books') }}",
+            url: url,
             type: 'GET',
             data: { search: query, category: category, availability: availability },
             success: function(response) {
@@ -56,8 +59,18 @@ $(document).ready(function() {
         });
     }
 
-    // Trigger AJAX on search input or filter change
-    $('#search, #category, #availability').on('keyup change', fetchBooks);
+    // ✅ Trigger on search/filter
+    $('#search, #category, #availability').on('keyup change', function() {
+        fetchBooks();
+    });
+
+    // ✅ Handle pagination clicks (inside ready)
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        fetchBooks(url);
+    });
+
 });
 </script>
 @endsection

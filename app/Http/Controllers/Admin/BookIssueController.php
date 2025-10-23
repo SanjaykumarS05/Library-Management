@@ -20,10 +20,8 @@ class BookIssueController extends Controller
         $books = Book::all();
         $book_issues = Book_issue::where('user_id', Auth::id())->get();
         $book_issues1 = Book_issue::where('status', 'Issued')->get();
-
         return view('admin.issue_return', compact('books', 'book_issues', 'users', 'book_issues1'));
     }
-
     
     public function issueBook(Request $request)
     {
@@ -40,7 +38,7 @@ class BookIssueController extends Controller
             ->whereHas('book', function ($query) use ($book) {
                 $query->where('isbn', $book->isbn);
             })
-            ->where('status', 'Issued')
+            ->where('status', ['Issued','Overdue'])
             ->exists();
 
         if ($alreadyIssued) {
@@ -62,6 +60,15 @@ class BookIssueController extends Controller
         $book->decrement('stock');
         $book->update(['availability' => $book->stock > 0 ? 'Yes' : 'No']);
 
+         // ✅ Update book_requests table → set to "approved"
+        $bookRequest = \App\Models\BookRequest::where('book_id', $book->id)
+            ->where('user_id', $request->user_id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($bookRequest) {
+            $bookRequest->update(['status' => 'approved']);
+        }
         return redirect()->route('barcode.index')->with('success', 'Book issued successfully!');
     }
 
@@ -100,14 +107,15 @@ class BookIssueController extends Controller
         return redirect()->route('barcode.index')->with('success', 'Book returned successfully!');
     }
 
-    public function issueReturn($bookId = null)
+    public function issueReturn($bookId = null, $userId = null)
     {
         $users = User::all();
         $books = Book::all();
         $book_issues1 = Book_issue::where('status', 'Issued')->get();
 
         $selectedBook = $bookId ? Book::find($bookId) : null;
+        $selectedUser = $userId ? User::find($userId) : null;
 
-        return view('admin.issue_return', compact('users', 'books', 'book_issues1', 'selectedBook'));
+        return view('admin.issue_return', compact('users', 'books', 'book_issues1', 'selectedBook', 'selectedUser'));
     }
 }

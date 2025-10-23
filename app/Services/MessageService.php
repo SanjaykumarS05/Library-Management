@@ -13,7 +13,6 @@ class MessageService
     {
         try {
             $user = User::findOrFail($data['recipient_id']);
-
             $user->notify(new MailNotification($data));
             email_log::create([
                 'recipient_id' => $user->id,

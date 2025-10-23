@@ -5,37 +5,38 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\bookrequest as BookRequest;
 use App\Models\email_log as EmailLog;
+use App\Models\User;
+use App\Models\books;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    public function index()
-    {
-        return view('admin.notification'); // initial blade, content loaded via AJAX
+ public function index()
+{
+    $bookRequests = BookRequest::whereIn('status', ['pending', 'approved'])
+        ->with('user')
+        ->orderBy('created_at', 'desc')
+        ->paginate(20);
+    $statusOptions = ['pending', 'approved', 'rejected'];
+    return view('admin.notification', compact('bookRequests', 'statusOptions'));
+}
+public function updateStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:pending,approved,rejected',
+    ]);
+
+    $bookRequest =bookrequest::findOrFail($id);
+    $bookRequest->status = $request->status;
+
+    if ($request->status === 'approved') {
+        return redirect()->route('notification.issue_return1', [
+            $bookRequest->book_id,
+            $bookRequest->user_id
+        ])->with('success', 'Ready to issue.');
     }
 
-    public function dynamic(Request $request)
-    {
-        $html = '';
+    return back()->with('success', 'tatus updated successfully.');
+}
 
-        // ===== Book Requests =====
-        if ($request->has('book_requests')) {
-            $bookRequests = BookRequest::with('user', 'book')->latest()->get();
-            $html .= view('admin.partials.book_requests', compact('bookRequests'))->render();
-        }
-
-        // ===== Received Emails =====
-        if ($request->has('received_emails')) {
-            $emails = EmailLog::where('status', 'received')->latest()->take(10)->get();
-            $html .= view('admin.partials.received_emails', compact('emails'))->render();
-        }
-
-        // ===== Sent Notifications =====
-        if ($request->has('sent_notifications')) {
-            $sentNotifications = EmailLog::where('status', 'sent')->latest()->take(10)->get();
-            $html .= view('admin.partials.sent_notifications', compact('sentNotifications'))->render();
-        }
-
-        return response()->json(['html' => $html]);
-    }
 }
