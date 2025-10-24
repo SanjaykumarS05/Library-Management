@@ -7,9 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class MailNotification extends Notification implements ShouldQueue
+class BookNotification extends Notification
 {
     use Queueable;
+
     protected $data;
 
     public function __construct(array $data)
@@ -17,29 +18,48 @@ class MailNotification extends Notification implements ShouldQueue
         $this->data = $data;
     }
 
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        return ['mail'];
     }
 
+    /**
+     * Get the mail representation of the notification.
+     */
     public function toMail($notifiable)
-    {
+        {
         $type = trim($this->data['type'] ?? 'a notification');
         $message = trim($this->data['message'] ?? '');
+        $dueDate = $this->data['due_date'] ?? null; // use lowercase key
 
-        return (new MailMessage)
+        $mail = (new MailMessage)
             ->subject($this->data['subject'] ?? 'Library Notification')
             ->greeting('Hello ' . ($this->data['name'] ?? 'User'))
-            ->line("This is {$type} from the Library Management System.")
-            ->line($message)
-            ->line('Thank you for using our system!');
-    }
+            ->line("This is {$type} Notification from the Library Management System.")
+            ->line($message);
 
+        if ($dueDate) {
+            $mail->line("Due Date: {$dueDate}");
+        }
+
+        return $mail->line('Thank you for using our system!');
+        }
+
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray(object $notifiable): array
     {
         return [
-            'recipient_id' => $this->data['recipient_id'] ?? null,
-            'message' => $this->data['message'] ?? null,
+            //
         ];
     }
 }

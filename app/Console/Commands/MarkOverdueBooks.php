@@ -31,7 +31,7 @@ class MarkOverdueBooks extends Command
 
         // Find all issued books where issued date + 15 days < today
         $overdueBooks = Book_issue::where('status', 'Issued')
-            ->whereDate('issue_date', '<=', $today->subDays(15))
+            ->whereDate('issue_date', '<', $today->subDays(15))
             ->get();
 
         foreach ($overdueBooks as $issue) {

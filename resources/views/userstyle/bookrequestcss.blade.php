@@ -188,7 +188,7 @@
     }
 
     .requests-table th {
-        background: #f8f9fa;
+        background: #71a7ddff;
         padding: 1rem;
         text-align: left;
         font-weight: 600;
@@ -207,7 +207,7 @@
     }
 
     .requests-table tbody tr:hover {
-        background-color: #f8f9fa;
+        background-color: #dbe3ebff;
     }
 
     .book-title {
@@ -252,6 +252,11 @@
     .status-approved {
         background: #d1edff;
         color: #004085;
+        font-weight: 700;
+    }
+    .status-returned {
+        background: #d1edff;
+        color: #218500ff;
         font-weight: 700;
     }
 
@@ -362,7 +367,7 @@
     }
 
     body.dark-mode .requests-table th {
-        background: #2d2d44;
+        background: #71a7ddff;
         color: #ffffff;
         border-bottom: 2px solid #3a3a4f;
     }

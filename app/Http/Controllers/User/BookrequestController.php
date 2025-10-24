@@ -16,6 +16,7 @@ class BookrequestController extends Controller
         $userRequests = BookRequest::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->paginate(20);
+        
         $bookIssues = Book_issue::where('user_id', Auth::id())->get();
         $readingBook = $bookIssues->whereIn('status', ['Issued','Overdue'])->count();
         $stats = [

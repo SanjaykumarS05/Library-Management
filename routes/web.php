@@ -129,7 +129,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
     Route::post('/admin/notifications/send', [AdminNotificationController::class, 'store'])->name('notification.store');
-    Route::post('/admin/notifications/dynamic', [AdminNotificationController::class, 'dynamic'])->name('notification.dynamic');
+    Route::post('/admin/notifications/dynamic', [AdminNotificationController::class, 'sendNotification'])->name('admin.sendEmail');
     Route::get('/books/issue-return/{book}/{user}', [AdminBookIssueController::class, 'issueReturn'])->name('notification.issue_return1');
     Route::post('/book-requests/{id}/update-status', [AdminNotificationController::class, 'updateStatus'])->name('bookrequests.updateStatus');
 

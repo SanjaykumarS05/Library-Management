@@ -72,6 +72,9 @@ class SearchController extends Controller
                 if ($latestRequest->status === 'rejected') {
                     $book->can_request = true;
                     $book->request_message = '';
+                } elseif ($latestRequest->status === 'returned') {
+                    $book->can_request = true;
+                    $book->request_message = '';
                 } elseif ($latestRequest->status === 'pending') {
                     $book->can_request = false;
                     $book->request_message = 'Pending approval';

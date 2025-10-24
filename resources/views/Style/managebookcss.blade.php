@@ -108,6 +108,7 @@ table {
 
 thead {
     background-color: #007bff;
+     text-transform: uppercase;
     color: #fff;
 }
 

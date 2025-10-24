@@ -146,6 +146,7 @@ table.table th, table.table td {
 table.table th {
     background-color: #3498db;
     color: #fff;
+    text-transform: uppercase;
     font-weight: 700;
     cursor: pointer;
 }

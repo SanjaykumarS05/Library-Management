@@ -126,6 +126,8 @@
                                             Approved
                                         @elseif($request->status === 'rejected')
                                             Rejected
+                                        @elseif($request->status === 'returned')
+                                            Returned
                                         @else
                                             Pending
                                         @endif

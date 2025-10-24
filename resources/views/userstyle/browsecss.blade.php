@@ -353,7 +353,7 @@ body.dark-mode .book-footer p {
 }
 
 body.dark-mode .borrow-btn {
-    background-color: #f8fafc;
+    background-color: #111827
     color: #111827;
 }
 
