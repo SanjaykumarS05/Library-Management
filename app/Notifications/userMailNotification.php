@@ -7,9 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class MailNotification extends Notification implements ShouldQueue
+class userMailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+
     protected $data;
 
     public function __construct(array $data)
@@ -24,14 +25,11 @@ class MailNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        $type = trim($this->data['type'] ?? 'a notification');
-        $message = trim($this->data['message'] ?? '');
-
         return (new MailMessage)
-            ->subject($this->data['subject'] ?? 'Library Notification')
+            ->subject($this->data['subject'] ?? 'User Notification')
             ->greeting('Hello ' . ($this->data['name'] ?? 'User'))
-            ->line("This is {$type}")
-            ->line($message)
+            ->line("This is {$this->data['type']}")
+            ->line($this->data['message'])
             ->line('Thank you for using our system!');
     }
 
@@ -39,9 +37,9 @@ class MailNotification extends Notification implements ShouldQueue
     {
         return [
             'recipient_id' => $this->data['recipient_id'] ?? null,
-            'message' => $this->data['message'] ?? null,
-            'type' => $this->data['type'] ?? null,
-            'subject' => $this->data['subject'] ?? null,
+            'message'      => $this->data['message'] ?? null,
+            'type'         => $this->data['type'] ?? null,
+            'subject'      => $this->data['subject'] ?? null,
         ];
     }
 }

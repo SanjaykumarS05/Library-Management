@@ -34,6 +34,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(BookRequest::class);
     }
+    public function emailLogs()
+    {
+        return $this->hasMany(email_log::class, 'sender_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

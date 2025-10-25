@@ -288,6 +288,232 @@
 #sent-section {
     transition: all 0.3s ease-in-out;
 }
+/* =========================
+   Pagination Styles
+========================= */
+.pagination-wrapper {
+    margin-top: 25px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.pagination {
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination li {
+    display: inline-block;
+    margin: 0;
+}
+
+.pagination li a,
+.pagination li span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+/* Page links */
+.pagination li a {
+    background-color: #f8f9fa;
+    color: #3498db;
+    border: 1px solid #dee2e6;
+}
+
+.pagination li a:hover {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+    transform: translateY(-2px);
+}
+
+/* Active page */
+.pagination li .page-link.active,
+.pagination li .active .page-link {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border: 1px solid #3498db;
+    cursor: default;
+}
+
+/* Disabled pages */
+.pagination li .page-link.disabled,
+.pagination li .disabled .page-link {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.pagination li .page-link.disabled:hover,
+.pagination li .disabled .page-link:hover {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border-color: #dee2e6;
+    transform: none;
+}
+
+/* Previous/Next buttons - Make them arrows */
+.pagination li:first-child a,
+.pagination li:first-child span,
+.pagination li:last-child a,
+.pagination li:last-child span {
+    min-width: 40px;
+    font-weight: 700;
+}
+
+
+
+/* Ellipsis */
+.pagination li .page-link:not(.active):not(:hover) {
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    cursor: default;
+}
+
+/* =========================
+   Responsive Pagination
+========================= */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 4px;
+    }
+    
+    .pagination li a,
+    .pagination li span {
+        min-width: 35px;
+        height: 35px;
+        padding: 0 8px;
+        font-size: 13px;
+    }
+    
+    .pagination li:first-child a,
+    .pagination li:first-child span,
+    .pagination li:last-child a,
+    .pagination li:last-child span {
+        min-width: 35px;
+    }
+}
+.text-success {
+    color: #155724;              /* Darker green text for professionalism */
+    font-weight: 600;             /* Bold */
+    background-color: #d4edda;    /* Soft, muted green background */
+    padding: 4px 10px;            /* Slightly larger padding for balance */
+    border-radius: 12px;          /* Smooth rounded corners */
+    font-size: 0.95rem;           /* Slightly bigger, readable font */
+    display: inline-block;
+    border: 1px solid #c3e6cb;   /* Subtle border for better separation */
+    transition: all 0.3s ease;    /* Smooth hover effect */
+}
+
+/* Optional hover effect */
+.text-success:hover {
+    background-color: #c3e6cb;
+    color: #0b2e13;
+    cursor: default;
+}
+
+.status-select {
+    padding: 6px 12px;                /* Comfortable padding */
+    font-size: 0.95rem;               /* Readable text */
+    font-weight: 500;                 /* Slightly bold text */
+    color: #333;                      /* Dark text for readability */
+    background-color: #f8f9fa;        /* Light gray background */
+    border: 1px solid #ced4da;        /* Subtle border */
+    border-radius: 6px;               /* Smooth rounded corners */
+    outline: none;                    /* Remove default outline */
+    transition: all 0.3s ease;        /* Smooth hover/focus effect */
+    min-width: 120px;                 /* Prevent shrinking too small */
+    cursor: pointer;                  /* Pointer cursor on hover */
+}
+
+/* Hover effect */
+.status-select:hover {
+    border-color: #80bdff;            /* Light blue border on hover */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25); /* Subtle shadow */
+}
+
+/* Focus effect */
+.status-select:focus {
+    border-color: #007bff;            /* Highlight on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    background-color: #fff;            /* White background on focus */
+}
+
+@media (max-width: 480px) {
+    .pagination {
+        gap: 2px;
+    }
+    
+    .pagination li a,
+    .pagination li span {
+        min-width: 32px;
+        height: 32px;
+        padding: 0 6px;
+        font-size: 12px;
+    }
+    
+    .pagination li:first-child a,
+    .pagination li:first-child span,
+    .pagination li:last-child a,
+    .pagination li:last-child span {
+        min-width: 32px;
+    }
+}
+
+/* Dark mode pagination */
+body.dark-mode .pagination li a {
+    background-color: #2a2a3f;
+    color: #ddd;
+    border: 1px solid #444;
+}
+
+body.dark-mode .pagination li a:hover {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+body.dark-mode .pagination li .page-link.active,
+body.dark-mode .pagination li .active .page-link {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border: 1px solid #3498db;
+}
+
+body.dark-mode .pagination li .page-link.disabled,
+body.dark-mode .pagination li .disabled .page-link {
+    background-color: #2a2a3f;
+    color: #888;
+    border: 1px solid #444;
+}
+
+body.dark-mode .pagination li .page-link:not(.active):not(:hover) {
+    background: transparent;
+    color: #888;
+}
+
 
 /* ==============================
    DARK THEME

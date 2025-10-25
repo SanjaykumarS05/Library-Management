@@ -25,7 +25,7 @@
                     <input type="text" name="query" id="searchBox" placeholder="Search">
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
-                <a href="{{ route('notifications') }}"><span class="material-icons">notifications</span></a>
+                <a href="{{ route('user.notifications') }}"><span class="material-icons">notifications</span></a>
                 <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
                     <span class="material-icons">
                         {{ (Auth::user()->profile->theme ?? 'light') === 'dark' ? 'light_mode' : 'dark_mode' }}
@@ -180,7 +180,7 @@
                 } else if(query.includes("settings")) {
                     url = "{{ route('user.settings') }}";
                 } else if(query.includes("notification")) {
-                    url = "{{ route('notifications') }}";
+                    url = "{{ route('user.notifications') }}";
                 }
                 // Redirect to the chosen URL with the query as GET parameter if needed
                 window.location.href = url + (url === "{{ route('user.search') }}" ? "?query=" + encodeURIComponent(query) : "");

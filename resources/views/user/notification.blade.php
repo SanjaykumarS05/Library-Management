@@ -1,4 +1,4 @@
-@extends('layout.template')
+@extends('layout.usertemplate')
 @section('title', 'Notifications')
 @include('userstyle.notificationcss')
 
@@ -7,66 +7,12 @@
 
 {{-- SECTION TOGGLES --}}
 <div class="setting-toggle">
-    <label><input type="checkbox" id="toggle-book" checked> Book Requests</label>
-    <label><input type="checkbox" id="toggle-received"> Received Notifications</label>
-    <label><input type="checkbox" id="toggle-send"> Send Notifications</label>
+    <label><input type="checkbox" id="toggle-received" checked> Received Notifications</label>
+    <label><input type="checkbox" id="toggle-send"> Send Notification</label>
     <label><input type="checkbox" id="toggle-sent-logs"> Sent Logs</label>
 </div>
 
 <div class="container setting">
-
-    {{-- BOOK REQUESTS SECTION --}}
-    <div id="book-section" style="display:none;">
-        <h3>Book Requests</h3>
-        <div id="book-content">
-            @if($bookRequests->isEmpty())
-                <p>No book requests found.</p>
-            @else
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>User Name</th>
-                            <th>Book Title</th>
-                            <th>ISBN</th>
-                            <th>Comments</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($bookRequests as $request)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $request->user->name ?? 'N/A' }}</td>
-                            <td>{{ $request->book->title ?? 'N/A' }}</td>
-                            <td>{{ $request->book->isbn ?? 'N/A' }}</td>
-                            <td>{{ $request->Comments ?? 'N/A' }}</td>
-                            <td>
-                                @if($request->status === 'approved')
-                                    <span class="text-success font-weight-bold">Approved</span>
-                                @else
-                                    <form method="post" action="{{ route('bookrequests.updateStatus', $request->id) }}">
-                                        @csrf
-                                        <select name="status" class="status-select">
-                                            @foreach($statusOptions as $status)
-                                                <option value="{{ $status }}" {{ $request->status === $status ? 'selected' : '' }}>
-                                                    {{ ucfirst($status) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </form>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
-            <div class="pagination-wrapper mt-4">
-                {{ $bookRequests->appends(['section' => 'book'])->links('pagination::bootstrap-5') }}
-            </div>
-        </div>
-    </div>
 
     {{-- RECEIVED NOTIFICATIONS --}}
     <div id="received-section" style="display:none;">
@@ -82,7 +28,7 @@
                             <th>Subject</th>
                             <th>Type</th>
                             <th>Message</th>
-                            <th>Received At</th>
+                            <th>Sent At</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,33 +45,24 @@
                 </table>
             @endif
             <div class="pagination-wrapper mt-4">
-                {{ $logs->appends(['section' => 'received'])->links('pagination::bootstrap-5') }}
+                {{ $logs->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
 
-    {{-- SEND NOTIFICATIONS --}}
+    {{-- SEND NOTIFICATION --}}
     <div id="send-section" style="display:none;">
         <h3>Send Notification</h3>
-        <form id="send-email-form" method="POST" action="{{ route('admin.sendEmail') }}">
+        <form id="send-email-form" method="POST" action="{{ route('user.sendEmail') }}">
             @csrf
-            <label for="recipient">Recipient:</label>
-            <select id="recipient" name="recipient_id" required>
-                <option value="">Select a user</option>
-                <option value="all">All Users</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                @endforeach
-            </select>
 
             <label for="subject">Subject:</label>
             <input type="text" name="subject" id="subject" required>
 
             <label for="type">Type:</label>
-            <select id="type" name="type" required>
-                <option value="offers">Offers</option>
-                <option value="updates">Updates</option>
-                <option value="alerts">Alerts</option>
+            <select id="type" name="type">
+                <option value="feedback">Feedback</option>
+                <option value="suggestions">Suggestions</option>
                 <option value="other">Other</option>
             </select>
 
@@ -136,6 +73,7 @@
 
             <label for="message">Message:</label>
             <textarea id="message" name="message" rows="4" required></textarea>
+
             <button type="submit" id="send-email-btn">Send Email</button>
         </form>
     </div>
@@ -171,34 +109,31 @@
                 </table>
             @endif
             <div class="pagination-wrapper mt-4">
-                {{ $sentLogs->appends(['section' => 'sentlogs'])->links('pagination::bootstrap-5') }}
+                {{ $sentLogs->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
 
 </div>
-
 @endsection
 
 @section('scripts')
 <script>
 $(document).ready(function() {
     // Track current active section
-    let currentSection = 'book';
+    let currentSection = 'received';
     
-    // Show book section by default
-    $('#book-section').show();
-    $('#toggle-book').prop('checked', true);
+    $('#received-section').show();
+    $('#toggle-received').prop('checked', true);
     
     // ===== TOGGLE SECTIONS =====
     function showOnly(section) {
-        $('#book-section, #received-section, #send-section, #sent-logs-section').slideUp();
+        $('#received-section, #send-section, #sent-logs-section').slideUp();
         $(section).slideDown();
         
         currentSection = section.replace('#', '').replace('-section', '');
 
-        $('#toggle-book, #toggle-received, #toggle-send, #toggle-sent-logs').prop('checked', false);
-        if(section === '#book-section') $('#toggle-book').prop('checked', true);
+        $('#toggle-received, #toggle-send, #toggle-sent-logs').prop('checked', false);
         if(section === '#received-section') $('#toggle-received').prop('checked', true);
         if(section === '#send-section') $('#toggle-send').prop('checked', true);
         if(section === '#sent-logs-section') $('#toggle-sent-logs').prop('checked', true);
@@ -209,17 +144,9 @@ $(document).ready(function() {
         window.history.replaceState({}, '', url);
     }
 
-    // ===== TOGGLE BUTTON ACTIONS =====
-    $('#toggle-book').on('change', () => showOnly('#book-section'));
     $('#toggle-received').on('change', () => showOnly('#received-section'));
     $('#toggle-send').on('change', () => showOnly('#send-section'));
     $('#toggle-sent-logs').on('change', () => showOnly('#sent-logs-section'));
-
-    // ===== STATUS CHANGE =====
-    $(document).on('change', '.status-select', function() {
-        if(this.value === 'rejected' && !confirm("Reject this request?")) return;
-        $(this).closest('form').submit();
-    });
 
     // ===== AJAX PAGINATION =====
     $(document).on('click', '.pagination a', function(e) {

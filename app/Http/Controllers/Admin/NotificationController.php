@@ -7,6 +7,7 @@ use App\Models\bookrequest as BookRequest;
 use App\Models\email_log as EmailLog;
 use App\Models\User;
 use App\Models\books;
+use App\Models\library;
 use Illuminate\Http\Request;
 use App\Services\MessageService;
 
@@ -22,9 +23,10 @@ class NotificationController extends Controller
     $statusOptions = ['pending', 'approved', 'rejected'];
     $users = User::all();
     $recipients = User::all();
-    $logs = EmailLog::latest()->paginate(20);
+    $logs = EmailLog::where('recipient_id', auth()->id())->latest()->paginate(20);
+    $sentLogs = EmailLog::where('sender_id', auth()->id())->latest()->paginate(20);
 
-    return view('admin.notification', compact('bookRequests', 'statusOptions', 'recipients', 'logs', 'users'));
+    return view('admin.notification', compact('bookRequests', 'statusOptions', 'recipients', 'logs', 'users', 'sentLogs'));
     }
     
     public function updateStatus(Request $request, $id)
@@ -36,10 +38,13 @@ class NotificationController extends Controller
         $bookRequest = BookRequest::findOrFail($id);
 
       // Only update if the new status is 'rejected'
-        if ($request->status === 'rejected') {
-            $bookRequest->status = 'rejected';
-            $bookRequest->save();
-        }
+            if ($request->status === 'rejected')
+            {
+             $bookRequest->status = 'rejected'; 
+             $bookRequest->save();
+             return back()->with('success', 'Request rejected.');
+            } 
+
         if ($request->status === 'approved') {
             return redirect()->route('notification.issue_return1', [
                 $bookRequest->book_id,
@@ -51,44 +56,55 @@ class NotificationController extends Controller
 
     protected $messageService;
 
+
     public function __construct(MessageService $messageService)
     {
         $this->messageService = $messageService;
     }
-     public function sendNotification(Request $request)
+
+    public function sendNotification(Request $request)
     {
         $request->validate([
             'recipient_id' => 'required',
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string',
-            'type' => 'required',
+            'subject'      => 'required|string|max:255',
+            'message'      => 'required|string',
+            'type'         => 'required|string',
         ]);
 
-        $type = $request->type === 'other' ? $request->other_type : 'other';
+        $library = Library::first();
+        $libraryName = $library->library_name ?? 'Library';
 
+        // If "other" was selected, use custom input, else use selected type
+        $type = $request->type === 'other'
+                ? $request->other_type
+                : $request->type;
+
+        // Send to ALL USERS
         if ($request->recipient_id === 'all') {
-            $users = User::all();
-            foreach ($users as $user) {
+            $allUsers = User::all();
+            foreach ($allUsers as $user) {
                 $this->messageService->sendMessage([
                     'recipient_id' => $user->id,
-                    'subject' => $request->subject,
-                    'message' => $request->message,
-                    'type' => $type,
-                    'name' => $user->name,
+                    'subject'      => $request->subject .' from '. $libraryName,
+                    'message'      => $request->message,
+                    'type'         => $type . ' from ' . $libraryName,
+                    'name'         => $user->name,
                 ]);
-
             }
-        } else {
+        }
+        // Send to ONE USER
+        else {
+            $user = User::findOrFail($request->recipient_id);
+
             $this->messageService->sendMessage([
-                'recipient_id' => $request->recipient_id,
-                'subject' => $request->subject,
-                'message' => $request->message,
-                'type' => $type,
-                'name' => User::find($request->recipient_id)->name,
+                'recipient_id' => $user->id,
+                'subject'      => $request->subject . ' from ' . $libraryName,
+                'message'      => $request->message,
+                'type'         => $type . ' from ' . $libraryName,
+                'name'         => $user->name,
             ]);
         }
 
         return redirect()->back()->with('success', 'Notification sent successfully.');
     }
-
 }

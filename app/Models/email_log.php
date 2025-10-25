@@ -11,6 +11,7 @@ class email_log extends Model
 
     protected $fillable = [
         'recipient_id',
+        'sender_id',
         'email',
         'subject',
         'message',
@@ -22,5 +23,9 @@ class email_log extends Model
     public function recipient()
     {
         return $this->belongsTo(User::class, 'recipient_id');
+    }
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
     }
 }

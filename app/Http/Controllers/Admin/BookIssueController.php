@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\User;
 use App\Models\Book_issue;
-use App\Models\bookrequest as BookRequest;
+use App\Models\Library;
+use App\Models\BookRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\BookNotification;
-use Illuminate\Support\Facades\DB;
 
 class BookIssueController extends Controller
 {
+    // Show Issue/Return Form
     public function showIssueReturnForm()
     {
         $users = User::all();
@@ -24,6 +25,7 @@ class BookIssueController extends Controller
         return view('admin.issue_return', compact('books', 'book_issues', 'users', 'book_issues1'));
     }
 
+    // Issue a Book
     public function issueBook(Request $request)
     {
         $request->validate([
@@ -36,10 +38,8 @@ class BookIssueController extends Controller
 
         // Check if user already has this book issued
         $alreadyIssued = Book_issue::where('user_id', $request->user_id)
-            ->whereHas('book', function ($query) use ($book) {
-                $query->where('isbn', $book->isbn);
-            })
-            ->whereIn('status', ['Issued','Overdue'])
+            ->where('book_id', $book->id)
+            ->whereIn('status', ['Issued', 'Overdue'])
             ->exists();
 
         if ($alreadyIssued) {
@@ -50,35 +50,39 @@ class BookIssueController extends Controller
             return back()->with('error', 'Book is out of stock!');
         }
 
-        DB::transaction(function () use ($book, $request) {
+        // Create Book Issue
+        $bookIssue = Book_issue::create([
+            'book_id' => $book->id,
+            'user_id' => $request->user_id,
+            'issued_id' => Auth::id(),
+            'issue_date' => $request->issue_date,
+            'status' => 'Issued',
+        ]);
 
-            Book_issue::create([
-                'book_id' => $book->id,
-                'user_id' => $request->user_id,
-                'issued_id' => Auth::user()->id,
-                'issue_date' => $request->issue_date,
-                'status' => 'Issued',
-            ]);
+        // Update Book stock and availability
+        $book->stock -= 1;
+        $book->availability = $book->stock > 0 ? 'Yes' : 'No';
+        $book->save();
 
-            $book->decrement('stock');
-            $book->update(['availability' => $book->stock > 0 ? 'Yes' : 'No']);
+        // Approve Book Request if exists
+        $bookRequest = BookRequest::where('book_id', $book->id)
+            ->where('user_id', $request->user_id)
+            ->where('status', 'pending')
+            ->first();
 
-            // Update book_requests table → set to "approved"
-            $bookRequest = BookRequest::where('book_id', $book->id)
-                ->where('user_id', $request->user_id)
-                ->where('status', 'pending')
-                ->first();
+        if ($bookRequest) {
+            $bookRequest->status = 'approved';
+            $bookRequest->save();
+        }
 
-            if ($bookRequest) {
-                $bookRequest->update(['status' => 'approved']);
-            }
-        });
+        // Send Notification
         $user = User::findOrFail($request->user_id);
+        $library = Library::first();
         $data = [
             'name' => $user->name,
-            'subject' => 'Book Issued Notification',
-            'message' => "The book '{$book->title}' has been issued to you on {$request->issue_date}. Please return it on time otherwise late fees may apply.",
-            'type' => 'Book Issued',
+            'subject' => 'Book Issued Notification from ' . ($library->library_name ?? 'Library'),
+            'message' => "The book '{$book->title}' has been issued to you on {$request->issue_date}. Please return it on time to avoid late fees.",
+            'type' => 'Book Issued Notification',
             'due_date' => now()->addDays(14)->toDateString(),
         ];
         $user->notify(new BookNotification($data));
@@ -86,7 +90,8 @@ class BookIssueController extends Controller
         return redirect()->route('barcode.index')->with('success', 'Book issued successfully!');
     }
 
-   public function returnBook(Request $request)
+    // Return a Book
+    public function returnBook(Request $request)
     {
         $request->validate([
             'issue_id' => 'required|exists:book_issues,id',
@@ -106,41 +111,56 @@ class BookIssueController extends Controller
             return back()->with('error', 'This book has already been returned.');
         }
 
-        DB::transaction(function () use ($bookIssue, $request) {
-            $bookIssue->update([
-                'return_date' => $request->return_date,
-                'status' => 'Returned',
-            ]);
+        $returnDate = $request->return_date;
+        $issueDate = $bookIssue->issue_date;
+        $diffInDays = (strtotime($returnDate) - strtotime($issueDate)) / (60 * 60 * 24);
+        $diffInDays = (int)$diffInDays;
 
-            $book = Book::findOrFail($bookIssue->book_id);
-            $book->increment('stock');
-            $book->update(['availability' => $book->stock > 0 ? 'Yes' : 'No']);
+        if( $diffInDays > 14 ) {
+            $lateDays = $diffInDays - 14;
+            $lateFeePerDay = 1; // Assuming $1 per day late fee
+            $totalLateFee = $lateDays * $lateFeePerDay;
 
-            $bookRequest = BookRequest::where('book_id', $book->id)
-                ->where('user_id', $request->user_id_return)
-                ->where('status', 'approved')
-                ->first();
+            return back()->with('error', "Book is returned late by {$lateDays} days. Late fee: \${$totalLateFee}. Please settle the fee before returning the book.");
+        }
 
-            if ($bookRequest) {
-                $bookRequest->update(['status' => 'returned']);
-            }
-        });
+        // Update Book Issue Status
+        $bookIssue->status = 'Returned';
+        $bookIssue->return_date = $request->return_date;
+        $bookIssue->save();
 
-        // Fetch the book again for notification
+        // Update Book stock and availability
         $book = Book::findOrFail($bookIssue->book_id);
-        $user = User::findOrFail($request->user_id_return);
+        $book->stock += 1;
+        $book->availability = $book->stock > 0 ? 'Yes' : 'No';
+        $book->save();
 
+        // Update Book Request status if exists
+        $bookRequest = BookRequest::where('book_id', $book->id)
+            ->where('user_id', $request->user_id_return)
+            ->where('status', 'approved')
+            ->first();
+
+        if ($bookRequest) {
+            $bookRequest->status = 'returned';
+            $bookRequest->save();
+        }
+
+        // Send Notification
+        $user = User::findOrFail($request->user_id_return);
+        $library = Library::first();
         $data = [
             'name' => $user->name,
-            'subject' => 'Book Return Notification',
+            'subject' => 'Book Return Notification from ' . ($library->library_name ?? 'Library'),
             'message' => "The book '{$book->title}' has been returned on {$request->return_date}.",
-            'type' => 'Book Returned',
+            'type' => 'Book Returned Notification',
         ];
-
         $user->notify(new BookNotification($data));
 
         return redirect()->route('barcode.index')->with('success', 'Book returned successfully!');
     }
+
+    // Issue/Return Page with optional selected book/user
     public function issueReturn($bookId = null, $userId = null)
     {
         $users = User::all();

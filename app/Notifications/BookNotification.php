@@ -32,16 +32,17 @@ class BookNotification extends Notification
      * Get the mail representation of the notification.
      */
     public function toMail($notifiable)
-        {
-        $type = trim($this->data['type'] ?? 'a notification');
+    {
+        $type = trim($this->data['type']);
         $message = trim($this->data['message'] ?? '');
         $dueDate = $this->data['due_date'] ?? null; // use lowercase key
 
         $mail = (new MailMessage)
             ->subject($this->data['subject'] ?? 'Library Notification')
             ->greeting('Hello ' . ($this->data['name'] ?? 'User'))
-            ->line("This is {$type} Notification from the Library Management System.")
-            ->line($message);
+            ->line("This is {$type}")
+            ->line($message)
+            ->line("Don't reply to this email. This is an automated message.");
 
         if ($dueDate) {
             $mail->line("Due Date: {$dueDate}");

@@ -38,6 +38,7 @@ use App\Http\Controllers\User\BrowseLibraryController as BrowseLibraryController
 use App\Http\Controllers\User\SettingController as UserSettingController;
 use App\Http\Controllers\User\MyhistoryController as UserMyhistoryController;
 use App\Http\Controllers\User\BookrequestController as UserBookRequestController;
+use App\Http\Controllers\User\NotificationController as UserNotificationController;
 
 // ================= TEMPLATE ROUTES =================
 Route::get('/template', [TemplateController::class, 'index'])->name('template');
@@ -127,9 +128,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/settings/theme', [AdminSettingController::class, 'updateTheme'])->name('settings.updateTheme');
     Route::put('/settings/password', [AdminSettingController::class, 'updatePassword'])->name('settings.password');
 
-    Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
-    Route::post('/admin/notifications/send', [AdminNotificationController::class, 'store'])->name('notification.store');
-    Route::post('/admin/notifications/dynamic', [AdminNotificationController::class, 'sendNotification'])->name('admin.sendEmail');
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/send', [AdminNotificationController::class, 'store'])->name('notification.store');
+    Route::post('/notifications/dynamic', [AdminNotificationController::class, 'sendNotification'])->name('admin.sendEmail');
     Route::get('/books/issue-return/{book}/{user}', [AdminBookIssueController::class, 'issueReturn'])->name('notification.issue_return1');
     Route::post('/book-requests/{id}/update-status', [AdminNotificationController::class, 'updateStatus'])->name('bookrequests.updateStatus');
 
@@ -221,4 +222,9 @@ Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
     Route::post('/browse-library/filter', [BrowseLibraryController::class, 'filterBooks'])->name('user.browse.filter');
     Route::get('/book/request/{bookId}', [UserBookRequestController::class, 'requestBook'])->name('user.book.request');
     Route::post('/book/request/submit', [UserBookRequestController::class, 'submitBookRequest'])->name('user.book.request.submit');
+
+    Route::get('/notifications', [UserNotificationController::class, 'index'])->name('user.notifications');
+    Route::post('/notifications/send', [UserNotificationController::class, 'store'])->name('user.notification.store');
+    Route::post('/notifications/dynamic', [UserNotificationController::class, 'sendNotification'])->name('user.sendEmail');
+
 });

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('email_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('recipient_id');
+            $table->unsignedBigInteger('sender_id');
             $table->string('email', 255);
             $table->string('subject', 255);
             $table->text('message');
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->timestamp('sent_at')->useCurrent();
             $table->timestamps();
             $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

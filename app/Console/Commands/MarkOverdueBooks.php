@@ -39,5 +39,6 @@ class MarkOverdueBooks extends Command
             $issue->save();
         }
         $this->info(count($overdueBooks) . ' books marked as overdue.');
+        
     }
 }

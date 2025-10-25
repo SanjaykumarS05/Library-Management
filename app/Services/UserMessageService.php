@@ -4,16 +4,16 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Models\email_log;
-use App\Notifications\MailNotification;
+use App\Notifications\userMailNotification;
 use Illuminate\Support\Facades\Log;
 
-class MessageService
+class UserMessageService
 {
     public function sendMessage(array $data)
     {
         try {
             $user = User::findOrFail($data['recipient_id']);
-            $user->notify(new MailNotification($data));
+            $user->notify(new userMailNotification($data));
 
             email_log::create([
                 'recipient_id' => $user->id,
