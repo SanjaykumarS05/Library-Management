@@ -44,7 +44,9 @@ use App\Http\Controllers\User\NotificationController as UserNotificationControll
 Route::get('/template', [TemplateController::class, 'index'])->name('template');
 Route::post('/logout', [TemplateController::class, 'logout'])->name('logout');
 
+
 // ================= AUTHENTICATION =================
+Route::get('/', [UserController::class, 'home'])->name('home');
 Route::get('/login', [UserController::class, 'index'])->name('login');
 Route::post('/login', [UserController::class, 'submit'])->name('submit');
 Route::get('/register', [UserController::class, 'Registerindex'])->name('register');
@@ -107,6 +109,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/books/issue-return/{bookId?}', [AdminBookIssueController::class, 'issueReturn'])->name('books.issue_return1');
     Route::post('/issue-book', [AdminBookIssueController::class, 'issueBook'])->name('book.issue');
     Route::post('/return-book', [AdminBookIssueController::class, 'returnBook'])->name('book.return');
+    Route::post('/return-book/payment', [AdminBookIssueController::class, 'returnBookPayment'])->name('returnBookPayment');
 
     // Barcode Actions
     Route::get('/books/issue/{issueId}', [AdminBookIssueController::class, 'issueFromBarcode'])->name('books.issue_from_barcode');

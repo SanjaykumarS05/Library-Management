@@ -22,14 +22,14 @@ class DashboardController extends Controller
 
         $recentBooks = Book_issue::with('book')
             ->where('user_id', $userId)
-            ->orderBy('issue_date', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->take(10)
             ->get()
             ->map(function ($issue) {
                 return (object)[
                     'book' => $issue->book,
                     'status' => $issue->status,
-                    'time_ago' => $issue->created_at->diffForHumans(),
+                    'time_ago' => $issue->updated_at->diffForHumans(),
                 ];
             });
 

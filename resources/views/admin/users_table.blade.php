@@ -5,6 +5,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Fine</th>
             <th class="no-export">Actions</th>
         </tr>
     </thead>
@@ -15,6 +16,7 @@
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->role }}</td>
+            <td>₹{{ $user->fine ?? '0' }}</td>
             <td class="no-export">
                 @if($user->id !== Auth::id())
                 <a href="{{ route('users.edit', $user->id) }}">Edit</a>

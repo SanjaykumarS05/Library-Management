@@ -111,17 +111,12 @@ class BookIssueController extends Controller
             return back()->with('error', 'This book has already been returned.');
         }
 
-        $returnDate = $request->return_date;
-        $issueDate = $bookIssue->issue_date;
-        $diffInDays = (strtotime($returnDate) - strtotime($issueDate)) / (60 * 60 * 24);
-        $diffInDays = (int)$diffInDays;
-
-        if( $diffInDays > 14 ) {
-            $lateDays = $diffInDays - 14;
-            $lateFeePerDay = 1; // Assuming $1 per day late fee
-            $totalLateFee = $lateDays * $lateFeePerDay;
-
-            return back()->with('error', "Book is returned late by {$lateDays} days. Late fee: \${$totalLateFee}. Please settle the fee before returning the book.");
+        $overdue= Book_issue::where('id', $request->issue_id)
+            ->where('user_id', $request->user_id_return)
+            ->where('status', 'Overdue')
+            ->get();
+        if ($overdue->count() > 0) {
+            return view('admin.overdue', compact('overdue'));
         }
 
         // Update Book Issue Status
@@ -172,4 +167,40 @@ class BookIssueController extends Controller
 
         return view('admin.issue_return', compact('users', 'books', 'book_issues1', 'selectedBook', 'selectedUser'));
     }
+
+   public function returnBookPayment(Request $request)
+{
+    // Validate payment
+    $request->validate([
+        'issue_id' => 'required',
+        'user_id_return' => 'required',
+        'fine_amount' => 'required|numeric',
+        'payment_method' => 'required'
+    ]);
+
+    // Fetch overdue book entry
+    $bookIssue = Book_issue::where('id', $request->issue_id)
+        ->where('user_id', $request->user_id_return)
+        ->where('status', 'Overdue')
+        ->firstOrFail();
+
+    // Update Issue Status
+    $bookIssue->status = 'Returned';
+    $bookIssue->return_date = now();
+    $bookIssue->save();
+
+    // Update Book stock
+    $book = Book::findOrFail($bookIssue->book_id);
+    $book->stock += 1;
+    $book->availability = $book->stock > 0 ? 'Yes' : 'No';
+    $book->save();
+
+    // Update User Fine
+    $user = User::findOrFail($request->user_id_return);
+    $user->fine += (int)$request->fine_amount;
+    $user->save();
+
+    return redirect()->route('barcode.index')->with('success', 'Payment processed successfully!');
+}
+
 }

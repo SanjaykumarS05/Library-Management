@@ -1,176 +1,205 @@
 <style>
-form {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* === Center Form on Page === */
-body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f4f3ec;
-  margin: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* === Form Container === */
-.container {
-  background-color: #fffdf6;
-  width: 400px;
-  padding: 40px 50px;
-  border-radius: 14px;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.container:hover {
-  box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.25);
-}
-
-/* === Header === */
-h1 {
-  color: #2b2a1e;
-  font-size: 26px;
-  margin-bottom: 30px;
-  font-weight: 700;
-  transition: color 0.3s ease;
-}
-
-/* === Input Group === */
-.input-group {
-  margin-bottom: 22px;
-  text-align: left;
-  position: relative;
-}
-
-.input-group label {
-  color: #4d493c;
-  font-size: 14px;
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.input-group i.material-icons {
-  position: absolute;
-  left: -35px;
-  top: 34px;
-  color: #7b6f50;
-  font-size: 22px;
-  transition: color 0.3s ease;
-}
-
-/* === Input Fields === */
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 10px 12px;
-  font-size: 15px;
-  border: 1px solid #b9ae90;
-  border-radius: 8px;
-  background-color: #fff;
-  color: #2b2a1e;
-  transition: 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus {
-  border-color: #84754e;
-  outline: none;
-  background-color: #fffdf8;
-}
-
-/* === Button === */
-button.submit {
-  width: 100%;
-  padding: 12px;
-  background-color: #1b3a57;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-button.submit:hover {
-  background-color: #2d5270;
-  transform: scale(1.02);
-}
-
-/* === Text and Links === */
-p {
-  font-size: 14px;
-  color: #3b372d;
-  transition: color 0.3s ease;
-}
-
-a {
-  color: #1b3a57;
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* === Responsive Design === */
-@media (max-width: 480px) {
-  .container {
-    width: 90%;
-    padding: 25px;
-  }
-}
-
-/* ==============================
-   DARK THEME
-============================== */
-body.dark-mode {
-  background-color: #1e1f28;
-  color: #ccc;
-}
-
-body.dark-mode .container {
-  background-color: #2a2a3d;
-  box-shadow: 0px 5px 15px rgba(0,0,0,0.6);
-}
-
-body.dark-mode h1 {
-  color: #fff;
-}
-
-body.dark-mode .input-group label,
-body.dark-mode .input-group i.material-icons {
-  color: #ccc;
-}
-
-body.dark-mode input[type="text"],
-body.dark-mode input[type="password"] {
-  background-color: #1f1f2e;
-  color: #eee;
-  border-color: #555;
-}
-
-body.dark-mode button.submit {
-  background-color: #2563eb;
-}
-
-body.dark-mode button.submit:hover {
-  background-color: #1d4ed8;
-}
-
-body.dark-mode p,
-body.dark-mode a {
-  color: #ccc;
-}
-
-</style>
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+        }
+        
+        .feature-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        
+        .feature-icon i {
+            font-size: 30px;
+            color: white;
+        }
+        
+        /* Book card styling to match features */
+        .book-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .book-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        
+        .book-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        
+        .book-icon i {
+            font-size: 30px;
+            color: white;
+        }
+        
+        /* Modal styling */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-box {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .auth-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .auth-tab.active {
+            border-bottom: 2px solid #667eea;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px 40px 10px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 10px;
+            top: 35px;
+            color: #777;
+        }
+        
+        .show-password {
+            margin-top: 5px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .show-password input {
+            width: auto;
+            margin-right: 5px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .auth-footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        #signup {
+            background: white;
+            color: black;
+        }
+    </style>

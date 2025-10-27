@@ -3,7 +3,6 @@
 @include('style.searchcss')
 
 @section('content')
-<div class="container book-search">
     <h2 class="h2">📚 Search Books</h2>
 
     <!-- Search Form -->

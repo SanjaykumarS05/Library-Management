@@ -50,6 +50,24 @@ body.dark-mode {
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+aside {
+    width: 260px;
+    transition: all 0.3s ease;
+}
+
+aside.closed {
+    margin-left: -260px; /* Hide sidebar */
+}
+
+main {
+    transition: margin-left 0.3s ease;
+    margin-left: 260px;
+}
+
+main.full-width {
+    margin-left: 0;
+}
+
 
 body {
     display: flex;
@@ -117,6 +135,70 @@ header .search-container button:hover,
 header .search-container a:hover {
     background-color: var(--button-hover);
     transform: scale(1.05);
+}
+/* ===== Layout Base ===== */
+body {
+    display: flex;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ===== Sidebar ===== */
+aside {
+    width: 260px;
+    background: #ffffff;
+    border-right: 1px solid #dadada;
+    height: 100vh;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+aside.closed {
+    width: 65px; /* collapsed width */
+}
+
+aside ul li a {
+    display: block;
+    padding: 12px;
+    font-size: 15px;
+    white-space: nowrap;
+    text-decoration: none;
+    color: #333;
+    transition: padding 0.3s, opacity 0.3s;
+}
+
+aside.closed ul li a {
+    padding-left: 5px;
+    opacity: 0; /* hide text */
+}
+
+/* Logo + profile collapse */
+aside.closed .profile-header,
+aside.closed .profile-info,
+aside.closed h3,
+aside.closed p {
+    display: none;
+}
+
+/* ===== Main Content ===== */
+main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* When sidebar collapsed */
+main.full-width {
+    width: calc(100% - 65px);
+}
+
+/* ===== Menu Icon ===== */
+#menuToggle {
+    cursor: pointer;
+    font-size: 30px;
+    margin-right: 15px;
 }
 
 header form button {

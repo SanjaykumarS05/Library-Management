@@ -26,6 +26,12 @@ class ManageUserController extends Controller
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
+
+            if ($request->fine) {
+                $users->whereHas('user', function($q) use ($request) {
+                    $q->where('fine', '>=', $request->fine);
+                });
+            }
             if ($request->role) {
                 $users->where('role', $request->role);
             }

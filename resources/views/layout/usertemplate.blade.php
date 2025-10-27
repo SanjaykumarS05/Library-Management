@@ -17,9 +17,10 @@
 <body class="{{ Auth::user()->profile->theme ?? 'light' }}">
     {{-- ================= Header ================= --}}
     <header>
+        <i class="material-icons" id="menuToggle">menu</i>
         <div class="box" style="display: flex; justify-content: center; align-items: center;">
             {{-- User Search Bar --}}
-            <h1>{{ $library->library_name ?? 'Library Management System' }}</h1>
+            <h1 class="library-title">{{ $library->library_name ?? 'Library Management System' }}</h1>
             <div class="search-container">
                 <form id="headerSearchForm" method="GET" style="display:flex; align-items:center;">
                     <input type="text" name="query" id="searchBox" placeholder="Search">
@@ -79,6 +80,8 @@
         @yield('scripts')
     </main>
 
+    <!-- ================= Footer ================= -->
+  
     {{-- ================= Scripts ================= --}}
     <script>
         @if(session('success')) toastr.success("{{ session('success') }}"); @endif
@@ -114,6 +117,17 @@
                 toastr.error('Failed to update theme');
             });
         });
+
+         // Sidebar toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('aside');
+        const mainContent = document.querySelector('main');
+
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('closed');
+            mainContent.classList.toggle('full-width');
+        });
+        
         // 🖨️ Print Report
         function printReport() {
         let tableClone = document.getElementById('report-table').cloneNode(true);

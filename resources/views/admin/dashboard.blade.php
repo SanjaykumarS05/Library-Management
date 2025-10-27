@@ -4,7 +4,7 @@
 @section('title', 'Admin Dashboard')
 
 @section('content')
-<div class="dashboard-container">
+
 
     <div class="dashboard-header">
         <h2>Library Dashboard</h2>

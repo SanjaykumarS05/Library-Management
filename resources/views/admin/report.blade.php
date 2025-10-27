@@ -4,7 +4,7 @@
 @section('title', 'Customizable Report')
 
 @section('content')
-<div class="container">
+
     <h1 class="h1">📊 Advance Customizable Report</h1>
 
     <!-- Filters Form -->
@@ -128,6 +128,7 @@
                     <th>Issued By</th>
                     <th>Issue Date</th>
                     <th>Return Date</th>
+                    <th>Fine Amount</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -144,6 +145,7 @@
                         <td>{{ $item->issuedBy->name ?? 'NOT FOUND' }}</td>
                         <td>{{ $item->issue_date->format('Y-m-d') }}</td>
                         <td>{{ $item->return_date?? '  -' }}</td>
+                        <td>₹{{ $item->fine_amount ?? '0' }}</td>
                         <td>{{ $item->status }}</td>
                     </tr>
                 @empty

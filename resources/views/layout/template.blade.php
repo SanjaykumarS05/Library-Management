@@ -17,6 +17,7 @@
 <body class="{{ Auth::user()->profile->theme ?? 'light' }}">
     {{-- ================= Header ================= --}}
     <header>
+        <i class="material-icons" id="menuToggle">menu</i>
         <div class="box" style="display: flex; justify-content: center; align-items: center;">
             {{-- Admin Search Bar --}}
             <h1>{{ $library->library_name ?? 'Library Management System' }}</h1>
@@ -170,6 +171,16 @@
             @endif
         });
 
+        // Sidebar toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('aside');
+        const mainContent = document.querySelector('main');
+
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('closed');
+            mainContent.classList.toggle('full-width');
+        });
+
         // 🖨️ Print Report
         function printReport() {
         let tableClone = document.getElementById('report-table').cloneNode(true);
@@ -189,7 +200,7 @@
                     </style>
                 </head>
                 <body>
-                    <h2>Library Book Report</h2>
+                    <h2>Report</h2>
                     ${tableClone.innerHTML}
                 </body>
             </html>
@@ -234,7 +245,9 @@
                     url = "{{ route('categories.create') }}";
                 } else if(query.includes("overall issued books")) {
                     url = "{{ route('overallbook.index') }}";
-                } else if(query.includes("issue return")) {
+                } else if(query.includes("issue")) {
+                    url = "{{ route('books.issue_return') }}";
+                } else if(query.includes("return")) {
                     url = "{{ route('books.issue_return') }}";
                 } else if(query.includes("barcode")) {
                     url = "{{ route('barcode.index') }}";

@@ -14,7 +14,6 @@ class RoleMiddleware
         if (!Auth::check()) {
             return redirect()->route('login'); 
         }
-
         $user = Auth::user();
 
         if (!in_array($user->role, $roles)) {

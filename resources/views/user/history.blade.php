@@ -64,9 +64,13 @@
         @endforeach
     </div>
     @endif
+     <div style="margin-top:10px; margin-bottom:20px;">
+            <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
+            <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
+        </div>
     {{-- Complete History --}}
-    <div class="card shadow-sm mt-4">
-        <div class="card-body">
+    <div class="card shadow-sm mt-4" div id="report-table">
+        <div class="card-body" >
             <div class="table-responsive">
                 <table class="table align-middle">
                     <thead class="table-light">
@@ -115,11 +119,13 @@
             </div>
 
             {{-- Pagination --}}
+            <div class="no-export">
             @if($bookIssues->hasPages())
                 <div class="pagination-wrapper mt-4">
                     {{ $bookIssues->links('pagination::bootstrap-5') }}
                 </div>
             @endif
+</div>
         </div>
     </div>
 </div>

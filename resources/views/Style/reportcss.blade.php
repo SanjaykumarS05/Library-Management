@@ -2,18 +2,8 @@
     /* =========================
    General Styles
 ========================= */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
-    color: #2c3e50;
-    transition: background 0.3s ease, color 0.3s ease;
-}
 
 .container {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 25px;
-    background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     transition: background 0.3s ease, box-shadow 0.3s ease;
@@ -131,7 +121,7 @@ table.table {
     border-spacing: 0;
     border-radius: 12px;
     overflow: hidden;
-    min-width: 800px;
+    min-width: 100%;
     transition: all 0.3s ease;
 }
 

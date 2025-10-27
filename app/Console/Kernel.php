@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-            $schedule->command('books:mark-overdue')->dailyAt('15:38')->timezone('Asia/Kolkata')->appendOutputTo(storage_path('logs/mark_overdue_books.log'));
+            $schedule->command('books:mark-overdue')->dailyAt('10:00')->timezone('Asia/Kolkata')->appendOutputTo(storage_path('logs/mark_overdue_books.log'));
             // $schedule->command('books:send-reminders')->dailyAt('15:38')->timezone('Asia/Kolkata')->appendOutputTo(storage_path('logs/send_reminders.log'));
         }
 

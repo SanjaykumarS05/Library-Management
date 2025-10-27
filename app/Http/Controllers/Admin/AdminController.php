@@ -41,7 +41,7 @@ class AdminController extends Controller
                     'type' => ucfirst($issue->status),
                     'book_title' => $issue->book->title,
                     'user_name' => ucfirst($issue->user->name),
-                    'time_ago' => $issue->created_at->diffForHumans(),
+                    'time_ago' => $issue->updated_at->diffForHumans(),
                 ];
             });
 
