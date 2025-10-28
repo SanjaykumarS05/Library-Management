@@ -42,21 +42,4 @@ class book_issue extends Model
     }
 
     protected $appends = ['fine_amount'];
-
-    public function getFineAmountAttribute()
-    {
-        if (!$this->issue_date) {
-            return 0;
-        }
-
-        $dueDate = Carbon::parse($this->issue_date)->addDays(15);
-        $today = $this->return_date ? Carbon::parse($this->return_date) : Carbon::today();
-
-        if ($today->gt($dueDate)) {
-            $daysLate = $today->diffInDays($dueDate);
-            return $daysLate * 100; // ₹100 per day fine
-        }
-
-        return 0;
-    }
 }

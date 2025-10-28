@@ -4,7 +4,7 @@
 @section('title', 'Customizable Report')
 
 @section('content')
-<div class="container">
+
     <h1 class="h1">📊 Advance Customizable Report</h1>
 
     <!-- Filters Form -->
@@ -54,6 +54,7 @@
                     <option value="">All</option>
                     <option value="Issued" {{ request('status')=='Issued'?'selected':'' }}>Issued</option>
                     <option value="Returned" {{ request('status')=='Returned'?'selected':'' }}>Returned</option>
+                    <option value="Overdue" {{ request('status')=='Overdue'?'selected':'' }}>Overdue</option>
                 </select>
             </div>
 
@@ -66,7 +67,6 @@
                 <label for="author">Author:</label>
                 <input type="text" name="author" value="{{ request('author') }}">
             </div>
-
             <div>
                 <label for="issue_by">Issued By :</label>
                 <select id="issue_by" name="issue_by">
@@ -99,11 +99,15 @@
                 <label>To:</label>
                 <input type="date" name="to_date" value="{{ request('to_date') }}">
             </div>
+            <div>
+                <label for="fine">Fine Amount:</label>
+                <input type="text" name="fine" value="{{ request('fine') }}">
+            </div>
         </div>
 
         <!-- Buttons -->
         <div style="margin-top:10px;">
-            <a href="{{ route('reports.index') }}" class="btn btn-secondary">Reset</a>
+            <a href="{{ route('staff.reports.index') }}" class="btn btn-secondary">Reset</a>
             <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
             <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
         </div>
@@ -128,13 +132,14 @@
                     <th>Issued By</th>
                     <th>Issue Date</th>
                     <th>Return Date</th>
+                    <th>Fine Amount</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($bookIssues as $index => $item)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $bookIssues->firstItem() + $index}}</td>
                         <td>{{ $item->user->name ?? '' }}</td>
                         <td>{{ $item->user->role ?? '' }}</td>
                         <td>{{ $item->book->title ?? '' }}</td>
@@ -144,6 +149,7 @@
                         <td>{{ $item->issuedBy->name ?? 'NOT FOUND' }}</td>
                         <td>{{ $item->issue_date->format('Y-m-d') }}</td>
                         <td>{{ $item->return_date?? '  -' }}</td>
+                        <td>₹{{ $item->fine_amount ?? '0' }}</td>
                         <td>{{ $item->status }}</td>
                     </tr>
                 @empty
@@ -151,6 +157,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="pagination-wrapper" >
+            {{ $bookIssues->links('pagination::bootstrap-5') }}
     </div>
 </div>
 
@@ -181,6 +190,25 @@ $(document).ready(function() {
         });
     }
 
+        $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: $('#report-filter-form').serialize(),
+            success: function(response) {
+                let tbody = $(response).find('#report-table tbody').html();
+                $('#report-table tbody').html(tbody);
+
+                let total = $(response).find('#total-count').text();
+                $('#total-count').text(total);
+
+                let pagination = $(response).find('.pagination-wrapper').html();
+                $('.pagination-wrapper').html(pagination);
+            }
+        });
+    });
     // Filter changes
     $('#role').on('change', function() {
         let role = $(this).val();
@@ -213,5 +241,6 @@ function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
 }
+
 </script>
 @endsection

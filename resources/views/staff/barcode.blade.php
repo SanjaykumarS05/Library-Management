@@ -39,7 +39,7 @@
     <div id="printable-content">
         <div id="book-info" style="margin-top:20px;"></div>
 
-        <h2>Issued Books</h2>
+        <h2>Currrent Issued Books</h2>
         @if($book_issues_count)
             <h3>Total Issued Books: <span class="count">{{ $book_issues_count }}</span></h3>
             <br>
@@ -54,6 +54,7 @@
                         <p><strong>Issued Name:</strong> {{ $item['issued_name']}} ({{ $item['issue_role'] }})</p>
                         <p><strong>Issued To:</strong> {{ $item['user_name'] }}</p>
                         <p><strong>Issue Date:</strong> {{ $item['issue_date']->format('Y-m-d') }}</p>
+                        <p><strong>Due Date:</strong> {{ $item['issue_date']->addDay(15)->format('Y-m-d') }}</p>
                         <p><strong>Status:</strong> {{ $item['status'] }}</p><br>
                         <center><span class="barcode1">{!! $item['barcode'] !!}</span></center>
 
@@ -165,6 +166,19 @@ function processBarcodeImage(file) {
         });
 }
 
+// ✅ PRINT ALL CONTENT
+function printContent(divId) {
+    const content = document.getElementById(divId).innerHTML;
+    const myWindow = window.open('', '', 'width=800,height=600');
+    myWindow.document.write('<html><head><title>Print Barcode</title>');
+    myWindow.document.write('<link rel="stylesheet" href="{{ asset("Style/barcodecss.css") }}" type="text/css" />');
+    myWindow.document.write('<style>.no-print {display:none !important;}</style>');
+    myWindow.document.write('</head><body>');
+    myWindow.document.write(content);
+    myWindow.document.write('</body></html>');
+    myWindow.document.close();
+    setTimeout(() => { myWindow.focus(); myWindow.print(); myWindow.close(); }, 500);
+}
 
 // ✅ PRINT SINGLE CARD
 function printSingle(cardId) {

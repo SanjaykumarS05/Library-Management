@@ -8,9 +8,9 @@
         </tr>
     </thead>
     <tbody>
-        @forelse($categories as $category)
+        @forelse($categories as $index => $category)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $categories->firstItem() + $index }}</td>
             <td>{{ $category->name }}</td>
             <td>{{ $category->description }}</td>
             <td class="no-export">

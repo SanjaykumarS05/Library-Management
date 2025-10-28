@@ -20,7 +20,7 @@
         <i class="material-icons" id="menuToggle">menu</i>
         <div class="box" style="display: flex; justify-content: center; align-items: center;">
             {{-- Admin Search Bar --}}
-            <h1>{{ $library->library_name ?? 'Library Management System' }}</h1>
+            <h1 style="margin-right: 50px;">{{ $library->library_name ?? 'Library Management System' }}</h1>
             @if(auth()->user()->role === 'admin')
             <div class="search-container">
                 <form id="headerSearchForm" method="GET" style="display:flex; align-items:center;">
@@ -82,31 +82,31 @@
 
         <nav>
             @if(auth()->user()->role === 'admin')
-            <ul>
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ route('search') }}">Search Books</a></li>
-                <li><a href="{{ route('books') }}">Manage Books</a></li>
-                <li><a href="{{ route('users') }}">Manage Users</a></li>
-                <li><a href="{{ route('categories.index') }}">Manage Categories</a></li>
-                <li><a href="{{ route('overallbook.index') }}">Overall Issued Books</a></li>
-                <li><a href="{{ route('books.issue_return') }}">Issue / Return Books</a></li>
-                <li><a href="{{ route('barcode.index') }}">Barcode</a></li>
-                <li><a href="{{ route('reports.index') }}">Reports</a></li>
-                <li><a href="{{ route('settings') }}">Settings</a></li>
+            <ul>        
+                <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a></li>
+                <li><a href="{{ route('search') }}" class="{{ request()->routeIs('search') ? 'active' : '' }}">Search Books</a></li>
+                <li><a href="{{ route('books') }}" class="{{ request()->routeIs('books') ? 'active' : '' }}">Manage Books</a></li>
+                <li><a href="{{ route('users') }}" class="{{ request()->routeIs('users') ? 'active' : '' }}">Manage Users</a></li>
+                <li><a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.index') ? 'active' : '' }}">Manage Categories</a></li>
+                <li><a href="{{ route('overallbook.index') }}" class="{{ request()->routeIs('overallbook.index') ? 'active' : '' }}">Overall Issued Books</a></li>
+                <li><a href="{{ route('books.issue_return') }}" class="{{ request()->routeIs('books.issue_return') ? 'active' : '' }}">Issue / Return Books</a></li>
+                <li><a href="{{ route('barcode.index') }}" class="{{ request()->routeIs('barcode.index') ? 'active' : '' }}">Barcode</a></li>
+                <li><a href="{{ route('reports.index') }}" class="{{ request()->routeIs('reports.index') ? 'active' : '' }}">Reports</a></li>
+                <li><a href="{{ route('settings') }}" class="{{ request()->routeIs('settings') ? 'active' : '' }}">Settings</a></li>
             </ul>
             @endif
 
             @if(auth()->user()->role === 'staff')
             <ul>
-                <li><a href="{{ route('staff.dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ route('staff.search') }}">Search Books</a></li>
-                <li><a href="{{ route('staff.books') }}">Manage Books</a></li>
-                <li><a href="{{ route('staff.categories.index') }}">Manage Categories</a></li>
-                <li><a href="{{ route('staff.overallbook.index') }}">Overall Issued Books</a></li>
-                <li><a href="{{ route('staff.books.issue_return') }}">Issue / Return Books</a></li>
-                <li><a href="{{ route('staff.barcode.index') }}">Barcode</a></li>
-                <li><a href="{{ route('staff.reports.index') }}">Reports</a></li>
-                <li><a href="{{ route('staff.settings') }}">Settings</a></li>
+                <li><a href="{{ route('staff.dashboard') }}" class="{{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">Dashboard</a></li>
+                <li><a href="{{ route('staff.search') }}" class="{{ request()->routeIs('search') ? 'active' : '' }}">Search Books</a></li>
+                <li><a href="{{ route('staff.books') }}" class="{{ request()->routeIs('books') ? 'active' : '' }}">Manage Books</a></li>
+                <li><a href="{{ route('staff.categories.index') }}" class="{{ request()->routeIs('categories.index') ? 'active' : '' }}">Manage Categories</a></li>
+                <li><a href="{{ route('staff.overallbook.index') }}" class="{{ request()->routeIs('overallbook.index') ? 'active' : '' }}">Overall Issued Books</a></li>
+                <li><a href="{{ route('staff.books.issue_return') }}" class="{{ request()->routeIs('books.issue_return') ? 'active' : '' }}">Issue / Return Books</a></li>
+                <li><a href="{{ route('staff.barcode.index') }}" class="{{ request()->routeIs('barcode.index') ? 'active' : '' }}">Barcode</a></li>
+                <li><a href="{{ route('staff.reports.index') }}" class="{{ request()->routeIs('reports.index') ? 'active' : '' }}">Reports</a></li>
+                <li><a href="{{ route('staff.settings') }}" class="{{ request()->routeIs('settings') ? 'active' : '' }}">Settings</a></li>
             </ul>
             @endif
         </nav>

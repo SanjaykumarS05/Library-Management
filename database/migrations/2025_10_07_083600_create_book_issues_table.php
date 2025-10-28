@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('issue_date');
             $table->date('return_date')->nullable();
             $table->enum('status', ['Issued', 'Returned','Overdue'])->default('Issued');
+            $table->integer('fine_amount')->default(0);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');

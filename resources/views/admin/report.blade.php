@@ -99,6 +99,10 @@
                 <label>To:</label>
                 <input type="date" name="to_date" value="{{ request('to_date') }}">
             </div>
+            <div>
+                <label for="fine">Fine Amount:</label>
+                <input type="text" name="fine" value="{{ request('fine') }}">
+            </div>
         </div>
 
         <!-- Buttons -->
@@ -135,7 +139,7 @@
             <tbody>
                 @forelse($bookIssues as $index => $item)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $bookIssues->firstItem() + $index}}</td>
                         <td>{{ $item->user->name ?? '' }}</td>
                         <td>{{ $item->user->role ?? '' }}</td>
                         <td>{{ $item->book->title ?? '' }}</td>

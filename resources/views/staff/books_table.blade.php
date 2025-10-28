@@ -8,28 +8,30 @@
             <th>Category</th>
             <th>Published Year</th>
             <th>Availability</th>
-            <th>Stock</th>
-            <th>Cover Image</th>
-            <th>Actions</th>
+            <th>Total Copies</th>
+            <th>In Stock</th>
+            <th class="no-export">Cover Image</th>
+            <th class="no-export">Actions</th>
         </tr>
     </thead>
     <tbody>
-        @forelse($books as $book)
-        <tr> 
-            <td>{{ $loop->iteration }}</td>
+        @forelse($books as $index => $book)
+        <tr>
+            <td>{{ $books->firstItem() + $index }}</td>
             <td>{{ $book->title }}</td>
             <td>{{ $book->author }}</td>
             <td>{{ $book->isbn }}</td>
             <td>{{ $book->category->name ?? '-' }}</td>
             <td>{{ $book->publish_year }}</td>
-            <td>{{ $book->availability }}</td>
+            <td class="{{ $book->availability == 'Yes' ? 'Available' : 'Unavailable' }}">{{ $book->availability }}</td>
+            <td>{{ $book->issued_count + $book->stock }}</td>
             <td>{{ $book->stock }}</td>
-            <td>
+            <td class="no-export">
                 @if($book->image_path)
                     <img src="{{ asset('storage/' . $book->image_path) }}" alt="Book Image" width="100">
                 @endif
             </td>
-            <td>
+            <td class="no-export">
                 <a href="{{ route('staff.books.edit', $book->id) }}">Edit</a>
                 <form action="{{ route('staff.books.delete', $book->id) }}" method="POST" style="display:inline;">
                     @csrf
@@ -40,8 +42,13 @@
         </tr>
         @empty
         <tr>
-            <td colspan="10" class="text-center">No books found.</td>
+            <td colspan="11" class="text-center">No books found.</td>
         </tr>
         @endforelse
-    </tbody>   
+    </tbody>
 </table>
+<div class="no-export">
+<div class="pagination-wrapper">
+            {{ $books->links('pagination::bootstrap-5') }}
+</div>
+</div>

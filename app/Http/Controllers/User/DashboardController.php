@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $totalIssued = Book_issue::where('user_id', $userId)->count();
         $returnedCount = Book_issue::where('user_id', $userId)->where('status', 'returned')->count();
         $pendingCount = Book_issue::where('user_id', $userId)->where('status', 'issued')->count();
-
+        $fineTotal = Book_issue::where('user_id', $userId)->sum('fine_amount');
         $recentBooks = Book_issue::with('book')
             ->where('user_id', $userId)
             ->orderBy('updated_at', 'desc')
@@ -48,7 +48,7 @@ class DashboardController extends Controller
             'totalIssued', 'returnedCount', 'pendingCount', 
             'recentBooks', 'totalBooks', 'booksCount', 'categoriesCount',
             'availableBooks', 'issuedBooks', 'outOfStockBooks',
-            'issuedPercentage', 'lowStockBooks'
+            'issuedPercentage', 'lowStockBooks', 'fineTotal'
         ));
     }
 }

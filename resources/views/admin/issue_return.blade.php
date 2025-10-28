@@ -33,7 +33,7 @@
                         @if($book->stock > 0)
                             <option value="{{ $book->id }}" 
                                 {{ (isset($selectedBook) && $selectedBook->id == $book->id) ? 'selected' : '' }}>
-                                {{ $book->title }} by {{ $book->author }}-{{$book->isbn}} ({{ $book->stock }} available) 
+                                {{ $book->title }} ({{ $book->stock }} available) 
                             </option>
                         @endif
                     @endforeach

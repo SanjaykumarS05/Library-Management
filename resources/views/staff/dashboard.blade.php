@@ -1,10 +1,10 @@
 @extends('layout.template')
 @include('style.admincss')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Staff Dashboard')
 
 @section('content')
-<div class="dashboard-container">
+
 
     <div class="dashboard-header">
         <h2>Library Dashboard</h2>
@@ -12,19 +12,19 @@
     </div>
     <div class="stats-grid">
         <div class="stat-card">
-            <h3>Total Books</h3>
+            <h3>Total Book Copies</h3>
             <p>{{ $totalBooks + $issuedBooks }}</p>
             <p class="sub">Across {{ $categoriesCount }} categories</p>
         </div>
 
         <div class="stat-card">
-            <h3>Available Books</h3>
+            <h3>Available Book Copies</h3>
             <p>{{ $totalBooks }}</p>
             <p class="sub">Books currently in stock</p>
         </div>
 
         <div class="stat-card">
-            <h3>Books Count</h3>
+            <h3>Total Books Count</h3>
             <p>{{ $booksCount }}</p>
             <p class="sub">Books in the Library</p>
         </div>
@@ -34,11 +34,11 @@
             <p>{{ $outOfStockBooks }}</p>
             <p class="sub">Need restocking</p>
         </div>
-
+        
         <div class="stat-card">
-            <h3>Active Users</h3>
-            <p>{{ $activeUsers }}</p>
-            <p class="sub">Registered library members</p>
+            <h3>Total Fines Collected</h3>
+            <p>₹{{ $totalfines }}</p>
+            <p class="sub">Total fines from users</p>
         </div>
     </div>
 

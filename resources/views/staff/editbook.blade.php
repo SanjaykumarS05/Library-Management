@@ -9,16 +9,16 @@
     
     @method('PUT')
     <label for="title">Title:</label>
-    <input type="text" id="title" name="title" value="{{$book->title}}" required>
+    <input type="text" id="title" name="title" value="{{$book->title}}">
 
     <label for="author">Author:</label>
-    <input type="text" id="author" name="author" value="{{$book->author}}" required>
+    <input type="text" id="author" name="author" value="{{$book->author}}">
 
     <label for="isbn">ISBN:</label>
-    <input type="text" id="isbn" name="isbn" value="{{$book->isbn}}" maxlength="13" pattern="\d{10}|\d{13}" title="Enter a 10 or 13 digit ISBN" required>
+    <input type="text" id="isbn" name="isbn" value="{{$book->isbn}}" maxlength="13" pattern="\d{10}|\d{13}" title="Enter a 10 or 13 digit ISBN">
 
     <label for="category">Category:</label>
-    <select id="category" name="category_id" required>
+    <select id="category" name="category_id">
         @foreach($categories as $category)
             <option value="{{ $category->id }}" {{ $category->id == $book->category_id ? 'selected' : '' }}>
                 {{ $category->name }}
@@ -27,15 +27,15 @@
     </select>
 
     <label for="publish_year">Published Year:</label>
-    <input type="text" id="publish_year" name="publish_year" value="{{$book->publish_year}}" maxlength="4" pattern="\d{4}" title="Enter a valid year (e.g., 2000)" required>
+    <input type="text" id="publish_year" name="publish_year" value="{{$book->publish_year}}" maxlength="4" pattern="\d{4}" title="Enter a valid year (e.g., 2000)">
     <label for="availability">Availability:</label>
-    <select id="availability" name="availability" required>
+    <select id="availability" name="availability" >
         <option value="Yes" {{ $book->availability == 'Yes' ? 'selected' : '' }}>Yes</option>
         <option value="No" {{ $book->availability == 'No' ? 'selected' : '' }}>No</option>
     </select>
 
     <label for="stock">Stock:</label>
-    <input type="number" id="stock" name="stock" value="{{$book->stock}}" required min="0">
+    <input type="number" id="stock" name="stock" value="{{$book->stock}}"  min="0">
 
 
     <label for="image_path">Cover Image:</label>

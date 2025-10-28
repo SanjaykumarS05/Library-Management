@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\staff;
+namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
@@ -8,25 +8,26 @@ use App\Models\Category;
 class CategoryController extends Controller
 {
     public function index(Request $request)
-{
-    $categories = Category::query();
+    {
+        $categories = Category::query();
+        $allCategories = Category::all(); // for dropdown
 
-    if ($request->ajax()) {
-        if ($request->search) {
-            $search = $request->search;
-            $categories->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            });
+        if ($request->ajax()) {
+            if ($request->search_name) {
+                $categories->where('name', 'like', "%{$request->search_name}%");
+            }
+
+            if ($request->search_description) {
+                $categories->where('description', 'like', "%{$request->search_description}%");
+            }
+
+            $categories = $categories->latest()->paginate(10);
+            return view('staff.categories_table', compact('categories'))->render();
         }
 
-        $categories = $categories->get();
-        return view('staff.categories_table', compact('categories'))->render();
+        $categories = $categories->latest()->paginate(10);
+        return view('staff.manage_category', compact('categories', 'allCategories'));
     }
-
-    $categories = $categories->get();
-    return view('staff.manage_category', compact('categories'));
-}
 
     public function create()
     {

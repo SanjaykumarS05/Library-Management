@@ -4,16 +4,16 @@
             <th>S.no</th>
             <th>Categories</th>
             <th>Description</th>
-            <th>Actions</th>
+            <th class="no-export">Actions</th>
         </tr>
     </thead>
     <tbody>
-        @forelse($categories as $category)
+        @forelse($categories as $index => $category)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $categories->firstItem() + $index }}</td>
             <td>{{ $category->name }}</td>
             <td>{{ $category->description }}</td>
-            <td>
+            <td class="no-export">
                 <a href="{{ route('staff.categories.edit', $category->id) }}">Edit</a>
                 <form action="{{ route('staff.categories.delete', $category->id) }}" method="POST" style="display:inline;">
                     @csrf
@@ -29,3 +29,8 @@
         @endforelse
     </tbody>
 </table>
+<div class="no-export">
+<div class="pagination-wrapper" >
+            {{ $categories->links('pagination::bootstrap-5') }}
+</div>
+</div>

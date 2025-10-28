@@ -12,40 +12,38 @@ use Carbon\Carbon;
 
 class ManageUserController extends Controller
 {
-    // List all users
-   public function index(Request $request)
+    // ✅ List all users
+    public function index(Request $request)
     {
         $users = User::query();
 
-        // AJAX Search / Filter
+        // ✅ AJAX Search / Filter
         if ($request->ajax()) {
-             if ($request->name) {
-            $search = $request->name;
-            $users->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-            if ($request->fine) {
-                $users->whereHas('user', function($q) use ($request) {
-                    $q->where('fine', '>=', $request->fine);
+            if ($request->search) {
+                $search = $request->search;
+                $users->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
                 });
             }
+            if ($request->fine) {
+                $users->where('fine', '>=', $request->fine);
+            }   
             if ($request->role) {
                 $users->where('role', $request->role);
             }
 
             $users = $users->latest()->paginate(10);
+
             return view('admin.users_table', compact('users'))->render();
         }
-        // Normal page load
+
+        // ✅ Normal page load
         $users = $users->latest()->paginate(10);
         return view('admin.manage_users', compact('users'));
     }
 
-
-    // Show Add User form
+    // ✅ Show Add User Form
     public function create()
     {
         $admin = Auth::user();
@@ -53,10 +51,9 @@ class ManageUserController extends Controller
         return view('admin.adduser', compact('admin', 'profile'));
     }
 
-    // Store new user + optional profile
-     public function store(Request $request)
+    // ✅ Store New User
+    public function store(Request $request)
     {
-        // ✅ Common Validation
         $validated = $request->validate([
             'name'             => 'required|string|max:255',
             'email'            => 'required|email|unique:users,email',
@@ -77,7 +74,6 @@ class ManageUserController extends Controller
             'qualification'    => 'required|string|min:2|max:255',
         ]);
 
-        // ✅ Create User
         $user = User::create([
             'name'     => $validated['name'],
             'email'    => $validated['email'],
@@ -85,7 +81,6 @@ class ManageUserController extends Controller
             'role'     => $validated['role'],
         ]);
 
-        // ✅ Create Profile
         Profile::create([
             'user_id'         => $user->id,
             'secondary_email' => $validated['secondary_email'],
@@ -101,19 +96,18 @@ class ManageUserController extends Controller
         return redirect()->route('users')->with('success', 'User created successfully.');
     }
 
-    // Edit User
+    // ✅ Edit User
     public function edit($id)
-    {   
+    {
         $user = User::with('profile')->findOrFail($id);
         return view('admin.edituser', compact('user'));
     }
 
-    // Update User
+    // ✅ Update User
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
-        // ✅ Validate everything together
         $validated = $request->validate([
             'name'             => 'required|string|max:255',
             'email'            => 'required|email|unique:users,email,' . $id,
@@ -135,43 +129,30 @@ class ManageUserController extends Controller
             'qualification'    => 'required|string|min:2|max:255',
         ]);
 
-        // ✅ Update main user table
         $user->update([
             'name'  => $validated['name'],
             'email' => $validated['email'],
             'role'  => $validated['role'],
         ]);
 
-        // ✅ Update or create profile
-        if ($user->profile) {
-            $user->profile->update([
-                'secondary_email' => $validated['secondary_email'] ?? $user->profile->secondary_email,
-                'blood_group'     => $validated['blood_group'] ?? $user->profile->blood_group,
-                'dob'             => $validated['dob'] ?? $user->profile->dob,
-                'gender'          => $validated['gender'] ?? $user->profile->gender,
-                'designation'     => $validated['designation'] ?? $user->profile->designation,
-                'phone'           => $validated['phone'] ?? $user->profile->phone,
-                'address'         => $validated['address'] ?? $user->profile->address,
-                'qualification'   => $validated['qualification'] ?? $user->profile->qualification,
-            ]);
-        } else {
-            $user->profile()->create([
-                'secondary_email' => $validated['secondary_email'] ?? null,
-                'blood_group'     => $validated['blood_group'] ?? null,
-                'dob'             => $validated['dob'] ?? null,
-                'gender'          => $validated['gender'] ?? null,
-                'designation'     => $validated['designation'] ?? null,
-                'phone'           => $validated['phone'] ?? null,
-                'address'         => $validated['address'] ?? null,
-                'qualification'   => $validated['qualification'] ?? null,
-            ]);
-        }
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'secondary_email' => $validated['secondary_email'],
+                'blood_group'     => $validated['blood_group'],
+                'dob'             => $validated['dob'],
+                'gender'          => $validated['gender'],
+                'designation'     => $validated['designation'],
+                'phone'           => $validated['phone'],
+                'address'         => $validated['address'],
+                'qualification'   => $validated['qualification'],
+            ]
+        );
 
         return redirect()->route('users')->with('success', 'User updated successfully.');
     }
 
-
-    // Delete User
+    // ✅ Delete User
     public function delete($id)
     {
         $user = User::findOrFail($id);

@@ -277,6 +277,19 @@
         background: white;
     }
 
+    .book-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-bottom: 1px solid #e5e7eb;
+    transition: border-color 0.3s ease;
+}
+
+body.dark-mode .book-image {
+    border-bottom: 1px solid #334155;
+    filter: brightness(0.9);
+}
+
     /* =========================
        DARK MODE
     ========================= */

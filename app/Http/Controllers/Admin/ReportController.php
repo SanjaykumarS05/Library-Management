@@ -49,6 +49,9 @@ class ReportController extends Controller
         if ($request->issue_by) {
             $bookIssues->where('issued_id', $request->issue_by);
         }
+        if ($request->fine) {
+            $bookIssues->where('fine_amount', '>=', $request->fine);
+        }
         
         if ($request->time && $request->time !== 'all') {
             switch ($request->time) {

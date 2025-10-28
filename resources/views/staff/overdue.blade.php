@@ -5,7 +5,7 @@
 @section('content')
 <h1 class="h1">Overdue Books</h1>
 
-<form action="{{ route('returnBookPayment') }}" method="POST" class="mt-4">
+<form action="{{ route('staff.returnBookPayment') }}" method="POST" class="mt-4">
     @csrf
 
     @foreach($overdue as $issue)

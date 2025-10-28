@@ -18,7 +18,7 @@ class AdminController extends Controller
         $categoriesCount = Category::count();
 
         $booksCount = Book::count();
-
+        $totalfines = User::sum('fine');
         $availableBooks = Book::where('availability', 'Yes')->count();
         $issuedBooks = Book_issue::where('status', 'issued')->count();
 
@@ -46,7 +46,8 @@ class AdminController extends Controller
             });
 
         return view('admin.dashboard', [
-            'admin' => auth()->user(),  
+            'admin' => auth()->user(),
+            'totalfines' => $totalfines,
             'booksCount' => $booksCount,
             'totalBooks' => $totalBooks,
             'categoriesCount' => $categoriesCount,

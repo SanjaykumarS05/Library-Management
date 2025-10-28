@@ -46,6 +46,11 @@
             <p>{{ $activeUsers }}</p>
             <p class="sub">Registered library members</p>
         </div>
+        <div class="stat-card">
+            <h3>Total Fines Collected</h3>
+            <p>₹{{ $totalfines }}</p>
+            <p class="sub">Total fines from users</p>
+        </div>
     </div>
 
     <div class="utilisation">

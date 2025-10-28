@@ -11,22 +11,22 @@
 
     <div>
         <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="{{ old('title') }}" required>
+        <input type="text" id="title" name="title" value="{{ old('title') }}">
     </div>
 
     <div>
         <label for="author">Author:</label>
-        <input type="text" id="author" name="author" value="{{ old('author') }}" required>
+        <input type="text" id="author" name="author" value="{{ old('author') }}">
     </div>
 
     <div>
         <label for="isbn">ISBN:</label>
-        <input type="text" id="isbn" name="isbn" value="{{ old('isbn') }}" maxlength="13" pattern="\d{10}|\d{13}" title="Enter a 10 or 13 digit ISBN" required>
+        <input type="text" id="isbn" name="isbn" value="{{ old('isbn') }}" maxlength="13" pattern="\d{10}|\d{13}" title="Enter a 10 or 13 digit ISBN">
     </div>
 
     <div>
         <label for="category_id">Category:</label>
-        <select id="category_id" name="category_id" required>
+        <select id="category_id" name="category_id">
             <option value="" disabled selected>Select category</option>
             @foreach($categories as $category)
                 <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -38,14 +38,14 @@
 
     <div>
         <label for="publish_year">Published Year:</label>
-        <input type="text" id="publish_year" name="publish_year" value="{{ old('publish_year') }}" maxlength="4" pattern="\d{4}" title="Enter a valid year (e.g., 2000)" required>
+        <input type="text" id="publish_year" name="publish_year" value="{{ old('publish_year') }}" maxlength="4" pattern="\d{4}" title="Enter a valid year (e.g., 2000)">
     </div>
 
     <input type="hidden" id="availability" name="availability" value="Yes">
 
     <div>
         <label for="stock">Stock:</label>
-        <input type="number" id="stock" name="stock" value="{{ old('stock') }}" required min="0">
+        <input type="number" id="stock" name="stock" value="{{ old('stock') }}"  min="0">
     </div>
 
     <div>

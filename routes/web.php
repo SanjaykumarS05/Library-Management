@@ -31,7 +31,7 @@ use App\Http\Controllers\Staff\SettingController as StaffSettingController;
 use App\Http\Controllers\Staff\NotificationController as StaffNotificationController;
 
 
-
+// ================= USER CONTROLLERS =================
 use App\Http\Controllers\User\DashboardController as DashboardController;
 use App\Http\Controllers\User\SearchController as UserSearchController;
 use App\Http\Controllers\User\BrowseLibraryController as BrowseLibraryController;
@@ -144,16 +144,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 // ================= STAFF ROUTES =================
 Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
 
-   // Dashboard
+    // Dashboard
     Route::get('/', [StaffDashboardController::class, 'index'])->name('staff.dashboard');
-
-    // Manage Users
-    Route::get('/manage_users', [StaffManageUserController::class, 'index'])->name('staff.users');
-    Route::get('/manage_users/create', [StaffManageUserController::class, 'create'])->name('staff.users.create');
-    Route::post('/manage_users', [StaffManageUserController::class, 'store'])->name('staff.users.store');
-    Route::get('/manage_users/{id}/edit', [StaffManageUserController::class, 'edit'])->name('staff.users.edit');
-    Route::put('/manage_users/{id}', [StaffManageUserController::class, 'update'])->name('staff.users.update');
-    Route::delete('/manage_users/{id}', [StaffManageUserController::class, 'delete'])->name('staff.users.delete');
 
     // Books
     Route::get('/books', [StaffBookController::class, 'index'])->name('staff.books');
@@ -171,7 +163,7 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
     Route::put('/categories/{id}', [StaffCategoryController::class, 'update'])->name('staff.categories.update');
     Route::delete('/categories/{id}', [StaffCategoryController::class, 'delete'])->name('staff.categories.delete');
 
-    // Search
+    // Search & Reports
     Route::get('/search', [StaffSearchController::class, 'index'])->name('staff.search');
 
 
@@ -185,6 +177,7 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('/books/issue-return/{bookId?}', [StaffBookIssueController::class, 'issueReturn'])->name('staff.books.issue_return1');
     Route::post('/issue-book', [StaffBookIssueController::class, 'issueBook'])->name('staff.book.issue');
     Route::post('/return-book', [StaffBookIssueController::class, 'returnBook'])->name('staff.book.return');
+    Route::post('/return-book/payment', [StaffBookIssueController::class, 'returnBookPayment'])->name('staff.returnBookPayment');
 
     // Barcode Actions
     Route::get('/books/issue/{issueId}', [StaffBookIssueController::class, 'issueFromBarcode'])->name('staff.books.issue_from_barcode');
@@ -205,8 +198,12 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
     Route::put('/settings/theme', [StaffSettingController::class, 'updateTheme'])->name('staff.settings.updateTheme');
     Route::put('/settings/password', [StaffSettingController::class, 'updatePassword'])->name('staff.settings.password');
 
+    // Notifications
     Route::get('/notifications', [StaffNotificationController::class, 'index'])->name('staff.notifications');
-    Route::post('/notification/store', [StaffNotificationController::class, 'store'])->name('staff.notification.store');
+    Route::post('/notifications/send', [StaffNotificationController::class, 'store'])->name('staff.notification.store');
+    Route::post('/notifications/dynamic', [StaffNotificationController::class, 'sendNotification'])->name('staff.sendEmail');
+    Route::get('/books/issue-return/{book}/{user}', [StaffBookIssueController::class, 'issueReturn'])->name('staff.notification.issue_return1');
+    Route::post('/book-requests/{id}/update-status', [StaffNotificationController::class, 'updateStatus'])->name('staff.bookrequests.updateStatus');
 });
 
 // ================= USER ROUTE =================

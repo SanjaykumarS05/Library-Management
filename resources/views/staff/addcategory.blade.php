@@ -8,11 +8,11 @@
     @csrf
     <div>
         <label for="name">Category Name:</label>
-        <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+        <input type="text" id="name" name="name" value="{{ old('name') }}">
     </div>
     <div>
         <label for="description">Description:</label>
-        <textarea id="description" name="description" required>{{ old('description') }}</textarea>
+        <textarea id="description" name="description">{{ old('description') }}</textarea>
     </div>
     <button type="submit" class="button1">Add Category</button>
     </div>

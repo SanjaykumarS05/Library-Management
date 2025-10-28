@@ -15,9 +15,9 @@
         </tr>
     </thead>
     <tbody>
-        @forelse($books as $book)
+        @forelse($books as $index => $book)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $books->firstItem() + $index }}</td>
             <td>{{ $book->title }}</td>
             <td>{{ $book->author }}</td>
             <td>{{ $book->isbn }}</td>

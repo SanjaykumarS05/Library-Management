@@ -10,9 +10,9 @@
         </tr>
     </thead>
     <tbody>
-        @forelse($users as $user)
+        @forelse($users as $index => $user)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $users->firstItem() + $index }}</td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->role }}</td>

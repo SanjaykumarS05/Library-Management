@@ -411,6 +411,23 @@ table.table th {
 
 table.table tr:nth-child(even) { background-color: var(--table-row-even); }
 table.table tr:hover { background-color: var(--table-row-hover); }
+aside nav ul li a.active {
+    background-color: var(--button-bg);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.sidebar a.active {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+body.dark-mode aside nav ul li a.active {
+    background-color: #3498db;
+    color: #fff;
+}
 
 /* =========================
    Responsive

@@ -8,14 +8,18 @@
 <!-- Search & Filters -->
 <form method="GET" action="" class="search-form" id="user-search-form">
     <div class="form-group">
-        <input type="text" id="search-name" placeholder="Search by Name or Email" 
+        <input type="text" id="search-name" name="search" 
+               placeholder="Search by Name or Email"
                style="padding:5px; width:150%; position:relative; left:-92px;">
+        <input type="text" id="search-fine" name="fine" 
+               placeholder="Search by Fine Amount"
+               style="padding:5px; width:10%; position:relative; left:-92px;">
 
-        <select id="role" style="padding:5px; position:relative; left:-92px;">
+        <select id="role" name="role" style="padding:5px; position:relative; left:-92px;">
             <option value="">All Roles</option>
             <option value="admin">Admin</option>
             <option value="staff">Staff</option>
-            <option value="User">User</option>
+            <option value="user">User</option>
         </select>
     </div>
 </form>
@@ -30,6 +34,7 @@
     @include('admin.users_table', ['users' => $users])
 </div>
 @endsection
+
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -37,13 +42,14 @@ $(document).ready(function() {
 
     // ✅ Fetch Users (for search/filter/pagination)
     function fetchUsers(url = "{{ route('users') }}") {
-        let name = $('#search-name').val();
+        let search = $('#search-name').val();
+        let fine = $('#search-fine').val();
         let role = $('#role').val();
 
         $.ajax({
             url: url,
             type: 'GET',
-            data: { search: name, role: role },
+            data: { search: search, fine: fine, role: role },
             success: function(response) {
                 $('#report-table').html(response);
             },
@@ -53,8 +59,15 @@ $(document).ready(function() {
         });
     }
 
-    // ✅ Trigger AJAX on search or filter change
-    $('#search-name, #role').on('keyup change', function() {
+    // ✅ Debounce typing (wait 300ms before fetching)
+    let typingTimer;
+    $('#search-name, #search-fine').on('keyup', function() {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(fetchUsers, 300);
+    });
+
+    // ✅ Role filter change
+    $('#role').on('change', function() {
         fetchUsers();
     });
 

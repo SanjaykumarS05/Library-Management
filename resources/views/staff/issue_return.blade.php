@@ -18,7 +18,8 @@
                 <select name="user_id" id="user_id_issue" required>
                     <option value="" disabled selected>Select user</option>
                     @foreach($users as $user)
-                        <option value="{{ $user->id }}">
+                        <option value="{{ $user->id }}"      
+                        {{ (isset($selectedUser) && $selectedUser->id == $user->id) ? 'selected' : '' }}>
                             {{ ucfirst($user->name) }} ({{ $user->role }})
                         </option>
                     @endforeach
@@ -32,7 +33,7 @@
                         @if($book->stock > 0)
                             <option value="{{ $book->id }}" 
                                 {{ (isset($selectedBook) && $selectedBook->id == $book->id) ? 'selected' : '' }}>
-                                {{ $book->title }} by {{ $book->author }}-{{$book->isbn}} ({{ $book->stock }} available) 
+                                {{ $book->title }} ({{ $book->stock }} available) 
                             </option>
                         @endif
                     @endforeach

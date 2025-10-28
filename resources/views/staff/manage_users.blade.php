@@ -1,63 +1,37 @@
 @extends('layout.template')
 @section('title', 'Manage Users')
-@include ('style.managebookcss')
+@include('style.managebookcss')
 
 @section('content')
 <h2 class="h2">Manage Users</h2>
 
-<!-- Search Bar -->
-<div class="search-bar" style="margin:10px 0;">
-    <input type="text" id="search" placeholder="Search by Name , Email , Role" style="width:300px; padding:5px;">
-</div>
+<!-- Search & Filters -->
+<form method="GET" class="search-form" id="user-search-form">
+    <div class="form-group">
+        <input type="text" id="search-name" name="search" 
+               placeholder="Search by Name or Email"
+               style="padding:5px; width:150%; position:relative; left:-92px;">
+        <input type="text" id="search-fine" name="fine" 
+               placeholder="Search by Fine Amount"
+               style="padding:5px; width:10%; position:relative; left:-92px;">
 
-<a href="{{ route('users.create') }}" class="addbook">╋ Add Member</a>
+        <select id="role" name="role" style="padding:5px; position:relative; left:-92px;">
+            <option value="">All Roles</option>
+            <option value="admin">Admin</option>
+            <option value="staff">Staff</option>
+            <option value="user">User</option>
+        </select>
+    </div>
+</form>
 
-<div style="margin-top:10px;">
-            <button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
-            <button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
-        </div>
-        <br>
+<a href="{{ route('staff.users.create') }}" class="addbook">╋ Add Member</a>
+<a href="{{ route('staff.users') }}" class="btn btn-secondary">Reset</a>
+<button type="button" class="btn btn-success" onclick="printReport()">Print Report</button>
+<button type="button" class="btn btn-warning" onclick="exportToExcel()">Export to Excel</button>
 
 <!-- Users Table -->
- <div id="report-table">
-<div id="users-table">
-    <table border="1">
-        <thead>
-            <tr>
-                <th>S.no</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th class="no-export">Actions</th> 
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($users as $user)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->role }}</td>
-                <td class="no-export">
-                    @if($user->id !== Auth::id())
-                    <a href="{{ route('users.edit', $user->id) }}">Edit</a>
-                    <form action="{{ route('users.delete', $user->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="button1" onclick="return confirm('Are you sure you want to delete this user?');">Remove</button>
-                    </form>
-                    @else
-                    Can't Edit/Delete Self
-                    @endif
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="5" class="text-center">No users found.</td>
-            </tr>
-            @endforelse
-        </tbody>   
-    </table>
+<div id="report-table">
+    @include('admin.users_table', ['users' => $users])
 </div>
 @endsection
 
@@ -65,17 +39,45 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#search').on('keyup', function() {
-        let query = $(this).val();
+
+    // ✅ Fetch Users (for search/filter/pagination)
+    function fetchUsers(url = "{{ route('staff.users') }}") {
+        let search = $('#search-name').val();
+        let fine = $('#search-fine').val();
+        let role = $('#role').val();
+
         $.ajax({
-            url: "{{ route('users') }}",
+            url: url,
             type: 'GET',
-            data: { search: query },
+            data: { search: search, fine: fine, role: role },
             success: function(response) {
-                $('#users-table').html(response);
+                $('#report-table').html(response);
+            },
+            error: function(err) {
+                console.error(err);
             }
         });
+    }
+
+    // ✅ Debounce typing (wait 300ms before fetching)
+    let typingTimer;
+    $('#search-name, #search-fine').on('keyup', function() {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(fetchUsers, 300);
     });
+
+    // ✅ Role filter change
+    $('#role').on('change', function() {
+        fetchUsers();
+    });
+
+    // ✅ Handle pagination clicks (no full page reload)
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        fetchUsers(url);
+    });
+
 });
 </script>
 @endsection

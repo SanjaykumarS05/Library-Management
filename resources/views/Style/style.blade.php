@@ -44,10 +44,14 @@
         .book-card:hover {
             transform: translateY(-5px);
         }
+
+        
         
         .book-image {
-            width: 100%;
-            height: 200px;
+            position: relative;
+            left: 40px;
+            width: 80%;
+            height: 80%;
             object-fit: cover;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;

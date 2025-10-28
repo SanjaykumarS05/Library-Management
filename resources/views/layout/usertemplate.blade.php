@@ -20,7 +20,7 @@
         <i class="material-icons" id="menuToggle">menu</i>
         <div class="box" style="display: flex; justify-content: center; align-items: center;">
             {{-- User Search Bar --}}
-            <h1 class="library-title">{{ $library->library_name ?? 'Library Management System' }}</h1>
+            <h1  style="margin-right: 50px;">{{ $library->library_name ?? 'Library Management System' }}</h1>
             <div class="search-container">
                 <form id="headerSearchForm" method="GET" style="display:flex; align-items:center;">
                     <input type="text" name="query" id="searchBox" placeholder="Search">
@@ -62,12 +62,12 @@
 
         <nav>
             <ul>
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ route('user.browse_library') }}">Browse Library</a></li>
-                <li><a href="{{ route('user.search') }}">Search Books</a></li>
-                <li><a href="{{ route('book-requests.index') }}">Book Request</a></li>
-                <li><a href="{{ route('user.history') }}">My History</a></li>
-                <li><a href="{{ route('user.settings') }}">Settings</a></li>
+                <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('user.dashboard') ? 'active' : '' }}">Dashboard</a></li>
+                <li><a href="{{ route('user.browse_library') }}" class="{{ request()->routeIs('user.browse_library') ? 'active' : '' }}">Browse Library</a></li>
+                <li><a href="{{ route('user.search') }}" class="{{ request()->routeIs('user.search') ? 'active' : '' }}">Search Books</a></li>
+                <li><a href="{{ route('book-requests.index') }}" class="{{ request()->routeIs('book-requests.index') ? 'active' : '' }}">Book Request</a></li>
+                <li><a href="{{ route('user.history') }}" class="{{ request()->routeIs('user.history') ? 'active' : '' }}">My History</a></li>
+                <li><a href="{{ route('user.settings') }}" class="{{ request()->routeIs('user.settings') ? 'active' : '' }}">Settings</a></li>
             </ul>
         </nav>
     </aside>

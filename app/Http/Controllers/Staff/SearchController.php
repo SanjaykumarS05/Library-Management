@@ -39,7 +39,7 @@ class SearchController extends Controller
             $books->where('stock', $availability === 'Yes' ? '>' : '=', 0);
         }
 
-        $books = $books->get();
+        $books = $books->latest()->paginate(10);
 
         // Return AJAX partial
         if ($request->ajax()) {

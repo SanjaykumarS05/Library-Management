@@ -32,6 +32,11 @@
                 <p>{{ $outOfStockBooks }}</p>
                 <p class="sub">Need restocking</p>
             </div>
+            <div class="stat-card">
+                <h3>My Paid Fines</h3>
+                <p>₹{{ $fineTotal }}</p>
+                <p class="sub">Total Fines Paid</p>
+            </div>
         </div>
 
         <div class="utilisation">
@@ -52,22 +57,6 @@
                 </ul>
             @endif
         </div>
-
-        <!-- <div class="dashboard-stats">
-            <div class="stat-card">
-                <h3>{{ $totalIssued }}</h3>
-                <p>Total Books Issued</p>
-            </div>
-            <div class="stat-card">
-                <h3>{{ $returnedCount }}</h3>
-                <p>Books Returned</p>
-            </div>
-            <div class="stat-card">
-                <h3>{{ $pendingCount }}</h3>
-                <p>Currently Issued</p>
-            </div>
-        </div> -->
-
         <!-- 📚 Recent Activities -->
         <div class="recent-activity">
             <h3>📖 Your Recent Activities</h3>

@@ -189,6 +189,9 @@ class BookIssueController extends Controller
     $bookIssue->return_date = now();
     $bookIssue->save();
 
+    $bookIssue->fine_amount = (int)$request->fine_amount;
+    $bookIssue->save();
+
     // Update Book stock
     $book = Book::findOrFail($bookIssue->book_id);
     $book->stock += 1;

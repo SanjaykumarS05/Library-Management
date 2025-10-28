@@ -66,9 +66,12 @@
                             <label for="category">Category *</label>
                             <input type="text" id="category" name="category" class="form-control" value="{{ $book->category->name }}" readonly>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group">                                                                                                    
                             <label for="Comments">Comments (optional)</label>
                             <textarea id="Comments" name="Comments" class="form-control" rows="2" placeholder="Any additional information...">{{ old('Comments') }}</textarea>
+                        </div>
+                        <div class="form-group">                                                                                                    
+                            <img src="{{ asset('storage/' . $book->image_path) }}" alt="{{ $book->title }}" class="book-image">
                         </div>
                     </div>
 
@@ -76,7 +79,7 @@
                         <h3 class="h3" style ="font-size: 1.2em; margin-bottom: 10px;">Terms and Conditions:</h3>
                         <label>
                             <input type="checkbox" id="terms" name="terms">
-                            After you receive a book from the library, you can keep it <b>free of charge for 15 days</b>. After that period, <b>a fine of ₹100 will be charged for each additional day</b>.
+                            After you receive a book from the library, you can keep it <b>free of charge for 15 days</b>. After that period, <b>a fine of ₹10 will be charged for each additional day</b>.
                         </label>
                     </p>
 
@@ -108,9 +111,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($userRequests as $request)
+                            @forelse($userRequests as $index => $request)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $userRequests->firstItem() + $index }}</td>
                                 <td class="book-title">{{ $request->book->title }}</td>
                                 <td>{{ $request->book->author }}</td>
                                 <td>

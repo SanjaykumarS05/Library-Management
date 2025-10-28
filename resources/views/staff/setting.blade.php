@@ -12,6 +12,7 @@
 
 <div class="setting-toggle">
     <label><input type="checkbox" id="toggle-profile" checked> Profile</label>
+    <label><input type="checkbox" id="toggle-library"> Library</label>
     <label><input type="checkbox" id="toggle-password"> Change Password</label>
 </div>
 
@@ -32,7 +33,7 @@
 
         <div>
             <label>Name:</label>
-            <input type="text" name="name" value="{{ old('name', $admin->name) }}" required>
+            <input type="text" name="name" value="{{ old('name', $admin->name) }}">
         </div>
         <div>
             <label>User ID:</label>
@@ -40,7 +41,7 @@
         </div>
         <div>
             <label>Email:</label>
-            <input type="email" name="email" value="{{ old('email', $admin->email) }}" readonly>
+            <input type="email" name="email" value="{{ old('email', $admin->email) }}">
         </div>
         <div>
             <label>Secondary Email:</label>
@@ -70,11 +71,11 @@
         </div>
         <div>
             <label>Designation:</label>
-            <input type="text" name="designation" value="{{ old('designation', $admin->profile->designation ?? '') }}" readonly>
+            <input type="text" name="designation" value="{{ old('designation', $admin->profile->designation ?? '') }}">
         </div>
         <div>
             <label>Phone:</label>
-            <input type="text" name="phone" value="{{ old('phone', $admin->profile->phone ?? '') }}">
+            <input type="text" name="phone" value="{{ old('phone', $admin->profile->phone ?? '') }}" maxlength="10">
         </div>
         <div>
             <label>Address:</label>
@@ -82,13 +83,11 @@
         </div>
         <div>
             <label>Qualification:</label>
-            <input type="text" name="qualification" value="{{ old('qualification', $admin->profile->qualification ?? '') }}" readonly>
+            <input type="text" name="qualification" value="{{ old('qualification', $admin->profile->qualification ?? '') }}">
         </div>
 
         <button type="submit" class="button1">Update Profile</button>
     </form>
-
-
     {{-- ==================== PASSWORD FORM ==================== --}}
     <form id="password-form" action="{{ route('staff.settings.password') }}" method="POST" style="display:none;">
         @csrf
@@ -96,16 +95,16 @@
         <h3>Change Password</h3>
 
         <div>
-            <label>Current Password:</label>
-            <input type="password" name="current_password" required>
+            <label for="current_password">Current Password:</label>
+            <input type="password" name="current_password">
         </div>
         <div>
-            <label>New Password:</label>
-            <input type="password" name="new_password" required>
+            <label for="new_password">New Password:</label>
+            <input type="password" name="new_password">
         </div>
         <div>
-            <label>Confirm New Password:</label>
-            <input type="password" name="new_password_confirmation" required>
+            <label for="new_password_confirmation">Confirm New Password:</label>
+            <input type="password" name="new_password_confirmation">
         </div>
 
         <button type="submit" class="button1">Change Password</button>
@@ -125,8 +124,8 @@ $(document).ready(function() {
 
     // ===== Toggle Forms =====
     function toggleForm(showFormId) {
-        const forms = ['#profile-form', '#password-form'];
-        const toggles = ['#toggle-profile', '#toggle-password'];
+        const forms = ['#profile-form', '#library-form', '#password-form'];
+        const toggles = ['#toggle-profile', '#toggle-library', '#toggle-password'];
 
         forms.forEach((form, index) => {
             if(form === showFormId) $(form).slideDown(); else $(form).slideUp();
@@ -138,6 +137,10 @@ $(document).ready(function() {
 
     $('#toggle-profile').on('change', function() {
         if(this.checked) toggleForm('#profile-form'); else $('#profile-form').slideUp();
+    });
+
+    $('#toggle-library').on('change', function() {
+        if(this.checked) toggleForm('#library-form'); else $('#library-form').slideUp();
     });
 
     $('#toggle-password').on('change', function() {
@@ -183,6 +186,7 @@ $(document).ready(function() {
     }
 
     ajaxSubmit('#profile-form');
+    ajaxSubmit('#library-form');
     ajaxSubmit('#password-form');
 });
 </script>

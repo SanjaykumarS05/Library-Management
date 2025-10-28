@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\staff;
+namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
@@ -18,12 +18,13 @@ class StaffController extends Controller
         $categoriesCount = Category::count();
 
         $booksCount = Book::count();
-
+        $totalfines = User::sum('fine');
         $availableBooks = Book::where('availability', 'Yes')->count();
         $issuedBooks = Book_issue::where('status', 'issued')->count();
 
         $outOfStockBooks = Book::where('stock', '<=', 0)->count();
 
+        $activeStaff = User::where('role', 'staff')->count();
         $activeUsers = User::where('role', 'user')->count();
         
         $issuedPercentage = $totalBooks > 0
@@ -40,18 +41,20 @@ class StaffController extends Controller
                     'type' => ucfirst($issue->status),
                     'book_title' => $issue->book->title,
                     'user_name' => ucfirst($issue->user->name),
-                    'time_ago' => $issue->created_at->diffForHumans(),
+                    'time_ago' => $issue->updated_at->diffForHumans(),
                 ];
             });
 
         return view('staff.dashboard', [
-            'admin' => auth()->user(),  
+            'admin' => auth()->user(),
+            'totalfines' => $totalfines,
             'booksCount' => $booksCount,
             'totalBooks' => $totalBooks,
             'categoriesCount' => $categoriesCount,
             'availableBooks' => $availableBooks,
             'issuedBooks' => $issuedBooks,
             'outOfStockBooks' => $outOfStockBooks,
+            'activeStaff' => $activeStaff,
             'activeUsers' => $activeUsers,
             'issuedPercentage' => $issuedPercentage,
             'lowStockBooks' => $lowStockBooks,

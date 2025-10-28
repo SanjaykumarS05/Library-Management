@@ -3,8 +3,8 @@
 @include('style.searchcss')
 
 @section('content')
-    <h2 class="h2">📚 Search Books</h2>
-
+   <center> <h2 class="h2">📚 Search Books</h2>
+    </center><br>
     <!-- Search Form -->
     <form method="GET" action="" class="search-form" id="book-search-form">
         <div class="form-group">
