@@ -54,7 +54,9 @@
                         <p>📅 Borrowed: {{ $issueDate->format('M d, Y') }}</p>
                         <p>📆 Due: {{ $dueDate->format('M d, Y') }}</p>
                         @if($overdueDays > 0)
-                            <span class="badge bg-danger">Overdue by {{ $overdueDays }} days</span>
+                        <p>💰 Fine Amount: ₹{{ $overdueDays * 10 }}.00</p>
+                        <br>
+                        <span class="badge bg-danger">Overdue by {{ $overdueDays }} days</span>  
                         @else
                             <span class="badge bg-success">On Time</span>
                         @endif

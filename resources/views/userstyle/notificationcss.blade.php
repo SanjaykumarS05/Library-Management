@@ -13,6 +13,7 @@
     color: #333;
 }
 
+
 /* ==============================
    Toggle Switch
 ============================== */
@@ -56,6 +57,23 @@
     border-bottom: 3px solid #3498db;
     padding-bottom: 10px;
 }
+.notify-badge {
+    position: absolute;
+    top: 2px;
+    right: -10px;
+    background-color: #e74c3c;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 0 6px rgba(231, 76, 60, 0.6);
+    animation: pulse 1.5s infinite;
+}
+
 
 .container.setting h3 {
     margin-bottom: 20px;

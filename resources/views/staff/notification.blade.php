@@ -7,7 +7,12 @@
 
 {{-- SECTION TOGGLES --}}
 <div class="setting-toggle">
-    <label><input type="checkbox" id="toggle-book" checked> Book Requests</label>
+    <label><input type="checkbox" id="toggle-book" checked> 
+        Book Requests
+        @if($hasPendingRequests>0)
+            <span class="notify-badge">{{ $hasPendingRequests }}</span>
+        @endif
+    </label>
     <label><input type="checkbox" id="toggle-received"> Received Notifications</label>
     <label><input type="checkbox" id="toggle-send"> Send Notifications</label>
     <label><input type="checkbox" id="toggle-sent-logs"> Sent Logs</label>

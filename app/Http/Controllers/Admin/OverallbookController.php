@@ -18,7 +18,7 @@ class OverallbookController extends Controller
         $categories = Category::latest()->get();
         $users = User::latest()->get();
 
-        $issuedbook = Book_issue::where('status', 'issued')->count();
+        $issuedbook = Book_issue::whereIn('status', ['issued', 'overdue'])->count();
         $totalBooks = Book_issue::count();
 
         $book_issues = Book_issue::with(['book.category', 'user'])->latest()->paginate(50);

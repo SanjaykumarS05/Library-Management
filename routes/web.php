@@ -202,7 +202,7 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('/notifications', [StaffNotificationController::class, 'index'])->name('staff.notifications');
     Route::post('/notifications/send', [StaffNotificationController::class, 'store'])->name('staff.notification.store');
     Route::post('/notifications/dynamic', [StaffNotificationController::class, 'sendNotification'])->name('staff.sendEmail');
-    Route::get('/books/issue-return/{book}/{user}', [StaffBookIssueController::class, 'issueReturn'])->name('staff.notification.issue_return1');
+    Route::get('/books/issue-return/{book}/{user}', [StaffBookIssueController::class, 'issueReturn'])->name('sbook.returntaff.notification.issue_return1');
     Route::post('/book-requests/{id}/update-status', [StaffNotificationController::class, 'updateStatus'])->name('staff.bookrequests.updateStatus');
 });
 

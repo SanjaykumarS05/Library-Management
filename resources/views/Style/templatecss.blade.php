@@ -408,6 +408,32 @@ table.table th {
     color: var(--table-header-text);
     font-weight: 700;
 }
+.notify-badge1 {
+    position: absolute;
+    background-color: #e1311dff;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 0 6px rgba(231, 76, 60, 0.6);
+    animation: pulse 1.5s infinite;
+}
+
+/* Slight pulsing effect */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Ensure parent labels are positioned properly */
+.setting-toggle label {
+    position: relative;
+}
 
 table.table tr:nth-child(even) { background-color: var(--table-row-even); }
 table.table tr:hover { background-color: var(--table-row-hover); }

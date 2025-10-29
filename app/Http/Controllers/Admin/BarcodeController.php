@@ -16,7 +16,7 @@ class BarcodeController extends Controller
     public function index()
     {
         $book_issues = Book_issue::with(['book.category', 'user'])
-            ->where('status', 'issued')
+            ->whereIn('status', ['issued', 'overdue'])
             ->orderBy('issue_date', 'desc')
             ->get();
 

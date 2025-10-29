@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\library;
+use App\Models\Bookrequest;
 use App\Http\Controllers\Controller;
 class TemplateController extends Controller
 {
@@ -13,7 +14,8 @@ class TemplateController extends Controller
     {
         $users = User::all();
         $profile = Profile::first();
-        return view('layout.template', compact('users','profile'));
+        $hasPendingRequests = Bookrequest::where('status', 'pending')->count();
+        return view('layout.template', compact('users','profile', 'hasPendingRequests'));
     }
     public function logout(Request $request)
     {

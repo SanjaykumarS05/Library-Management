@@ -104,7 +104,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8">
-                        <p class=""> &copy; 2022 - {{ $libraries->library_name ?? 'LibrarySystem' }}. All rights reserved.</p>
+                        <p class=""> &copy; {{ now()->year }} - {{ $libraries->library_name ?? 'LibrarySystem' }}. All rights reserved.</p>
                     </div>
                     <div class="col-md-4">
                         <div class="social-media">

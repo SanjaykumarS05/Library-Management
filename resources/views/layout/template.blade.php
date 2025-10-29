@@ -28,7 +28,13 @@
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
                 <a href="{{ route('barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
-                <a href="{{ route('notifications') }}"><span class="material-icons">notifications</span></a>
+                <a href="{{ route('notifications') }}">
+                    @if($hasPendingRequests)
+                    <span class="material-icons">notifications<span class="notify-badge1">{{ $hasPendingRequests }}</span></span>
+                    @else
+                    <span class="material-icons">notifications</span>
+                    @endif
+                </a>
                 <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
                     <span class="material-icons">
                         {{ (Auth::user()->profile->theme ?? 'light') === 'dark' ? 'light_mode' : 'dark_mode' }}
@@ -44,7 +50,13 @@
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
                 <a href="{{ route('staff.barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
-                <a href="{{ route('staff.notifications') }}"><span class="material-icons">notifications</span></a>
+                <a href="{{ route('notifications') }}">
+                    @if($hasPendingRequests)
+                    <span class="material-icons">notifications<span class="notify-badge1">{{ $hasPendingRequests }}</span></span>
+                    @else
+                    <span class="material-icons">notifications</span>
+                    @endif
+                </a>
                 <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
                     <span class="material-icons">
                         {{ (Auth::user()->profile->theme ?? 'light') === 'dark' ? 'light_mode' : 'dark_mode' }}
@@ -79,7 +91,6 @@
         <h3>{{ ucfirst(auth()->user()->name) }}</h3>
         <p>{{ auth()->user()->email }}</p>
         <hr>
-
         <nav>
             @if(auth()->user()->role === 'admin')
             <ul>        

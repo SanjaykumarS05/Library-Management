@@ -39,9 +39,8 @@ class MarkOverdueBooks extends Command
 
         // Books that are still issued and due tomorrow or overdue
         $dueSoonBooks = Book_issue::with('user', 'book')
-            ->where('status', 'Issued')
+            ->whereIn('status', ['Issued', 'Overdue'])
             ->where(function($q) use ($tomorrow) {
-                $q->whereDate('issue_date', $tomorrow->copy()->subDays(14));
                 $q->orWhereDate('issue_date', '<=', $tomorrow->copy()->subDays(14));
             })
             ->get();
@@ -53,7 +52,7 @@ class MarkOverdueBooks extends Command
             $data = [
                 'name' => $user->name,
                 'subject' => 'Book Due Reminder from ' . ($library->library_name ?? 'Library'),
-                'message' => "Reminder: The book '{$issue->book->title}' is due/overdue. Please return it to avoid increasing fines.",
+                'message' => "Reminder: The book '{$issue->book->title}({$issue->id})' is due/overdue. Please return it to avoid increasing fines.",
                 'type' => 'Book Return Reminder',
             ];
 

@@ -25,8 +25,9 @@ class NotificationController extends Controller
     $recipients = User::all();
     $logs = EmailLog::where('recipient_id', auth()->id())->latest()->paginate(20);
     $sentLogs = EmailLog::where('sender_id', auth()->id())->latest()->paginate(20);
+    $hasPendingRequests = $bookRequests->where('status', 'pending')->count();
 
-    return view('admin.notification', compact('bookRequests', 'statusOptions', 'recipients', 'logs', 'users', 'sentLogs'));
+    return view('admin.notification', compact('bookRequests', 'statusOptions', 'recipients', 'logs', 'users', 'sentLogs', 'hasPendingRequests'));
     }
     
     public function updateStatus(Request $request, $id)

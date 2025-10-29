@@ -92,7 +92,7 @@
                             <th>Subject</th>
                             <th>Type</th>
                             <th>Message</th>
-                            <th>Sent At</th>
+                            <th>Received At</th>
                         </tr>
                     </thead>
                     <tbody>

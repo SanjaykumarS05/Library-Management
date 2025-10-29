@@ -28,7 +28,13 @@
             <input type="file" id="barcode-file" accept="image/*" style="display:none;">
         </div>
 
+        <br>
+        <!-- Manual Barcode Input -->
+        <input type="text" id="barcode" placeholder="Or enter barcode manually" style="padding:8px; width:200px;">
+        <button id="barcode-submit" class="buttons small-btn" style="margin-left:5px;">Search</button>
+
         <p id="scan-result" style="margin-top:10px;">Scan result will appear here</p>
+        <p id="loading-message" style="color:#2196f3; display:none;">Fetching book info...</p>
     </center>
 
     <hr><br>
@@ -39,7 +45,7 @@
     <div id="printable-content">
         <div id="book-info" style="margin-top:20px;"></div>
 
-        <h2>Currrent Issued Books</h2>
+        <h2>Current Issued Books</h2>
         @if($book_issues_count)
             <h3>Total Issued Books: <span class="count">{{ $book_issues_count }}</span></h3>
             <br>
@@ -95,7 +101,7 @@ let html5QrcodeScanner = new Html5Qrcode("reader");
 // ✅ CAMERA SCAN SUCCESS
 function onScanSuccess(decodedText) {
     document.getElementById('scan-result').innerText = `Scanned Code: ${decodedText}`;
-    window.location.href = `/admin/barcode/book-info/${decodedText}`;
+    redirectToBookInfo(decodedText);
 }
 
 // ✅ CAMERA SCAN FAILURE
@@ -158,12 +164,46 @@ function processBarcodeImage(file) {
     html5QrcodeScanner.scanFile(file, true)
         .then(decodedText => {
             document.getElementById('scan-result').innerText = `Uploaded Barcode: ${decodedText}`;
-            window.location.href = `/admin/barcode/book-info/${decodedText}`;
+            redirectToBookInfo(decodedText);
         })
         .catch(err => {
             console.error(err);
             alert('Could not detect barcode. Try a clearer image.');
         });
+}
+
+// ✅ MANUAL BARCODE ENTRY (Enter key)
+document.getElementById('barcode').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const code = this.value.trim();
+        if (code) {
+            document.getElementById('scan-result').innerText = `Manual Barcode: ${code}`;
+            redirectToBookInfo(code);
+        } else {
+            alert('Please enter a valid barcode number.');
+        }
+    }
+});
+
+// ✅ Manual Search Button
+document.getElementById('barcode-submit').addEventListener('click', function() {
+    const code = document.getElementById('barcode').value.trim();
+    if (code) {
+        document.getElementById('scan-result').innerText = `Manual Barcode: ${code}`;
+        redirectToBookInfo(code);
+    } else {
+        alert('Please enter a barcode number.');
+    }
+});
+
+// ✅ REDIRECT FUNCTION WITH LOADING MESSAGE
+function redirectToBookInfo(code) {
+    const loadingMsg = document.getElementById('loading-message');
+    loadingMsg.style.display = 'block';
+    setTimeout(() => {
+        window.location.href = `/admin/barcode/book-info/${code}`;
+    }, 800);
 }
 
 // ✅ PRINT ALL CONTENT
@@ -200,6 +240,5 @@ function printSingle(cardId) {
     win.print();
     win.close();
 }
-
 </script>
 @endsection

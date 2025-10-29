@@ -122,7 +122,7 @@
         <table class="table table-bordered" style="width:100%;">
             <thead>
                 <tr>
-                    <th>S.No</th>
+                    <th>ID</th>
                     <th>User Name</th>
                     <th>Role</th>
                     <th>Book Title</th>
@@ -139,7 +139,7 @@
             <tbody>
                 @forelse($bookIssues as $index => $item)
                     <tr>
-                        <td>{{ $bookIssues->firstItem() + $index}}</td>
+                        <td>{{ $item->id }}</td>
                         <td>{{ $item->user->name ?? '' }}</td>
                         <td>{{ $item->user->role ?? '' }}</td>
                         <td>{{ $item->book->title ?? '' }}</td>

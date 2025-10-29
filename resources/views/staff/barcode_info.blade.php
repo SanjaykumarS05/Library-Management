@@ -48,7 +48,7 @@
         </div>
 </div>
 
-        @if($bookData['status'] == 'Issued')
+        @if(in_array($bookData['status'], ['Issued', 'Overdue']))
             <form action="{{ route('staff.book.return') }}" method="POST" style="margin-top:15px;">
                 @csrf
                 <input type="hidden" name="issue_id" value="{{ $book_issue->id }}">
