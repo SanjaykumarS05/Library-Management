@@ -19,7 +19,6 @@ class AdminController extends Controller
 
         $booksCount = Book::count();
         $totalfines = User::sum('fine');
-        $availableBooks = Book::where('availability', 'Yes')->count();
         $issuedBooks = Book_issue::where('status', 'issued')->count();
 
         $outOfStockBooks = Book::where('stock', '<=', 0)->count();
@@ -51,7 +50,6 @@ class AdminController extends Controller
             'booksCount' => $booksCount,
             'totalBooks' => $totalBooks,
             'categoriesCount' => $categoriesCount,
-            'availableBooks' => $availableBooks,
             'issuedBooks' => $issuedBooks,
             'outOfStockBooks' => $outOfStockBooks,
             'activeStaff' => $activeStaff,

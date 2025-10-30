@@ -23,7 +23,7 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users,email',
+            'email' => 'required|string|email|regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/i|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required',
         ];

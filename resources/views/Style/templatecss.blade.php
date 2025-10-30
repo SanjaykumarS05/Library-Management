@@ -466,5 +466,42 @@ body.dark-mode aside nav ul li a.active {
     header h1 { font-size: 18px; }
     header input[type="text"] { width: 140px; }
 }
+/* =========================
+   Footer Style (Sticky at Bottom)
+========================= */
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: 37px;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    margin-top: auto;
+}
+
+/* Makes footer stick to bottom when content is short */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    overflow-y: auto;
+}
+.social-media{
+    position: relative;
+    left: 37%;
+    text-align: end;
+}
+.social-media a{
+    margin: 0px 10px;
+    color: #fff;
+    width: 20px;
+}
      
 </style>

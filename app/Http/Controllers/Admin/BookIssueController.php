@@ -18,11 +18,10 @@ class BookIssueController extends Controller
     // Show Issue/Return Form
     public function showIssueReturnForm()
     {
-        $users = User::all();
-        $books = Book::all();
+        $users = User::select('id', 'name', 'role')->get();
+        $books = Book::select('id', 'title', 'stock')->where('stock', '>', 0)->get();
         $book_issues = Book_issue::where('user_id', Auth::id())->get();
         $book_issues1 = Book_issue::whereIn('status', ['Issued', 'Overdue'])->get();
-
         return view('admin.issue_return', compact('books', 'book_issues', 'users', 'book_issues1'));
     }
 
@@ -64,18 +63,15 @@ class BookIssueController extends Controller
         $book->stock -= 1;
         $book->availability = $book->stock > 0 ? 'Yes' : 'No';
         $book->save();
-
         // Approve Book Request if exists
         $bookRequest = BookRequest::where('book_id', $book->id)
             ->where('user_id', $request->user_id)
             ->where('status', 'pending')
             ->first();
-
         if ($bookRequest) {
             $bookRequest->status = 'approved';
             $bookRequest->save();
         }
-
         // Send Notification
         $user = User::findOrFail($request->user_id);
         $library = Library::first();
@@ -87,7 +83,6 @@ class BookIssueController extends Controller
             'due_date' => now()->addDays(14)->toDateString(),
         ];
         $user->notify(new BookNotification($data));
-
         return redirect()->route('barcode.index')->with('success', 'Book issued successfully!');
     }
 
@@ -162,7 +157,6 @@ class BookIssueController extends Controller
         $users = User::all();
         $books = Book::all();
         $book_issues1 = Book_issue::whereIn('status', ['Issued', 'Overdue'])->get();
-
         $selectedBook = $bookId ? Book::find($bookId) : null;
         $selectedUser = $userId ? User::find($userId) : null;
 

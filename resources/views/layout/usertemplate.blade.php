@@ -79,6 +79,14 @@
         </div>
         @yield('scripts')
     </main>
+    <footer>
+        <p>&copy; {{ now()->year }} {{ $library->library_name ?? 'Library Management System' }}. All rights reserved.<span class="social-media">
+                            <a href="{{ $library->facebook ?? '#' }}"><i class="fa fa-facebook"></i></a>
+                            <a href="{{ $library->twitter ?? '#' }}"><i class="fa fa-twitter"></i></a>
+                            <a href="{{ $library->instagram ?? '#' }}"><i class="fa fa-instagram"></i></a>
+                            <a href="{{ $library->youtube ?? '#' }}"><i class="fa fa-youtube"></i></a>
+                        </span></p>
+    </footer>
 
     <!-- ================= Footer ================= -->
   

@@ -114,6 +114,7 @@
 
     <!-- Latest Books Section - Updated to match features styling -->
     <section id="latest-books" class="py-5 bg-light">
+        
         <div class="container">
             <h2 class="text-center mb-5">Latest Books</h2>
             <div class="row g-4">
@@ -257,7 +258,7 @@
 
                 <div class="input-group">
                     <label for="registerEmail">Email:</label>
-                    <input type="email" id="registerEmail" name="email" placeholder="Enter your email" required value="{{ old('email') }}">
+                    <input type="text" id="registerEmail" name="email" placeholder="Enter your email" value="{{ old('email') }}">
                     <i class="material-icons input-icon">email</i>
                     @error('email')
                         <div class="error-message">{{ $message }}</div>
@@ -275,7 +276,6 @@
                         <div class="error-message">{{ $message }}</div>
                     @enderror
                 </div>
-
                 <div class="input-group">
                     <label for="password_confirmation">Confirm Password:</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password" required>
@@ -302,6 +302,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        
         // Modal functionality
         function openModal(modalId, tab = 'login') {
             document.getElementById(modalId).style.display = "flex";

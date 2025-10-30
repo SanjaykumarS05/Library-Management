@@ -9,12 +9,11 @@ use App\Models\Book;
 use App\Models\book_issue;
 use App\Models\Category;
 
-
 class BookController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::select('id', 'name')->get();
 
         // Start query builder
         $books = Book::with('category')

@@ -98,5 +98,8 @@ body.dark-mode .barcode-scanner {
 body.dark-mode .count {
     color: #ff6b6b;
 }
+p{
+    margin:-1;
+}
 
 </style>

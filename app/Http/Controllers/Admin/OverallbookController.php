@@ -116,7 +116,6 @@ class OverallbookController extends Controller
                 'status'         => ucfirst($book_issue->status ?? 'Issued'),
             ];
         }
-
         return $barcodes;
     }
 }

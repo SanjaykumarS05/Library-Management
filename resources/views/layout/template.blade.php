@@ -8,6 +8,8 @@
 
     <!-- Icons & Toastr -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -30,7 +32,7 @@
                 <a href="{{ route('barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
                 <a href="{{ route('notifications') }}">
                     @if($hasPendingRequests)
-                    <span class="material-icons">notifications<span class="notify-badge1">{{ $hasPendingRequests }}</span></span>
+                    <span class="material-icons">notifications<span class="notify-badge1" style="margin-top: -9px;">{{ $hasPendingRequests }}</span></span>
                     @else
                     <span class="material-icons">notifications</span>
                     @endif
@@ -52,7 +54,7 @@
                 <a href="{{ route('staff.barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
                 <a href="{{ route('notifications') }}">
                     @if($hasPendingRequests)
-                    <span class="material-icons">notifications<span class="notify-badge1">{{ $hasPendingRequests }}</span></span>
+                    <span class="material-icons">notifications<span class="notify-badge1"style="margin-top: -9px;">{{ $hasPendingRequests }}</span></span>
                     @else
                     <span class="material-icons">notifications</span>
                     @endif
@@ -130,6 +132,14 @@
         </div>
         @yield('scripts')
     </main>
+    <footer>
+        <p>&copy; {{ now()->year }} {{ $library->library_name ?? 'Library Management System' }}. All rights reserved.<span class="social-media">
+                            <a href="{{ $library->facebook ?? '#' }}"><i class="fa fa-facebook"></i></a>
+                            <a href="{{ $library->twitter ?? '#' }}"><i class="fa fa-twitter"></i></a>
+                            <a href="{{ $library->instagram ?? '#' }}"><i class="fa fa-instagram"></i></a>
+                            <a href="{{ $library->youtube ?? '#' }}"><i class="fa fa-youtube"></i></a>
+                        </span></p>
+    </footer>
 
     {{-- ================= Scripts ================= --}}
     <script>

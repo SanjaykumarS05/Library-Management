@@ -2,14 +2,6 @@
 /* ============================================
    GLOBAL LAYOUT (Light Theme)
 ============================================ */
-body {
-    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #e0e7ff, #f3e8ff);
-    margin: 0;
-    padding: 40px 10px;
-    color: #333;
-    transition: background 0.3s, color 0.3s;
-}
 
 /* ============================================
    HEADER & TITLE
@@ -226,5 +218,6 @@ body.dark-mode .barcode1 {
 
 body.dark-mode .buttons { background-color: #6a5acd; }
 body.dark-mode .buttons:hover { background-color: #5747a3; }
+
 
 </style>

@@ -12,6 +12,7 @@
         <p><strong>Due Date:</strong> {{ $item['issue_date']->addDay(15)->format('Y-m-d') }}</p>
         <p><strong>Return Date:</strong> {{ $item['return_date'] ?? '-' }}</p>
         <p><strong>Status:</strong> {{ $item['status'] }}</p>
+        <p><strong>Barcode ID:{{$item['barcodeText']}}</strong></p>
         <span class="barcode1">{!! $item['barcode'] !!}</span>
 
         <div class="no-export"  style="margin-top:10px;">

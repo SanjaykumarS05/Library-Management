@@ -64,7 +64,7 @@ class BarcodeController extends Controller
         }
 
         $generator = new BarcodeGeneratorHTML();
-        $barcodeHtml = $generator->getBarcode($book_issue->id, $generator::TYPE_CODE_128);
+        $barcodeHtml = $generator->getBarcode(($book_issue->id), $generator::TYPE_CODE_128);
         $users = User::all();
         $issuedUser = User::find($book_issue->issued_id);
 

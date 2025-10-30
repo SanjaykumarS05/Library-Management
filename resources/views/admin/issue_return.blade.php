@@ -7,9 +7,10 @@
 <div class="container issue-return">
    <h2 class="h2">📖 Issue / Return Books</h2>
 
+   {{-- ================= ISSUE BOOK ================= --}}
     <div class="issue-book">
         <h3 class="h3">Issue a Book</h3>
-        <form action="{{ route('book.issue') }}" method="POST">
+        <form action="{{ route('book.issue') }}" method="POST" class="book-form">
             @csrf
 
             {{-- Select User --}}
@@ -25,6 +26,8 @@
                     @endforeach
                 </select>
             </div>
+
+            {{-- Select Book --}}
             <div>
                 <label for="book_id">Select Book:</label>
                 <select name="book_id" id="book_id" required>
@@ -48,9 +51,10 @@
 
     <hr>
 
+    {{-- ================= RETURN BOOK ================= --}}
     <div class="return-book">
         <h3 class="h3">Return a Book</h3>
-        <form action="{{ route('book.return') }}" method="POST">
+        <form action="{{ route('book.return') }}" method="POST" class="book-form">
             @csrf
 
             {{-- Select User --}}
@@ -86,9 +90,22 @@
     </div>
 </div>
 
+<!-- ✅ Loading Overlay (hidden initially) -->
+<div id="loading-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:#fff; padding:30px 40px; border-radius:10px; text-align:center;
+                box-shadow:0 0 15px rgba(0,0,0,0.3); font-size:18px; color:#007bff;">
+        <div style="border:4px solid #f3f3f3; border-top:4px solid #007bff; border-radius:50%;
+                    width:40px; height:40px; animation:spin 1s linear infinite; margin:auto;"></div>
+        <p style="margin-top:15px; font-weight:500;">Processing Request...</p>
+    </div>
+</div>
+
 {{-- ========================= SCRIPT ========================= --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+    // Filter issued books by user
     const userSelect = document.getElementById('user_id_return');
     const issueSelect = document.getElementById('issue_id');
     const allOptions = Array.from(issueSelect.options);
@@ -102,7 +119,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // ✅ Show overlay on form submit
+    const forms = document.querySelectorAll('.book-form');
+    const overlay = document.getElementById('loading-overlay');
+
+    forms.forEach(form => {
+        form.addEventListener('submit', function() {
+            overlay.style.display = 'flex';
+        });
+    });
 });
+
+// Spinner animation
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}`;
+document.head.appendChild(style);
 </script>
 
 @endsection
