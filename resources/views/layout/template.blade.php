@@ -52,7 +52,7 @@
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
                 <a href="{{ route('staff.barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
-                <a href="{{ route('notifications') }}">
+                <a href="{{ route('staff.notifications') }}">
                     @if($hasPendingRequests)
                     <span class="material-icons">notifications<span class="notify-badge1"style="margin-top: -9px;">{{ $hasPendingRequests }}</span></span>
                     @else
@@ -105,6 +105,7 @@
                 <li><a href="{{ route('books.issue_return') }}" class="{{ request()->routeIs('books.issue_return') ? 'active' : '' }}">Issue / Return Books</a></li>
                 <li><a href="{{ route('barcode.index') }}" class="{{ request()->routeIs('barcode.index') ? 'active' : '' }}">Barcode</a></li>
                 <li><a href="{{ route('reports.index') }}" class="{{ request()->routeIs('reports.index') ? 'active' : '' }}">Reports</a></li>
+                <li><a href="{{ route('admin.history') }}" class="{{ request()->routeIs('admin.history') ? 'active' : '' }}">Borrowing History</a></li>
                 <li><a href="{{ route('settings') }}" class="{{ request()->routeIs('settings') ? 'active' : '' }}">Settings</a></li>
             </ul>
             @endif
@@ -119,6 +120,7 @@
                 <li><a href="{{ route('staff.books.issue_return') }}" class="{{ request()->routeIs('books.issue_return') ? 'active' : '' }}">Issue / Return Books</a></li>
                 <li><a href="{{ route('staff.barcode.index') }}" class="{{ request()->routeIs('barcode.index') ? 'active' : '' }}">Barcode</a></li>
                 <li><a href="{{ route('staff.reports.index') }}" class="{{ request()->routeIs('reports.index') ? 'active' : '' }}">Reports</a></li>
+                <li><a href="{{ route('staff.history') }}" class="{{ request()->routeIs('staff.history') ? 'active' : '' }}">Borrowing History</a></li>
                 <li><a href="{{ route('staff.settings') }}" class="{{ request()->routeIs('settings') ? 'active' : '' }}">Settings</a></li>
             </ul>
             @endif

@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\OverallbookController as AdminOverallbookControll
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
-
+use App\Http\Controllers\Admin\MyhistoryController as AdminMyhistoryController;
 // ================= STAFF CONTROLLERS =================
 use App\Http\Controllers\Staff\BookController as StaffBookController;
 use App\Http\Controllers\Staff\ManageUserController as StaffManageUserController;
@@ -29,6 +29,7 @@ use App\Http\Controllers\Staff\OverallbookController as StaffOverallbookControll
 use App\Http\Controllers\Staff\ReportController as StaffReportController;
 use App\Http\Controllers\Staff\SettingController as StaffSettingController;
 use App\Http\Controllers\Staff\NotificationController as StaffNotificationController;
+use App\Http\Controllers\Staff\MyhistoryController as StaffMyhistoryController;
 
 
 // ================= USER CONTROLLERS =================
@@ -52,7 +53,8 @@ Route::post('/login', [UserController::class, 'submit'])->name('submit');
 Route::get('/register', [UserController::class, 'Registerindex'])->name('register');
 Route::post('/register', [UserController::class, 'Registerstore'])->name('store');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-
+Route::post('/otp', [UserController::class, 'otp'])->name('otp');
+Route::get('/resend-otp', [UserController::class, 'resendOtp'])->name('resend.otp');
 // ================= DASHBOARD REDIRECT BASED ON ROLE =================
 Route::get('/dashboard', function() {
     $role = auth()->user()->role;
@@ -94,6 +96,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [AdminCategoryController::class, 'delete'])->name('categories.delete');
+    Route::get('/history', [AdminMyhistoryController::class, 'borrowingHistory'])->name('admin.history');
 
     // Search & Reports
     Route::get('/search', [AdminSearchController::class, 'index'])->name('search');
@@ -165,6 +168,7 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
 
     // Search & Reports
     Route::get('/search', [StaffSearchController::class, 'index'])->name('staff.search');
+    Route::get('/history', [StaffMyhistoryController::class, 'borrowingHistory'])->name('staff.history');
 
 
     Route::get('/reports', [StaffReportController::class, 'index'])->name('staff.reports.index');

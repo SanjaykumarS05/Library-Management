@@ -283,6 +283,7 @@ aside nav ul li a {
 
 aside nav ul li a:hover {
     background-color: var(--header-bg);
+    color: var(--sidebar-text);
 }
 
 body.dark-mode aside nav ul li a:hover {

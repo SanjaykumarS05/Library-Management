@@ -12,7 +12,6 @@
 
 <div class="setting-toggle">
     <label><input type="checkbox" id="toggle-profile" checked> Profile</label>
-    <label><input type="checkbox" id="toggle-library"> Library</label>
     <label><input type="checkbox" id="toggle-password"> Change Password</label>
 </div>
 

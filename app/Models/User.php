@@ -39,6 +39,11 @@ class User extends Authenticatable
         return $this->hasMany(email_log::class, 'sender_id');
     }
 
+    public function routeNotificationForMail()
+    {
+        return $this->email;
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

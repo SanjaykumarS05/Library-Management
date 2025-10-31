@@ -110,9 +110,9 @@ class ManageUserController extends Controller
 
         $validated = $request->validate([
             'name'             => 'required|string|max:255',
-            'email'            => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|string|email|regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/i|unique:users,email,' . $id,
             'role'             => 'required|in:admin,staff,user',
-            'secondary_email'  => 'required|email|different:email|unique:profiles,secondary_email,' . $user->id . ',user_id',
+            'secondary_email'  => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/i|different:email|unique:profiles,secondary_email,' . $user->id . ',user_id',
             'blood_group'      => 'required|string|max:3',
             'dob'              => ['required', 'date', function ($attribute, $value, $fail) {
                 if ($value) {

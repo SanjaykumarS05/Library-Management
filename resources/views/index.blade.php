@@ -295,6 +295,38 @@
             </form>
         </div>
     </div>
+    <!-- OTP Verification Modal -->
+@if(session('openModal') === 'otp')
+<div class="modal-bg" id="otpModal" style="display: flex;">
+    <div class="modal-box">
+        <button class="close-btn" onclick="closeModal('otpModal')">✖</button>
+        <h3 class="text-center mb-4">Verify Your Email</h3>
+        <p class="text-center text-muted mb-4">
+            Please enter the 6-digit OTP sent to your registered email.
+        </p>
+
+        <form method="POST" action="{{ route('otp') }}" class="auth-form active">
+            @csrf
+            <div class="input-group">
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp" name="otp" maxlength="6" placeholder="Enter 6-digit OTP" required>
+                <i class="material-icons input-icon">key</i>
+            </div>
+
+            <div class="input-group">
+                <button type="submit" class="submit-btn w-100">Verify OTP</button>
+            </div>
+
+            <div class="auth-footer text-center mt-3">
+                <p>Didn’t get the OTP? 
+                    <a href="{{ route('resend.otp') }}">Resend</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 
     <!-- Footer -->
 
@@ -358,6 +390,10 @@
             
             @if(session('openModal'))
                 openModal('authModal', '{{ session('openModal') }}');
+            @endif
+
+              @if(session('openModal') === 'otp')
+                document.getElementById('otpModal').style.display = 'flex';
             @endif
         });
         
