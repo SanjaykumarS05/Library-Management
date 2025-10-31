@@ -14,8 +14,8 @@ class book_issue extends Model
 
     protected $fillable = [
         'book_id',
-        'user_id',     // received by
-        'issued_id',   // issued by
+        'user_id',    
+        'issued_id',   
         'issue_date',
         'return_date',
         'status',

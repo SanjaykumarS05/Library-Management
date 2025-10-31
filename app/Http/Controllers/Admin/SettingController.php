@@ -15,9 +15,7 @@ use Carbon\Carbon;
 
 class SettingController extends Controller
 {
-    // =====================
-    // Show Settings Page
-    // =====================
+    
     public function index()
     {
         $admin = Auth::user();
@@ -27,9 +25,7 @@ class SettingController extends Controller
         return view('admin.setting', compact('admin', 'profile', 'settings'));
     }
 
-    // =====================
-    // Update Profile
-    // =====================
+   
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -63,7 +59,7 @@ class SettingController extends Controller
             'theme' => 'nullable|string|in:light,dark',
         ]);
 
-        // Handle profile image
+      
         $profileImagePath = optional($user->profile)->profile_image_path;
         if ($request->hasFile('profile_image')) {
             if ($profileImagePath && Storage::disk('public')->exists($profileImagePath)) {
@@ -72,10 +68,10 @@ class SettingController extends Controller
             $profileImagePath = $request->file('profile_image')->store('Profile', 'public');
         }
 
-        // Update user
+  
         $user->update($request->only('name', 'email'));
 
-        // Update or create profile
+     
         Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
@@ -95,9 +91,6 @@ class SettingController extends Controller
         return redirect()->back()->with('success', 'Profile updated successfully!');
     }
 
-    // =====================
-    // Update Library
-    // =====================
     public function updateLibrary(Request $request)
     {
         $request->validate([
@@ -122,9 +115,7 @@ class SettingController extends Controller
         return redirect()->back()->with('success', 'Library settings updated successfully!');
     }
 
-    // =====================
-    // Update Theme
-    // =====================
+ 
     public function updateTheme(Request $request)
     {
         $request->validate([
@@ -141,29 +132,26 @@ class SettingController extends Controller
     }
 
 
-    // =====================
-    // Update Password (AJAX)
-    // =====================
+   
    public function updatePassword(Request $request)
 {
     $request->validate([
         'current_password' => 'required|string',
-        'new_password' => 'required|string|min:8|confirmed', // confirmed expects new_password_confirmation
+        'new_password' => 'required|string|min:8|confirmed',
     ]);
 
     $user = Auth::user();
 
-    // Check if current password matches
+
     if (!Hash::check($request->current_password, $user->password)) {
         return response()->json(['message' => 'Current password is incorrect.'], 422);
     }
 
-    // Prevent using the same password
     if (Hash::check($request->new_password, $user->password)) {
         return response()->json(['message' => 'New password cannot be the same as the current password.'], 422);
     }
 
-    // Update password
+
     $user->update(['password' => Hash::make($request->new_password)]);
 
     return response()->json(['message' => 'Password updated successfully!']);

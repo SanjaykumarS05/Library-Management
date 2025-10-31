@@ -38,7 +38,7 @@ class NotificationController extends Controller
 
         $bookRequest = BookRequest::findOrFail($id);
 
-      // Only update if the new status is 'rejected'
+      
             if ($request->status === 'rejected')
             {
              $bookRequest->status = 'rejected'; 
@@ -75,12 +75,12 @@ class NotificationController extends Controller
         $library = Library::first();
         $libraryName = $library->library_name ?? 'Library';
 
-        // If "other" was selected, use custom input, else use selected type
+        
         $type = $request->type === 'other'
                 ? $request->other_type
                 : $request->type;
 
-        // Send to ALL USERS
+        
         if ($request->recipient_id === 'all') {
             $allUsers = User::all();
             foreach ($allUsers as $user) {
@@ -93,7 +93,7 @@ class NotificationController extends Controller
                 ]);
             }
         }
-        // Send to ONE USER
+        
         else {
             $user = User::findOrFail($request->recipient_id);
 

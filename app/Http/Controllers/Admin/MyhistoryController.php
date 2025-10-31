@@ -13,16 +13,16 @@ class MyhistoryController extends Controller
     {
         $user = Auth::user();
 
-        // Fetch all book issues with book details
+       
         $bookIssues = Book_issue::with('book')
             ->where('user_id', $user->id)
             ->orderBy('issue_date', 'desc')
             ->paginate(20);
 
-        // Fetch all issues for summary cards
+        
         $allIssues = Book_issue::where('user_id', $user->id)->get();
 
-        // Compute counts
+        
         $currentlyBorrowed = $allIssues->where('status', 'Issued')->count();
         $allIssues = Book_issue::where('user_id', $user->id)->get();
         $overalldue = $allIssues->where('status', 'Overdue')->count();

@@ -18,7 +18,7 @@ class SearchController extends Controller
         $categories = Category::all();
         $books = Book::query();
 
-        // Search by title, author, ISBN, or category name
+   
         if ($query) {
             $books->where(function($q) use ($query) {
                 $q->where('title', 'LIKE', "%{$query}%")
@@ -29,19 +29,19 @@ class SearchController extends Controller
             });
         }
 
-        // Filter by category
+
         if ($category) {
             $books->whereHas('category', fn($q) => $q->where('name', $category));
         }
 
-        // Filter by availability
+      
         if ($availability) {
             $books->where('stock', $availability === 'Yes' ? '>' : '=', 0);
         }
 
         $books = $books->latest()->paginate(10);
 
-        // Return AJAX partial
+
         if ($request->ajax()) {
             return view('admin.search_results', compact('books'))->render();
         }

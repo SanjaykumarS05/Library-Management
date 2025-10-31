@@ -113,7 +113,6 @@ let html5QrCode;
 let currentCameraId = null;
 const cameraSelect = document.getElementById('camera-select');
 
-// ✅ Step 1: Load cameras only (don’t start yet)
 Html5Qrcode.getCameras().then(cameras => {
     cameraSelect.innerHTML = '';
 
@@ -137,7 +136,6 @@ Html5Qrcode.getCameras().then(cameras => {
     console.error(err);
 });
 
-// ✅ Start Camera
 async function startCamera(cameraId) {
     if (html5QrCode) {
         try { await html5QrCode.stop(); await html5QrCode.clear(); } catch(e){}
@@ -147,7 +145,7 @@ async function startCamera(cameraId) {
     try {
         await html5QrCode.start(
             { deviceId: { exact: cameraId } },
-            { fps: 10, qrbox: { width: 250, height: 250 } },
+            { fps: 30, qrbox: { width: 250, height: 250 } },
             decodedText => {
                 document.getElementById('scan-result').innerText = `Scanned: ${decodedText}`;
                 redirectToBookInfo(decodedText);
@@ -174,7 +172,7 @@ async function stopCamera() {
     }
 }
 
-// ✅ Button actions
+
 document.getElementById('start-scan').addEventListener('click', () => {
     const selected = cameraSelect.value;
     if (!selected) return alert('Select a camera first.');
@@ -182,13 +180,13 @@ document.getElementById('start-scan').addEventListener('click', () => {
 });
 document.getElementById('stop-scan').addEventListener('click', stopCamera);
 
-// ✅ Stop camera when leaving page
+
 window.addEventListener('beforeunload', stopCamera);
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) stopCamera();
 });
 
-// ✅ File upload / drag & drop
+
 const dropZone = document.getElementById('drop-zone');
 const fileInput = document.getElementById('barcode-file');
 dropZone.addEventListener('click', () => fileInput.click());
@@ -218,7 +216,6 @@ function processBarcodeImage(file) {
         });
 }
 
-// ✅ Manual input
 document.getElementById('barcode-submit').addEventListener('click', () => {
     const code = document.getElementById('barcode').value.trim();
     if (code) redirectToBookInfo(code);
@@ -231,17 +228,17 @@ document.getElementById('barcode').addEventListener('keypress', e => {
     }
 });
 
-// ✅ Redirect to book info with overlay freeze
+
 function redirectToBookInfo(code) {
     const overlay = document.getElementById('loading-overlay');
     overlay.style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // freeze scrolling
+    document.body.style.overflow = 'hidden'; 
     setTimeout(() => {
         window.location.href = `/admin/barcode/book-info/${code}`;
     }, 800);
 }
 
-// ✅ Print Functions
+
 function printContent(divId) {
     const content = document.getElementById(divId).innerHTML;
     const win = window.open('', '', 'width=800,height=600');

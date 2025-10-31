@@ -156,7 +156,6 @@
             if(box) box.addEventListener('keydown', e => { if(e.key==='Enter') e.preventDefault(); });
         });
 
-        // Theme toggle with persistence
         const themeButton = document.getElementById('themeToggle');
         let theme = localStorage.getItem('theme') || "{{ Auth::user()->profile->theme ?? 'light' }}";
         document.body.classList.toggle('dark-mode', theme === 'dark');
@@ -194,7 +193,7 @@
             @endif
         });
 
-        // Sidebar toggle
+
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.querySelector('aside');
         const mainContent = document.querySelector('main');
@@ -204,11 +203,10 @@
             mainContent.classList.toggle('full-width');
         });
 
-        // 🖨️ Print Report
+     
         function printReport() {
         let tableClone = document.getElementById('report-table').cloneNode(true);
 
-        // Remove 'Actions' column before printing
         tableClone.querySelectorAll('.no-export').forEach(el => el.remove());
 
         const printWindow = window.open('', '', 'height=600,width=800');
@@ -232,7 +230,7 @@
         printWindow.print();
     }
 
-            // 📊 Export to Excel
+      
             function exportToExcel() {
                 let tableClone = document.getElementById('report-table').cloneNode(true);
                 tableClone.querySelectorAll('.no-export').forEach(el => el.remove());

@@ -12,12 +12,12 @@ use Carbon\Carbon;
 
 class ManageUserController extends Controller
 {
-    // ✅ List all users
+   
     public function index(Request $request)
     {
         $users = User::query();
 
-        // ✅ AJAX Search / Filter
+        
         if ($request->ajax()) {
             if ($request->search) {
                 $search = $request->search;
@@ -38,12 +38,12 @@ class ManageUserController extends Controller
             return view('admin.users_table', compact('users'))->render();
         }
 
-        // ✅ Normal page load
+        
         $users = $users->latest()->paginate(10);
         return view('admin.manage_users', compact('users'));
     }
 
-    // ✅ Show Add User Form
+   
     public function create()
     {
         $admin = Auth::user();
@@ -51,7 +51,7 @@ class ManageUserController extends Controller
         return view('admin.adduser', compact('admin', 'profile'));
     }
 
-    // ✅ Store New User
+  
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -96,14 +96,14 @@ class ManageUserController extends Controller
         return redirect()->route('users')->with('success', 'User created successfully.');
     }
 
-    // ✅ Edit User
+   
     public function edit($id)
     {
         $user = User::with('profile')->findOrFail($id);
         return view('admin.edituser', compact('user'));
     }
 
-    // ✅ Update User
+   
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -152,7 +152,7 @@ class ManageUserController extends Controller
         return redirect()->route('users')->with('success', 'User updated successfully.');
     }
 
-    // ✅ Delete User
+
     public function delete($id)
     {
         $user = User::findOrFail($id);

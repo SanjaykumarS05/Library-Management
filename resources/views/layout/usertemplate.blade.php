@@ -90,7 +90,7 @@
                         </span></p>
     </footer>
 
-    <!-- ================= Footer ================= -->
+
   
     {{-- ================= Scripts ================= --}}
     <script>
@@ -98,14 +98,13 @@
         @if(session('error')) toastr.error("{{ session('error') }}"); @endif
         @foreach ($errors->all() as $error) toastr.error("{{ $error }}"); @endforeach
         
-        // Prevent Enter reload in search
+
         const adminSearch = document.getElementById('searchBox');
         const staffSearch = document.getElementById('searchBoxStaff');
         [adminSearch, staffSearch].forEach(box => {
             if(box) box.addEventListener('keydown', e => { if(e.key==='Enter') e.preventDefault(); });
         });
 
-        // Theme toggle with persistence
         const themeButton = document.getElementById('themeToggle');
         let theme = localStorage.getItem('theme') || "{{ Auth::user()->profile->theme ?? 'light' }}";
         document.body.classList.toggle('dark-mode', theme === 'dark');
@@ -128,7 +127,7 @@
             });
         });
 
-         // Sidebar toggle
+
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.querySelector('aside');
         const mainContent = document.querySelector('main');
@@ -138,11 +137,10 @@
             mainContent.classList.toggle('full-width');
         });
         
-        // 🖨️ Print Report
         function printReport() {
         let tableClone = document.getElementById('report-table').cloneNode(true);
 
-        // Remove 'Actions' column before printing
+
         tableClone.querySelectorAll('.no-export').forEach(el => el.remove());
 
         const printWindow = window.open('', '', 'height=600,width=800');
@@ -166,7 +164,7 @@
         printWindow.print();
     }
 
-            // 📊 Export to Excel
+
             function exportToExcel() {
                 let tableClone = document.getElementById('report-table').cloneNode(true);
                 tableClone.querySelectorAll('.no-export').forEach(el => el.remove());
@@ -186,11 +184,11 @@
             }
             
             document.getElementById('headerSearchForm').addEventListener('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
+                e.preventDefault();
                 const query = document.getElementById('searchBox').value.toLowerCase().trim();
-                let url = "{{ route('user.search') }}"; // default action
+                let url = "{{ route('user.search') }}"; 
 
-                // Conditional routing based on query keywords
+
                 if(query.includes("dashboard")) {
                     url = "{{ route('user.dashboard') }}";
                 } else if(query.includes("browse")) {
@@ -206,7 +204,7 @@
                 } else if(query.includes("notification")) {
                     url = "{{ route('user.notifications') }}";
                 }
-                // Redirect to the chosen URL with the query as GET parameter if needed
+
                 window.location.href = url + (url === "{{ route('user.search') }}" ? "?query=" + encodeURIComponent(query) : "");
             });
         </script>
