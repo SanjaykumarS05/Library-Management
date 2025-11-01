@@ -47,7 +47,7 @@
 
         <h2>Current Issued Books</h2>
         @if($book_issues_count)
-            <h3>Total Issued Books: <span class="count">{{ $book_issues_count }}</span></h3>
+            <h3>Total Issued Books: <span class="count">{{ $book_issues_count }}</span></h3> 
             <br>
             <div class="barcode" id="barcode-cards">
                 @foreach($barcodes as $item)
@@ -62,7 +62,8 @@
                         <p><strong>Due Date:</strong> {{ $item['issue_date']->addDay(15)->format('Y-m-d') }}</p>
                         <p><strong>Status:</strong> {{ $item['status'] }}</p>
                         <p><strong>Barcode ID:</strong> {{ $item['barcodeText'] }}</p>
-                        <center><span class="barcode1">{!! $item['barcode'] !!}</span></center>
+                        <center><span class="barcode1"><img src="{{ $item['barcodeImage'] }}" alt="Barcode" style="width:150px; height:auto;">
+                        </span></center>
                         <div class="no-print" style="margin-top:10px;">
                             <button class="buttons small-btn" onclick="printSingle('card-{{ $item['barcodeText'] }}')">🖨️ Print</button>
                         </div>

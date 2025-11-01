@@ -8,7 +8,6 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Book_issue;
-use Picqer\Barcode\BarcodeGeneratorHTML;
 
 class BarcodeController extends Controller
 {
@@ -17,22 +16,24 @@ class BarcodeController extends Controller
     {
         $book_issues = Book_issue::with(['book.category', 'user'])
             ->whereIn('status', ['issued', 'overdue'])
-            ->orderBy('issue_date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         $book_issues_count = $book_issues->count();
 
-        $generator = new BarcodeGeneratorHTML();
+    
         $barcodes = [];
-
         foreach ($book_issues as $book_issue) {
-            $barcodeText = (string) $book_issue->id;
-            $barcodeHtml = $generator->getBarcode($barcodeText, $generator::TYPE_CODE_128);
-
-            $issuedUser = User::find($book_issue->issued_id);
+        $issuedUser = User::find($book_issue->issued_id);
+        $barcodePath = $book_issue->barcode_path ?? null;
+        $barcodeImage = $barcodePath ? asset('storage/' . $barcodePath) : asset('images/default-barcode.png');
+        $bookImagePath = $book_issue->book->image_path ?? null;
+        $bookImage = $bookImagePath ? asset('storage/' . $bookImagePath) : asset('images/default-book.png');
+        $issuedUser = User::find($book_issue->issued_id);
+        $barcodeText = $book_issue->id;
 
             $barcodes[] = [
-                'barcode'        => $barcodeHtml,
+                'barcodeImage'    => $barcodeImage,
                 'barcodeText'    => $barcodeText,
                 'book_title'     => $book_issue->book->title ?? 'UNKNOWN',
                 'book_isbn'      => $book_issue->book->isbn ?? 'UNKNOWN',
@@ -63,10 +64,10 @@ class BarcodeController extends Controller
             return redirect()->route('barcode.index')->with('error', 'Book not found for the provided barcode.');
         }
 
-        $generator = new BarcodeGeneratorHTML();
-        $barcodeHtml = $generator->getBarcode(($book_issue->id), $generator::TYPE_CODE_128);
         $users = User::all();
         $issuedUser = User::find($book_issue->issued_id);
+        $barcodePath = $book_issue->barcode_path ?? null;
+        $barcodeImage = $barcodePath ? asset('storage/' . $barcodePath) : asset('images/default-barcode.png');
 
         $bookData = [
             'id' => $book_issue->id,
@@ -82,7 +83,7 @@ class BarcodeController extends Controller
             'issue_date' => $book_issue->issue_date ?? 'UNKNOWN',
             'status' => $book_issue->status ?? 'UNKNOWN',
             'book_id' => $book_issue->book_id,
-            'barcode' => $barcodeHtml,
+            'barcodeImage' => $barcodeImage,
         ];
 
         return view('admin.barcode_info', compact('book_issue', 'bookData', 'users'));

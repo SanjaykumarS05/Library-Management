@@ -40,6 +40,18 @@ h1.h1 {
     margin-bottom: 6px;
     color: #34495e;
 }
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #34495e;
+}
+input[type="text"] {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #bdc3c7;
+    outline: none;
+    transition: all 0.3s ease;
+}
 
 .filter-section select,
 .filter-section input[type="text"],
@@ -371,6 +383,14 @@ body.dark-mode .container {
 
 body.dark-mode h1.h1 { color: #fff; }
 body.dark-mode .filter-section label { color: #ddd; }
+
+body.dark-mode label { color: #ddd; }
+
+body.dark-mode input[type="text"]{
+    background-color: #2a2a3f;
+    border: 1px solid #555;
+    color: #eee;
+}
 
 body.dark-mode .filter-section select,
 body.dark-mode .filter-section input[type="text"],

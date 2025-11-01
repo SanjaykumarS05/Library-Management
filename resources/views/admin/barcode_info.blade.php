@@ -44,7 +44,12 @@
         <label for="status"><strong>Status:</strong></label>
         <input type="text" id="status" value="{{ $bookData['status'] }}" readonly >
         <div>
-         <center><span class="barcode1">{!! $bookData['barcode'] !!}</span></center>
+        <div>
+        <label for="issued_id"><strong>Issued ID:</strong></label>
+        <input type="text" id="issued_id" value="{{ $bookData['id'] }}" readonly >
+        </div>
+         <center><span class="barcode1"><img src="{{ $bookData['barcodeImage'] }}" alt="Barcode" style="width:150px; height:auto;">
+                </span></center>
         </div>
 </div>
 

@@ -10,6 +10,7 @@
     <!-- Filters Form -->
     <form id="report-filter-form" method="GET" action="{{ route('staff.reports.index') }}">
         <div class="filter-section">
+
             <!-- Role -->
             <div>
                 <label for="role">Select Role:</label>
@@ -58,7 +59,7 @@
                 </select>
             </div>
 
-            <!-- ISBN -->
+            <!-- ISBN / Author -->
             <div>
                 <label for="isbn">ISBN:</label>
                 <input type="text" name="isbn" value="{{ request('isbn') }}">
@@ -67,13 +68,15 @@
                 <label for="author">Author:</label>
                 <input type="text" name="author" value="{{ request('author') }}">
             </div>
+
+            <!-- Issued By -->
             <div>
-                <label for="issue_by">Issued By :</label>
+                <label for="issue_by">Issued By:</label>
                 <select id="issue_by" name="issue_by">
                     <option value="">All</option>
                     @foreach($staffs as $staffMember)
                         <option value="{{ $staffMember->id }}" {{ request('issue_by')==$staffMember->id?'selected':'' }}>
-                            {{ ucfirst($staffMember->name) }}({{ $staffMember->role }})
+                            {{ ucfirst($staffMember->name) }} ({{ $staffMember->role }})
                         </option>
                     @endforeach
                 </select>
@@ -99,6 +102,8 @@
                 <label>To:</label>
                 <input type="date" name="to_date" value="{{ request('to_date') }}">
             </div>
+
+            <!-- Fine -->
             <div>
                 <label for="fine">Fine Amount:</label>
                 <input type="text" name="fine" value="{{ request('fine') }}">
@@ -113,10 +118,13 @@
         </div>
     </form>
 
-    <!-- Total Count -->
-    <p id="total-count-wrapper">
-        Total Count Fetch: <span id="total-count" style="color: white;">{{ $bookIssues->count() }}</span>
+    <!-- Total Count & Fine -->
+    <p id="total-count-wrapper" style="margin-top:15px;">
+        Total Count: <span id="total-count" style="color: white;">{{ $bookIssues->count() }}</span>
+        <label>Total Fetch Fine Amount:</label>
+        <input type="text" id="total-fine" value="₹{{ $bookIssues->sum('fine_amount') }}" readonly>
     </p>
+
     <!-- Report Table -->
     <div id="report-table" class="table-responsive" style="margin-top:20px;">
         <table class="table table-bordered" style="width:100%;">
@@ -137,7 +145,7 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($bookIssues as $index => $item)
+                @forelse($bookIssues as $item)
                     <tr>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->user->name ?? '' }}</td>
@@ -148,68 +156,70 @@
                         <td>{{ $item->book->category->name ?? '' }}</td>
                         <td>{{ $item->issuedBy->name ?? 'NOT FOUND' }}</td>
                         <td>{{ $item->issue_date->format('Y-m-d') }}</td>
-                        <td>{{ $item->return_date?? '  -' }}</td>
+                        <td>{{ $item->return_date ?? '-' }}</td>
                         <td>₹{{ $item->fine_amount ?? '0' }}</td>
                         <td>{{ $item->status }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="11" class="text-center">No records found.</td></tr>
+                    <tr><td colspan="12" class="text-center">No records found.</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-    <div class="pagination-wrapper" >
-            {{ $bookIssues->links('pagination::bootstrap-5') }}
+
+    <!-- Pagination -->
+    <div class="pagination-wrapper">
+        {{ $bookIssues->links('pagination::bootstrap-5') }}
     </div>
 </div>
 
 <!-- JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
+$(function() {
 
     // Dark mode
     if(localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
     }
 
-    // AJAX fetch
+    // Fetch report (AJAX)
     function fetchReport() {
-        let formData = $('#report-filter-form').serialize();
         $.ajax({
             url: "{{ route('staff.reports.index') }}",
             type: "GET",
-            data: formData,
+            data: $('#report-filter-form').serialize(),
             success: function(response) {
-                let tbody = $(response).find('#report-table tbody').html();
-                $('#report-table tbody').html(tbody);
+                $('#report-table tbody').html($(response).find('#report-table tbody').html());
+                $('.pagination-wrapper').html($(response).find('.pagination-wrapper').html());
 
-                let total = $(response).find('#total-count').text();
-                $('#total-count').text(total);
+                // Update total count
+                $('#total-count').text($(response).find('#total-count').text());
+
+                // Update fine amount
+                const fineVal = $(response).find('#total-fine').val();
+                if(fineVal) $('#total-fine').val(fineVal);
             }
         });
     }
 
-        $(document).on('click', '.pagination a', function(e) {
+    // Pagination
+    $(document).on('click', '.pagination a', function(e) {
         e.preventDefault();
-        let url = $(this).attr('href');
         $.ajax({
-            url: url,
+            url: $(this).attr('href'),
             type: "GET",
             data: $('#report-filter-form').serialize(),
             success: function(response) {
-                let tbody = $(response).find('#report-table tbody').html();
-                $('#report-table tbody').html(tbody);
-
-                let total = $(response).find('#total-count').text();
-                $('#total-count').text(total);
-
-                let pagination = $(response).find('.pagination-wrapper').html();
-                $('.pagination-wrapper').html(pagination);
+                $('#report-table tbody').html($(response).find('#report-table tbody').html());
+                $('.pagination-wrapper').html($(response).find('.pagination-wrapper').html());
+                $('#total-count').text($(response).find('#total-count').text());
+                $('#total-fine').val($(response).find('#total-fine').val());
             }
         });
     });
-    // Filter changes
+
+    // Role → Filter users dynamically
     $('#role').on('change', function() {
         let role = $(this).val();
         $.ajax({
@@ -218,8 +228,7 @@ $(document).ready(function() {
             data: { role: role },
             success: function(users) {
                 let userSelect = $('#user_id');
-                userSelect.empty();
-                userSelect.append('<option value="">All Users</option>');
+                userSelect.empty().append('<option value="">All Users</option>');
                 $.each(users, function(i, user) {
                     userSelect.append('<option value="'+user.id+'">'+user.name+'</option>');
                 });
@@ -228,8 +237,10 @@ $(document).ready(function() {
         });
     });
 
+    // Other filters
     $('form select, form input').not('#role').on('change keyup', fetchReport);
 
+    // Time filter toggle
     $('#time').on('change', function() {
         $('#custom-date-range').toggle(this.value === 'custom');
         fetchReport();
@@ -241,6 +252,5 @@ function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
 }
-
 </script>
 @endsection

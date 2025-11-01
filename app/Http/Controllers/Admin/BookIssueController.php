@@ -11,6 +11,8 @@ use App\Models\Library;
 use App\Models\BookRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\BookNotification;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use Illuminate\Support\Facades\Storage;
 
 
 class BookIssueController extends Controller
@@ -24,8 +26,6 @@ class BookIssueController extends Controller
         $book_issues1 = Book_issue::whereIn('status', ['Issued', 'Overdue'])->get();
         return view('admin.issue_return', compact('books', 'book_issues', 'users', 'book_issues1'));
     }
-
-    
     public function issueBook(Request $request)
     {
         $request->validate([
@@ -50,7 +50,6 @@ class BookIssueController extends Controller
             return back()->with('error', 'Book is out of stock!');
         }
 
-        
         $bookIssue = Book_issue::create([
             'book_id' => $book->id,
             'user_id' => $request->user_id,
@@ -59,7 +58,15 @@ class BookIssueController extends Controller
             'status' => 'Issued',
         ]);
 
-        
+        $generator = new BarcodeGeneratorPNG();
+        $barcodeText = (string) $bookIssue->id;
+        $barcodeImage = $generator->getBarcode($barcodeText, $generator::TYPE_CODE_128);
+        $barcodePath = 'barcodes/barcode_' . $barcodeText . '.png';
+        Storage::disk('public')->put($barcodePath, $barcodeImage);
+        $bookIssue->barcode_path = $barcodePath;
+        $bookIssue->save();
+        $barcodeImageData = base64_encode($barcodeImage);
+
         $book->stock -= 1;
         $book->availability = $book->stock > 0 ? 'Yes' : 'No';
         $book->save();
@@ -78,9 +85,12 @@ class BookIssueController extends Controller
         $data = [
             'name' => $user->name,
             'subject' => 'Book Issued Notification from ' . ($library->library_name ?? 'Library'),
-            'message' => "The book '{$book->title}({$bookIssue->id})' has been issued to you on {$request->issue_date}. Please return it on time to avoid late fees.",
+            'message' => "The book '{$book->title}' has been issued to you on {$request->issue_date}. Please return it on time to avoid late fees.",
             'type' => 'Book Issued Notification',
             'due_date' => now()->addDays(14)->toDateString(),
+            'barcode_path' => $bookIssue->barcode_path,
+            'id' => $bookIssue->id,
+            'library_name' => $library->library_name ?? 'Library',
         ];
         $user->notify(new BookNotification($data));
         return redirect()->route('barcode.index')->with('success', 'Book issued successfully!');
@@ -143,8 +153,11 @@ class BookIssueController extends Controller
         $data = [
             'name' => $user->name,
             'subject' => 'Book Return Notification from ' . ($library->library_name ?? 'Library'),
-            'message' => "The book '{$book->title}({$bookIssue->id})' has been returned on {$request->return_date}.",
+            'message' => "The book '{$book->title}' has been returned on {$request->return_date}.",
             'type' => 'Book Returned Notification',
+            'barcode_path' => $bookIssue->barcode_path,
+            'id' => $bookIssue->id,
+            'library_name' => $library->library_name ?? 'Library',
         ];
         $user->notify(new BookNotification($data));
 
@@ -186,7 +199,6 @@ class BookIssueController extends Controller
 
     $bookIssue->fine_amount = (int)$request->fine_amount;
     $bookIssue->save();
-
    
     $book = Book::findOrFail($bookIssue->book_id);
     $book->stock += 1;

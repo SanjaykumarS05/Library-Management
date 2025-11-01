@@ -13,8 +13,7 @@
         <p><strong>Return Date:</strong> {{ $item['return_date'] ?? '-' }}</p>
         <p><strong>Status:</strong> {{ $item['status'] }}</p>
         <p><strong>Barcode ID:{{$item['barcodeText']}}</strong></p>
-        <span class="barcode1">{!! $item['barcode'] !!}</span>
-
+       <img src="{{ $item['barcodeImage'] }}" alt="Barcode" style="width:150px; height:auto;">
         <div class="no-export"  style="margin-top:10px;">
             <button class="buttons small-btn" onclick="printSingle('card-{{ $item['barcodeText'] }}')">🖨️ Print This</button>
         </div>

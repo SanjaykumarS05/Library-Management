@@ -19,6 +19,7 @@ class MarkOverdueBooks extends Command
         $today = Carbon::today();
 
         /** 1. MARK OVERDUE (issue_date < today - 15 days) */
+        $today = Carbon::today();
         $overdueDate = $today->copy()->subDays(15);
 
         $overdueBooks = Book_issue::where('status', 'Issued')
@@ -34,14 +35,14 @@ class MarkOverdueBooks extends Command
 
 
         /** 2. SEND REMINDER FOR BOOKS DUE TOMORROW (issue_date = today - 14 days) */
-       $today = now();
-       $tomorrow = $today->copy()->addDay();
+       $today = Carbon::today();
+       $tomorrow = $today->copy()->subDays(14);
 
         // Books that are still issued and due tomorrow or overdue
         $dueSoonBooks = Book_issue::with('user', 'book')
             ->whereIn('status', ['Issued', 'Overdue'])
             ->where(function($q) use ($tomorrow) {
-                $q->orWhereDate('issue_date', '<=', $tomorrow->copy()->subDays(14));
+                $q->orWhereDate('issue_date', '<=', $tomorrow);
             })
             ->get();
 
@@ -52,8 +53,9 @@ class MarkOverdueBooks extends Command
             $data = [
                 'name' => $user->name,
                 'subject' => 'Book Due Reminder from ' . ($library->library_name ?? 'Library'),
-                'message' => "Reminder: The book '{$issue->book->title}({$issue->id})' is due/overdue. Please return it to avoid increasing fines.",
+                'message' => "Reminder: The book '{$issue->book->title}({$issue->id})' is due/overdue. Please return it to avoid increasing fines. ",
                 'type' => 'Book Return Reminder',
+                'issue_date' => $issue->issue_date? $issue->issue_date->format('Y-m-d') : null,
             ];
 
             $user->notify(new BookNotification($data));

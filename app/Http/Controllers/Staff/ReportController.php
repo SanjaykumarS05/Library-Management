@@ -12,7 +12,7 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = 50;
+        $perPage = 100;
         $allUsers = User::all();
         $categories = Category::all();
         $staffs = User::whereIn('role', ['admin', 'staff'])->get();
