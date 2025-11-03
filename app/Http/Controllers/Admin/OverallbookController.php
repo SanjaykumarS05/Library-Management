@@ -89,7 +89,7 @@ class OverallbookController extends Controller
     foreach ($book_issues as $book_issue) {
         $issuedUser = User::find($book_issue->issued_id);
         $barcodePath = $book_issue->barcode_path ?? null;
-        $barcodeImage = $barcodePath ? asset('storage/' . $barcodePath) : asset('images/default-barcode.png');
+        $barcodeImage = $barcodePath ? asset('storage/' . $barcodePath) : asset('storage/barcodes/default-barcode.png');
         $barcodes[] = [
             'barcodeImage'   => $barcodeImage,
             'barcodeText'    => $book_issue->id,

@@ -27,7 +27,7 @@ class BarcodeController extends Controller
         foreach ($book_issues as $book_issue) {
         $issuedUser = User::find($book_issue->issued_id);
         $barcodePath = $book_issue->barcode_path ?? null;
-        $barcodeImage = $barcodePath ? asset('storage/' . $barcodePath) : asset('images/default-barcode.png');
+        $barcodeImage = $barcodePath ? asset('storage/' . $barcodePath) : asset('storage/barcodes/default-barcode.png');
         $bookImagePath = $book_issue->book->image_path ?? null;
         $bookImage = $bookImagePath ? asset('storage/' . $bookImagePath) : asset('images/default-book.png');
         $issuedUser = User::find($book_issue->issued_id);
@@ -68,7 +68,7 @@ class BarcodeController extends Controller
         $users = User::all();
         $issuedUser = User::find($book_issue->issued_id);
         $barcodePath = $book_issue->barcode_path ?? null;
-        $barcodeImage = $barcodePath ? asset('storage/' . $barcodePath) : asset('images/default-barcode.png');
+        $barcodeImage = $barcodePath ? asset('storage/' . $barcodePath) : asset('storage/barcodes/default-barcode.png');
 
         $bookData = [
             'id' => $book_issue->id,
