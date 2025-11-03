@@ -30,7 +30,7 @@
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
                 <a href="{{ route('barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
-                <a href="{{ route('notifications') }}">
+                <a href="{{ route('notifications') }}" class="{{ request()->routeIs('notifications') ? 'active' : '' }}">
                     @if($hasPendingRequests)
                     <span class="material-icons">notifications<span class="notify-badge1" style="margin-top: -9px;">{{ $hasPendingRequests }}</span></span>
                     @else

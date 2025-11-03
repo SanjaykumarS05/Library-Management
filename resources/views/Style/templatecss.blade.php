@@ -450,6 +450,12 @@ aside nav ul li a.active {
     font-weight: bold;
     border-radius: 8px;
 }
+.header a.active {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 8px;
+}
 
 body.dark-mode aside nav ul li a.active {
     background-color: #3498db;

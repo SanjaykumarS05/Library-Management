@@ -83,6 +83,7 @@
                             <th>Borrowed Date</th>
                             <th>Due Date</th>
                             <th>Return Date</th>
+                            <th>Fine Amount</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -99,6 +100,7 @@
                                 <td>{{ $issueDate->format('M d, Y') }}</td>
                                 <td>{{ $dueDate->format('M d, Y') }}</td>
                                 <td>{{ $issue->return_date ? \Carbon\Carbon::parse($issue->return_date)->format('M d, Y') : '-' }}</td>
+                                <td>{{ $issue->fine_amount ? '₹' . number_format($issue->fine_amount, 2) : '-' }}</td>
                                 <td>
                                     @if ($issue->status == 'Returned')
                                         <span class="badge bg-success">Returned</span>

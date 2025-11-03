@@ -79,7 +79,7 @@ class ReportController extends Controller
             }
         }
 
-        $bookIssues = $bookIssues->paginate($perPage)->withQueryString();
+        $bookIssues = $bookIssues->orderByDesc('issue_date')->paginate($perPage)->withQueryString();
 
         return view('admin.report', compact('bookIssues', 'allUsers', 'categories', 'staffs'));
     }
