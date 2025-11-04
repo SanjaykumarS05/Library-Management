@@ -488,7 +488,6 @@ footer {
     font-size: 14px;
     margin-top: auto;
 }
-
 /* Makes footer stick to bottom when content is short */
 body {
     display: flex;
@@ -510,5 +509,16 @@ main {
     color: #fff;
     width: 20px;
 }
-     
+body.dark-mode .pagination-wrapper,
+body.dark-mode .pagination-wrapper p,
+body.dark-mode .pagination-wrapper span,
+body.dark-mode .pagination-wrapper .text-muted,
+body.dark-mode .pagination-wrapper small {
+    color: #f6f4f4 !important;  /* force light text */
+}
+
+/* Optional: improve visibility of numbers */
+body.dark-mode .pagination-wrapper strong {
+    color: #ffffff !important;
+}
 </style>

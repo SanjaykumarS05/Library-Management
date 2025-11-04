@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Profile;
 use App\Models\library;
 use App\Models\Bookrequest;
+use App\Models\emai_lLog;
 use App\Http\Controllers\Controller;
 class TemplateController extends Controller
 {
@@ -15,7 +16,9 @@ class TemplateController extends Controller
         $users = User::all();
         $profile = Profile::first();
         $hasPendingRequests = Bookrequest::where('status', 'pending')->count();
-        return view('layout.template', compact('users','profile', 'hasPendingRequests'));
+        $hasReceivedNotifications = email_log::where('recipient_id', auth()->id())->where('read', '0')->count();
+
+        return view('layout.template', compact('users','profile', 'hasPendingRequests', 'hasReceivedNotifications'));
     }
     public function logout(Request $request)
     {

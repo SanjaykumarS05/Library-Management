@@ -28,7 +28,16 @@
                     <input type="text" name="query" id="searchBox" placeholder="Search">
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
-                <a href="{{ route('user.notifications') }}"><span class="material-icons">notifications</span></a>
+                <a href="{{ route('user.notifications') }}" 
+                class="{{ request()->routeIs('user.notifications') ? 'active' : '' }}">
+                <span class="material-icons">
+                    notifications
+                    @if($hasReceivedNotifications)
+                        <span class="notify-badge1" style="margin-top: -9px;">
+                            {{ $hasReceivedNotifications }}
+                        </span>
+                    @endif
+                </span></a>
                 <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
                     <span class="material-icons">
                         {{ (Auth::user()->profile->theme ?? 'light') === 'dark' ? 'light_mode' : 'dark_mode' }}

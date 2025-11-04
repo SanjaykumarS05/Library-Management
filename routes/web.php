@@ -55,6 +55,7 @@ Route::post('/register', [UserController::class, 'Registerstore'])->name('store'
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 Route::post('/otp', [UserController::class, 'otp'])->name('otp');
 Route::get('/resend-otp', [UserController::class, 'resendOtp'])->name('resend.otp');
+
 // ================= DASHBOARD REDIRECT BASED ON ROLE =================
 Route::get('/dashboard', function() {
     $role = auth()->user()->role;
@@ -139,8 +140,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/notifications/dynamic', [AdminNotificationController::class, 'sendNotification'])->name('admin.sendEmail');
     Route::get('/books/issue-return/{book}/{user}', [AdminBookIssueController::class, 'issueReturn'])->name('notification.issue_return1');
     Route::post('/book-requests/{id}/update-status', [AdminNotificationController::class, 'updateStatus'])->name('bookrequests.updateStatus');
-
-
+    Route::post('/email-logs/{id}/read', [AdminNotificationController::class, 'updateReadStatus'])->name('email-logs.updateReadStatus');;
 
 });
 
@@ -208,6 +208,7 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
     Route::post('/notifications/dynamic', [StaffNotificationController::class, 'sendNotification'])->name('staff.sendEmail');
     Route::get('/books/issue-return/{book}/{user}', [StaffBookIssueController::class, 'issueReturn'])->name('sbook.returntaff.notification.issue_return1');
     Route::post('/book-requests/{id}/update-status', [StaffNotificationController::class, 'updateStatus'])->name('staff.bookrequests.updateStatus');
+    Route::post('/email-logs/{id}/read', [StaffNotificationController::class, 'updateReadStatus'])->name('staff.email-logs.updateReadStatus');;
 });
 
 // ================= USER ROUTE =================
@@ -230,5 +231,5 @@ Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
     Route::get('/notifications', [UserNotificationController::class, 'index'])->name('user.notifications');
     Route::post('/notifications/send', [UserNotificationController::class, 'store'])->name('user.notification.store');
     Route::post('/notifications/dynamic', [UserNotificationController::class, 'sendNotification'])->name('user.sendEmail');
-
+    Route::post('/email-logs/{id}/read', [UserNotificationController::class, 'updateReadStatus'])->name('user.email-logs.updateReadStatus');
 });

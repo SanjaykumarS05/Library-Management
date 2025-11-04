@@ -83,7 +83,9 @@ class BookIssueController extends Controller
         $user = User::findOrFail($request->user_id);
         $library = Library::first();
         $data = [
+            'recipient_id' => $user->id,
             'name' => $user->name,
+            'email' => $user->email,
             'subject' => 'Book Issued Notification from ' . ($library->library_name ?? 'Library'),
             'message' => "The book '{$book->title}' has been issued to you on {$request->issue_date}. Please return it on time to avoid late fees.",
             'type' => 'Book Issued Notification',
@@ -151,7 +153,9 @@ class BookIssueController extends Controller
         $user = User::findOrFail($request->user_id_return);
         $library = Library::first();
         $data = [
+            'recipient_id' => $user->id,
             'name' => $user->name,
+            'email' => $user->email,
             'subject' => 'Book Return Notification from ' . ($library->library_name ?? 'Library'),
             'message' => "The book '{$book->title}' has been returned on {$request->return_date}.",
             'type' => 'Book Returned Notification',

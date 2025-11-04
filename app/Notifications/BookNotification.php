@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\libray;
 use App\Models\Book_issue;
 use App\Models\User;
-class BookNotification extends Notification
+use App\Models\email_log;
+use Illuminate\Contracts\Queue\ShouldQueue;
+class BookNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -62,6 +64,22 @@ class BookNotification extends Notification
 
         $mail->line('Thank you for using our system!')
              ->salutation('Regards, ' . ($this->data['library_name'] ?? 'Library Team'));
+
+
+         try {
+            Email_log::create([
+                'recipient_id' => $this->data['recipient_id'] ?? null,
+                'sender_id' => auth()->id() ?? null,
+                'email' => $this->data['email'] ?? null,
+                'subject' => $this->data['subject'] ?? 'Library Notification',
+                'message' => $this->data['message'] ?? '',
+                'status' => 'Sent',
+                'type' => $this->data['type'] ?? null,
+                'sent_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to log email: ' . $e->getMessage());
+        }
 
         return $mail;
     }

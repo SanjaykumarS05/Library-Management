@@ -26,8 +26,9 @@ class NotificationController extends Controller
     $logs = EmailLog::where('recipient_id', auth()->id())->latest()->paginate(20);
     $sentLogs = EmailLog::where('sender_id', auth()->id())->latest()->paginate(20);
     $hasPendingRequests = $bookRequests->where('status', 'pending')->count();
+    $hasReceivedNotifications = $logs->where('read', '0')->count();
 
-    return view('admin.notification', compact('bookRequests', 'statusOptions', 'recipients', 'logs', 'users', 'sentLogs', 'hasPendingRequests'));
+    return view('admin.notification', compact('bookRequests', 'statusOptions', 'recipients', 'logs', 'users', 'sentLogs', 'hasPendingRequests', 'hasReceivedNotifications'));
     }
     
     public function updateStatus(Request $request, $id)
@@ -108,4 +109,13 @@ class NotificationController extends Controller
 
         return redirect()->back()->with('success', 'Notification sent successfully.');
     }
+    public function updateReadStatus(Request $request, $id)
+    {
+        $log = EmailLog::findOrFail($id);
+        $log->read = $request->read;
+        $log->save();
+
+        return response()->json(['success' => true, 'read' => $log->read]);
+    }
+
 }

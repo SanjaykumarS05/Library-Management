@@ -30,8 +30,9 @@ class NotificationController extends Controller
         ->with('recipient') // eager load recipient relation
         ->latest() // order by latest sent
         ->paginate(20);
+        $hasReceivedNotifications = $logs->where('read', '0')->count();
 
-        return view('user.notification', compact('logs', 'sentLogs'));
+        return view('user.notification', compact('logs', 'sentLogs', 'hasReceivedNotifications'));
     }
 
     public function sendNotification(Request $request)
@@ -59,5 +60,14 @@ class NotificationController extends Controller
         }
 
         return back()->with('success', 'Notification queued successfully.');
+    }
+
+    public function updateReadStatus(Request $request, $id)
+    {
+        $log = EmailLog::findOrFail($id);
+        $log->read = $request->read;
+        $log->save();
+
+        return response()->json(['success' => true, 'read' => $log->read]);
     }
 }

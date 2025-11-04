@@ -43,7 +43,7 @@ class UserController extends Controller
 
         // Generate OTP and store in session with expiration
         $otp = rand(100000, 999999);
-        
+        $library = Library::first();
         // Store session data properly
         Session::put([
             'temp_user_data' => $data,
@@ -53,10 +53,10 @@ class UserController extends Controller
 
         // Send OTP via email
         try {
-            Mail::send([], [], function ($message) use ($data, $otp) {
+            Mail::send([], [], function ($message) use ($data, $otp, $library) {
                 $message->to($data['email'])
-                        ->subject('Your Library Registration OTP Code')
-                        ->text("Your OTP code for completing registration is: $otp\n\nThis code will expire in 10 minutes.");
+                        ->subject("Your {$library->library_name} Registration OTP Code")
+                        ->text("Your OTP code for completing registration is: $otp\nThis code will expire in 10 minutes.");
             });
         } catch (\Exception $e) {
             \Log::error('OTP email failed: ' . $e->getMessage());
@@ -91,8 +91,8 @@ class UserController extends Controller
         if ($otpCreatedAt && (now()->timestamp - $otpCreatedAt) > 600) {
             Session::forget(['otp', 'temp_user_data', 'otp_created_at']);
             return redirect()->route('home')
-                ->with('openModal', 'register')
-                ->with('error', 'OTP has expired. Please register again.');
+                ->with('openModal', 'otp')
+                ->with('error', 'OTP has expired. Please request a new one.');
         }
 
         if ($request->otp != $sessionOtp) {
@@ -111,7 +111,6 @@ class UserController extends Controller
             } catch (\Exception $e) {
                 \Log::error('Welcome email failed: ' . $e->getMessage());
             }
-
             // Clear session data
             Session::forget(['otp', 'temp_user_data', 'otp_created_at']);
 
@@ -180,7 +179,7 @@ class UserController extends Controller
         }
 
         $otp = rand(100000, 999999);
-        
+        $library = Library::first();
         // Update session data
         Session::put([
             'otp' => $otp,
@@ -189,17 +188,17 @@ class UserController extends Controller
 
         // Resend OTP email
         try {
-            Mail::send([], [], function ($message) use ($tempData, $otp) {
+            Mail::send([], [], function ($message) use ($tempData, $otp, $library) {
                 $message->to($tempData['email'])
-                        ->subject('Your Library Registration OTP Code')
-                        ->text("Your new OTP code for completing registration is: $otp\n\nThis code will expire in 10 minutes.");
+                        ->subject("Your {$library->library_name} Registration OTP Code")
+                        ->text("Your new OTP code for completing registration is: $otp\nThis code will expire in 10 minutes.");
             });
         } catch (\Exception $e) {
             \Log::error('Resend OTP email failed: ' . $e->getMessage());
         }
 
-        return redirect()->route('home')
-            ->with('openModal', 'otp')
-            ->with('success', 'A new OTP has been sent to your email.');
-    }
+        return response()->json(['success' => true, 'message' => 'A new OTP has been sent to your email.']);
+}
+
+
 }

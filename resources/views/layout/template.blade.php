@@ -30,13 +30,17 @@
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
                 <a href="{{ route('barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
-                <a href="{{ route('notifications') }}" class="{{ request()->routeIs('notifications') ? 'active' : '' }}">
-                    @if($hasPendingRequests)
-                    <span class="material-icons">notifications<span class="notify-badge1" style="margin-top: -9px;">{{ $hasPendingRequests }}</span></span>
-                    @else
-                    <span class="material-icons">notifications</span>
+                <a href="{{ route('notifications') }}" 
+                class="{{ request()->routeIs('notifications') ? 'active' : '' }}">
+
+                <span class="material-icons">
+                    notifications
+                    @if($hasPendingRequests || $hasReceivedNotifications)
+                        <span class="notify-badge1" style="margin-top: -9px;">
+                            {{ $hasPendingRequests + $hasReceivedNotifications }}
+                        </span>
                     @endif
-                </a>
+                </span></a>
                 <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
                     <span class="material-icons">
                         {{ (Auth::user()->profile->theme ?? 'light') === 'dark' ? 'light_mode' : 'dark_mode' }}
@@ -52,13 +56,16 @@
                     <button type="submit"><span class="material-icons">search</span></button>
                 </form>
                 <a href="{{ route('staff.barcode.index') }}"><span class="material-icons">qr_code_scanner</span></a>
-                <a href="{{ route('staff.notifications') }}">
-                    @if($hasPendingRequests)
-                    <span class="material-icons">notifications<span class="notify-badge1"style="margin-top: -9px;">{{ $hasPendingRequests }}</span></span>
-                    @else
-                    <span class="material-icons">notifications</span>
+                <a href="{{ route('staff.notifications') }}" 
+                class="{{ request()->routeIs('staff.notifications') ? 'active' : '' }}">
+                <span class="material-icons">
+                    notifications
+                    @if($hasPendingRequests || $hasReceivedNotifications)
+                        <span class="notify-badge1" style="margin-top: -9px;">
+                            {{ $hasPendingRequests + $hasReceivedNotifications }}
+                        </span>
                     @endif
-                </a>
+                </span></a>
                 <button id="themeToggle" type="button" title="Toggle Theme" style="margin-left:10px;">
                     <span class="material-icons">
                         {{ (Auth::user()->profile->theme ?? 'light') === 'dark' ? 'light_mode' : 'dark_mode' }}

@@ -503,9 +503,23 @@
 /* Dark mode pagination */
 body.dark-mode .pagination li a {
     background-color: #2a2a3f;
-    color: #ddd;
+    color: #f6f4f4ff;
     border: 1px solid #444;
 }
+/* Fix pagination info text color in dark mode */
+body.dark-mode .pagination-wrapper,
+body.dark-mode .pagination-wrapper p,
+body.dark-mode .pagination-wrapper span,
+body.dark-mode .pagination-wrapper .text-muted,
+body.dark-mode .pagination-wrapper small {
+    color: #f6f4f4 !important;  /* force light text */
+}
+
+/* Optional: improve visibility of numbers */
+body.dark-mode .pagination-wrapper strong {
+    color: #ffffff !important;
+}
+
 
 body.dark-mode .pagination li a:hover {
     background-color: #3498db;

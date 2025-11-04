@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('status', ['Sent', 'Failed'])->default('Sent');
             $table->string('type', 255)->nullable();
             $table->timestamp('sent_at')->useCurrent();
+            $table->enum('read', ['0', '1'])->default('0');
             $table->timestamps();
             $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');

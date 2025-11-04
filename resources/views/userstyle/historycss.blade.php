@@ -547,6 +547,18 @@ button:focus,
     outline: 2px solid #3498db;
     outline-offset: 2px;
 }
+body.dark-mode .pagination-wrapper,
+body.dark-mode .pagination-wrapper p,
+body.dark-mode .pagination-wrapper span,
+body.dark-mode .pagination-wrapper .text-muted,
+body.dark-mode .pagination-wrapper small {
+    color: #f6f4f4 !important;  /* force light text */
+}
+
+/* Optional: improve visibility of numbers */
+body.dark-mode .pagination-wrapper strong {
+    color: #ffffff !important;
+}
 
 body.dark-mode button:focus,
 body.dark-mode .pagination li a:focus {

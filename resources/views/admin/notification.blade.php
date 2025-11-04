@@ -14,7 +14,10 @@
             <span class="notify-badge">{{ $hasPendingRequests }}</span>
         @endif
     </label>
-    <label><input type="checkbox" id="toggle-received"> Received Notifications</label>
+    <label><input type="checkbox" id="toggle-received"> Received Notifications 
+        @if($hasReceivedNotifications>0)
+            <span class="notify-badge">{{ $hasReceivedNotifications }}</span>
+        @endif</label>
     <label><input type="checkbox" id="toggle-send"> Send Notifications</label>
     <label><input type="checkbox" id="toggle-sent-logs"> Sent Logs</label>
 </div>
@@ -85,6 +88,7 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>Read</th>
                             <th>Recipient</th>
                             <th>Subject</th>
                             <th>Type</th>
@@ -95,6 +99,10 @@
                     <tbody>
                         @foreach($logs as $log)
                             <tr>
+                                <td> <input type="checkbox"
+                                class="toggle-read"
+                                data-id="{{ $log->id }}"
+                                {{ $log->read == '1' ? 'checked' : '' }}></td>
                                 <td>{{ $log->recipient->name ?? 'N/A' }}</td>
                                 <td>{{ $log->subject ?? 'N/A' }}</td>
                                 <td>{{ $log->type ?? 'N/A' }}</td>
@@ -297,6 +305,33 @@ $(document).ready(function() {
 
     toggleOtherInput();
     typeSelect.addEventListener('change', toggleOtherInput);
+});
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+$(document).ready(function() {
+    $('.toggle-read').change(function() {
+        let logId = $(this).data('id');
+        let isChecked = $(this).is(':checked') ? 1 : 0;
+
+        $.ajax({
+            url: '{{ url("admin/email-logs") }}/' + logId + '/read',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                read: isChecked
+            },
+            success: function(response) {
+                console.log('Updated successfully:', response);
+            },
+            error: function(xhr) {
+                alert('Error updating status');
+                console.error(xhr.responseText);
+            }
+        });
+    });
 });
 </script>
 

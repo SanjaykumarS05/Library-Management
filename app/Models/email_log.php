@@ -28,4 +28,6 @@ class email_log extends Model
     {
         return $this->belongsTo(User::class, 'sender_id');
     }
+
+    public $timestamps = true;
 }

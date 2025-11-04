@@ -43,7 +43,6 @@ class AdminController extends Controller
                     'time_ago' => $issue->updated_at->diffForHumans(),
                 ];
             });
-
         return view('admin.dashboard', [
             'admin' => auth()->user(),
             'totalfines' => $totalfines,

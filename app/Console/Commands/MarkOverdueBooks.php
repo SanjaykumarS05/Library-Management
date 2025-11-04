@@ -51,7 +51,9 @@ class MarkOverdueBooks extends Command
             $library = Library::first();
 
             $data = [
+                'recipient_id' => $user->id,
                 'name' => $user->name,
+                'email' => $user->email,
                 'subject' => 'Book Due Reminder from ' . ($library->library_name ?? 'Library'),
                 'message' => "Reminder: The book '{$issue->book->title}({$issue->id})' is due/overdue. Please return it to avoid increasing fines. ",
                 'type' => 'Book Return Reminder',
