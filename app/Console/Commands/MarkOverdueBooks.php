@@ -64,5 +64,16 @@ class MarkOverdueBooks extends Command
         }
 
         $this->info(count($dueSoonBooks) . ' reminder notifications sent successfully.');
+
+         /** 3. IDENTIFY USERS WITH NO BOOK ISSUES IN THE PAST YEAR */
+        $oneYearAgo = Carbon::now()->subYear();
+        $users = User::whereDoesntHave('bookIssues', function ($query) use ($oneYearAgo) {
+         $query->where('created_at', '>=', $oneYearAgo);
+        })->get();
+        foreach ($users as $user) {
+            $user->status = 'disabled';
+            $user->save();
         }
+        $this->info(count($users) . ' users have been disabled due to inactivity.');
+    }
 }
