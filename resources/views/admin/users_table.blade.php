@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         @forelse($users as $index => $user)
-        <tr>
+        <tr class="{{ $user->status == 'active' ? 'text-success' : 'text-danger' }} fw-bold">
             <td>{{ $users->firstItem() + $index }}</td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>

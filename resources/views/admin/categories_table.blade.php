@@ -9,7 +9,7 @@
     </thead>
     <tbody>
         @forelse($categories as $index => $category)
-        <tr>
+        <tr class="fw-bold">
             <td>{{ $categories->firstItem() + $index }}</td>
             <td>{{ $category->name }}</td>
             <td>{{ $category->description }}</td>

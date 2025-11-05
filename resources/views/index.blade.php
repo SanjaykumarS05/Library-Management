@@ -241,6 +241,7 @@
                 
                 <div class="auth-footer">
                     <p>Don't have an account? <a href="#" onclick="switchTab('register')">Sign up</a></p>
+                    <a href="#" onclick="switchTab('forgot')">Forget Password</a>
                 </div>
             </form>
             
@@ -293,39 +294,89 @@
                     <p>Have an account? <a href="#" onclick="switchTab('login')">Sign in</a></p>
                 </div>
             </form>
-        </div>
-    </div>
-    <!-- OTP Verification Modal -->
-@if(session('openModal') === 'otp')
-<div class="modal-bg" id="otpModal" style="display: flex;">
-    <div class="modal-box">
-        <button class="close-btn" onclick="closeModal('otpModal')">✖</button>
-        <h3 class="text-center mb-4">Verify Your Email</h3>
-        <p class="text-center text-muted mb-4">
-            Please enter the 6-digit OTP sent to your registered email.
-        </p>
-
-        <form method="POST" action="{{ route('otp') }}" class="auth-form active">
+            <!-- Forgot Password Form -->
+             <form class="auth-form" id="forgotForm" method="POST" action="{{ route('forgot.password') }}">
             @csrf
+            <h3 class="text-center mb-3">Forgot Password</h3>
             <div class="input-group">
-                <label for="otp">Enter OTP:</label>
-                <input type="text" id="otp" name="otp" maxlength="6" placeholder="Enter 6-digit OTP" required>
-                <i class="material-icons input-icon">key</i>
+                <label for="forgotEmail">Email:</label>
+                <input type="email" id="forgotEmail" name="email" placeholder="Enter your registered email" required>
+                <i class="material-icons input-icon">email</i>
             </div>
 
             <div class="input-group">
-                <button type="submit" class="submit-btn w-100">Verify OTP</button>
+                <button type="submit" class="submit-btn w-100">Send Reset Link</button>
             </div>
 
-            <div class="auth-footer text-center mt-3">
-                <p>Didn’t get the OTP? 
-                    <a href="{{ route('resend.otp') }}">Resend</a>
-                </p>
+            <div class="auth-footer">
+                <p>Remember your password? <a href="#" onclick="switchTab('login')">Sign in</a></p>
             </div>
         </form>
+                <!-- Reset Password Form -->
+        <form class="auth-form" id="resetForm" method="POST" action="{{ route('password.update') }}">
+            @csrf
+            <h3 class="text-center mb-3">Reset Password</h3>
+
+            <input type="hidden" name="token" value="{{ session('resetToken') }}">
+            <div class="input-group">
+                <label>Email:</label>
+                <input type="email" name="email" placeholder="Enter your email"  value="{{ session('resetEmail') }}" readonly>
+                <i class="material-icons input-icon">email</i>
+            </div>
+
+            <div class="input-group">
+                <label>New Password:</label>
+                <input type="password" name="password" placeholder="Enter new password" required>
+                <i class="material-icons input-icon">lock</i>
+            </div>
+            @error('password')
+                        <div class="error-message">{{ $message }}</div>
+            @enderror
+            <div class="input-group">
+                <label>Confirm Password:</label>
+                <input type="password" name="password_confirmation" placeholder="Confirm password" required>
+                <i class="material-icons input-icon">lock</i>
+            </div>
+
+            <button type="submit" class="submit-btn w-100">Reset Password</button>
+
+            <div class="auth-footer">
+                <a href="#" onclick="switchTab('login')">Back to Login</a>
+            </div>
+        </form>
+        </div>
     </div>
-</div>
-@endif
+        @if(session('openModal') === 'otp')
+        <div class="modal-bg" id="otpModal" style="display: flex;">
+            <div class="modal-box">
+                <button class="close-btn" onclick="window.location.href='{{ route('home') }}'">✖</button>
+                <h3 class="text-center mb-4">Verify Your Email</h3>
+                <p class="text-center text-muted mb-4">
+                    Please enter the 6-digit OTP sent to your registered email.
+                </p>
+
+                <form method="POST" action="{{ route('otp') }}" class="auth-form active">
+                    @csrf
+                    <div class="input-group">
+                        <label for="otp">Enter OTP:</label>
+                        <input type="text" id="otp" name="otp" maxlength="6" placeholder="Enter 6-digit OTP" required>
+                        <i class="material-icons input-icon">key</i>
+                    </div>
+
+                    <div class="input-group">
+                        <button type="submit" class="submit-btn w-100">Verify OTP</button>
+                    </div>
+
+                    <div class="auth-footer text-center mt-3">
+                        <p>Didn’t get the OTP?
+                            <a href="#" id="resendOtpBtn">Resend</a>
+                            <span id="otpTimer" style="display:none; font-weight:bold; color:#667eea;"></span>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
 
 
     <!-- Footer -->
@@ -344,27 +395,40 @@
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = "none";
         }
-        
         // Switch between login and register tabs
         function switchTab(tab) {
-            const loginTab = document.getElementById('loginTab');
-            const registerTab = document.getElementById('registerTab');
+            // Forms
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
-            
+            const forgotForm = document.getElementById('forgotForm');
+            const resetForm = document.getElementById('resetForm');
+            // Tabs
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            // Remove all form active states
+            loginForm.classList.remove('active');
+            registerForm.classList.remove('active');
+            forgotForm.classList.remove('active');
+            resetForm.classList.remove('active');
+            // Remove active from both tabs first
+            loginTab.classList.remove('active');
+            registerTab.classList.remove('active');
+            // Apply active tab + form
             if (tab === 'login') {
-                loginTab.classList.add('active');
-                registerTab.classList.remove('active');
                 loginForm.classList.add('active');
-                registerForm.classList.remove('active');
-            } else {
-                registerTab.classList.add('active');
-                loginTab.classList.remove('active');
-                registerForm.classList.add('active');
-                loginForm.classList.remove('active');
+                loginTab.classList.add('active');
             }
-        }
-        
+            else if (tab === 'register') {
+                registerForm.classList.add('active');
+                registerTab.classList.add('active');
+            }
+            else if (tab === 'forgot') {
+                forgotForm.classList.add('active');
+            }
+            else if (tab === 'reset') {
+                resetForm.classList.add('active');
+            }
+        }       
         // Toggle password visibility
         function togglePassword(inputId) {
             const passwordInput = document.getElementById(inputId);
@@ -381,13 +445,15 @@
                 event.target.style.display = 'none';
             }
         });
-
         // Auto-open modal if there are validation errors or session directive
         document.addEventListener('DOMContentLoaded', function() {
-            @if($errors->any())
-                openModal('authModal', 'register');
-            @endif
-            
+        @if($errors->any() && session('openModal') !== 'reset')
+            openModal('authModal', 'register');
+        @endif
+
+        @if($errors->any() && session('openModal') === 'reset')
+            openModal('authModal', 'reset');
+        @endif
             @if(session('openModal'))
                 openModal('authModal', '{{ session('openModal') }}');
             @endif
@@ -396,7 +462,12 @@
                 document.getElementById('otpModal').style.display = 'flex';
             @endif
         });
-        
+        @if(session('openModal') === 'reset')
+            openModal('authModal', 'reset');
+        @endif
+        @if(session('openModal'))
+            openModal('authModal', '{{ session('openModal') }}');
+        @endif
         // Toastr notifications
         @if(session('success'))
             toastr.success("{{ session('success') }}");
@@ -404,6 +475,59 @@
         @if(session('error'))
             toastr.error("{{ session('error') }}");
         @endif
+
+           let countdownTimer = null;
+            $(document).on('click', '#resendOtpBtn', function(e) {
+                e.preventDefault();
+                let resendBtn = $("#resendOtpBtn");
+                let timerDisplay = $("#otpTimer");
+                // ✅ Disable click immediately
+                resendBtn.prop("disabled", true); 
+                resendBtn.hide();
+                timerDisplay.show();
+                // ✅ Start timer immediately before Ajax completes
+                startOtpTimer(30);
+                $.ajax({
+                    url: "{{ route('resend.otp') }}",
+                    type: "GET",
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error(response.message);
+                            // If failed → stop timer + show link again
+                            resetOtpTimer();
+                        }
+                    },
+                    error: function() {
+                        toastr.error("Something went wrong!");
+                        resetOtpTimer();
+                    }
+                });
+            });
+            function startOtpTimer(seconds) {
+                let timerDisplay = $("#otpTimer");
+                let resendBtn = $("#resendOtpBtn");
+
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                }
+                let remaining = seconds;
+                countdownTimer = setInterval(function() {
+                    timerDisplay.text("Resend in " + remaining + "s");
+                    remaining--;
+
+                    if (remaining < 0) {
+                        resetOtpTimer();
+                    }
+                }, 1000);
+            }
+            // ✅ Timer Reset Function
+            function resetOtpTimer() {
+                clearInterval(countdownTimer);
+                $("#otpTimer").hide();
+                $("#resendOtpBtn").show().prop("disabled", false);
+            }
     </script>
 </body>
 </html>

@@ -29,6 +29,13 @@
             <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
         </select>
     </div>
+    <div>
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
+            <option value="disabled" {{ $user->status == 'disabled' ? 'selected' : '' }}>Disabled</option>
+        </select>
+    </div>
 
     {{-- Profile Info --}}
     <h3 class="h3" style="display:block; margin-top:20px;">Profile Details</h3>

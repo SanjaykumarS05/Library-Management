@@ -16,7 +16,7 @@
     </thead>
     <tbody>
         @forelse($books as $index => $book)
-        <tr>
+        <tr class="fw-bold">
             <td>{{ $books->firstItem() + $index }}</td>
             <td>{{ $book->title }}</td>
             <td>{{ $book->author }}</td>

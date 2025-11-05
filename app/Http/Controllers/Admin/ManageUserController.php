@@ -28,7 +28,10 @@ class ManageUserController extends Controller
             }
             if ($request->fine) {
                 $users->where('fine', '>=', $request->fine);
-            }   
+            }  
+            if ($request->status) {
+                $users->where('status', $request->status);
+            }  
             if ($request->role) {
                 $users->where('role', $request->role);
             }
@@ -112,6 +115,7 @@ class ManageUserController extends Controller
             'name'             => 'required|string|max:255',
             'email' => 'required|string|email|regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/i|unique:users,email,' . $id,
             'role'             => 'required|in:admin,staff,user',
+            'status'          => 'required|in:active,disabled',
             'secondary_email'  => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/i|different:email|unique:profiles,secondary_email,' . $user->id . ',user_id',
             'blood_group'      => 'required|string|max:3',
             'dob'              => ['required', 'date', function ($attribute, $value, $fail) {
@@ -133,6 +137,7 @@ class ManageUserController extends Controller
             'name'  => $validated['name'],
             'email' => $validated['email'],
             'role'  => $validated['role'],
+            'status'=> $validated['status'],
         ]);
 
         $user->profile()->updateOrCreate(

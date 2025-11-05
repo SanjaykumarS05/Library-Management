@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TemplateController;
+use Illuminate\Support\Facades\Password;
 
 // ================= ADMIN CONTROLLERS =================
 use App\Http\Controllers\Admin\BookController as AdminBookController;
@@ -55,6 +56,9 @@ Route::post('/register', [UserController::class, 'Registerstore'])->name('store'
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 Route::post('/otp', [UserController::class, 'otp'])->name('otp');
 Route::get('/resend-otp', [UserController::class, 'resendOtp'])->name('resend.otp');
+Route::post('/forgot-password', [UserController::class, 'forgotPassword'])->name('forgot.password');
+Route::get('/reset-password/{token}/{email}', [UserController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('password.update');
 
 // ================= DASHBOARD REDIRECT BASED ON ROLE =================
 Route::get('/dashboard', function() {
@@ -65,8 +69,6 @@ Route::get('/dashboard', function() {
         case 'user': default: return redirect()->route('user.dashboard');
     }
 })->middleware('auth')->name('dashboard');
-
-
 
 // ================= ADMIN ROUTES =================
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -187,8 +189,7 @@ Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('/books/issue/{issueId}', [StaffBookIssueController::class, 'issueFromBarcode'])->name('staff.books.issue_from_barcode');
     Route::get('/books/return/{issueId}', [StaffBookIssueController::class, 'returnFromBarcode'])->name('staff.books.return_from_barcode');
     // Redirect to book info by barcode (for scanning)
-
-
+    
     // Overall Book & Barcode
     Route::get('/overallbook', [StaffOverallbookController::class, 'index'])->name('staff.overallbook.index');
     Route::get('/overallbooks/search', [StaffOverallbookController::class, 'search'])->name('staff.overallbooks.search');

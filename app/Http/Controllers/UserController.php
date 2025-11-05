@@ -15,6 +15,8 @@ use App\Notifications\OtpNotification;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -142,6 +144,10 @@ class UserController extends Controller
                 : redirect()->back()->with('error', 'Invalid Email');
         }
 
+        if ($user->status === 'disabled') {
+            return redirect()->back()->with('error', 'Your account has been disabled. Please contact support.');
+        }
+
         if (Hash::check($data['password'], $user->password)) {
             Auth::login($user);
             return $request->ajax()
@@ -198,7 +204,84 @@ class UserController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'A new OTP has been sent to your email.']);
-}
+    }
+    public function forgotPassword(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
 
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
 
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with('success', 'Reset link sent to your email.')
+            : back()->with('error', 'Email not found.');
+    }
+
+    public function showResetPasswordForm($token, $email)
+        {
+            $user = User::where('email', $email)->first();
+
+            // If user doesn't exist → stop
+            if (!$user) {
+                return redirect('/')->with('error', 'Invalid or expired reset link.')
+                                    ->with('openModal', 'forgot');
+            }
+
+            // Check token validity
+            if (!Password::tokenExists($user, $token)) {
+                return redirect('/')->with('error', 'Reset link has expired. Please request a new one.')
+                                    ->with('openModal', 'forgot');
+            }
+
+            // Token is valid → open reset password modal
+            return redirect('/')->with([
+                'openModal' => 'reset',
+                'resetToken' => $token,
+                'resetEmail' => $email,
+            ])->withInput();
+        }
+   public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed'
+        ]);
+
+        // If validation fails → return back to reset modal
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with([
+                    'openModal' => 'reset',
+                    'resetToken' => $request->token,
+                    'resetEmail' => $request->email,
+                ]);
+        }
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($request->password)
+                ])->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('home')
+                ->with('openModal', 'login')
+                ->with('success', 'Password reset successful! Please login.');
+        }
+
+        return back()
+            ->withInput()
+            ->with([
+                'error' => 'Invalid token or email.',
+                'openModal' => 'reset',
+                'resetToken' => $request->token,
+                'resetEmail' => $request->email,
+            ]);
+    }
 }

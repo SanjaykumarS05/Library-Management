@@ -20,8 +20,6 @@ class BarcodeController extends Controller
             ->get();
 
         $book_issues_count = $book_issues->count();
-
-    
         $barcodes = [];
         foreach ($book_issues as $book_issue) {
         $issuedUser = User::find($book_issue->issued_id);
@@ -83,7 +81,6 @@ class BarcodeController extends Controller
             'book_id' => $book_issue->book_id,
             'barcodeImage' => $barcodeImage,
         ];
-
         return view('admin.barcode_info', compact('book_issue', 'bookData', 'users'));
     }
 }

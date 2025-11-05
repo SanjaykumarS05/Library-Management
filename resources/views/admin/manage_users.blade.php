@@ -14,6 +14,11 @@
         <input type="text" id="search-fine" name="fine" 
                placeholder="Search by Fine Amount"
                style="padding:5px; width:10%; position:relative; left:-92px;">
+         <select id="search-status" name="status" style="padding:5px; position:relative; left:-92px;">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="disabled">Disabled</option>
+        </select>
 
         <select id="role" name="role" style="padding:5px; position:relative; left:-92px;">
             <option value="">All Roles</option>
@@ -45,11 +50,12 @@ $(document).ready(function() {
         let search = $('#search-name').val();
         let fine = $('#search-fine').val();
         let role = $('#role').val();
+        let status = $('#search-status').val();
 
         $.ajax({
             url: url,
             type: 'GET',
-            data: { search: search, fine: fine, role: role },
+            data: { search: search, fine: fine, role: role, status: status },
             success: function(response) {
                 $('#report-table').html(response);
             },
@@ -67,7 +73,12 @@ $(document).ready(function() {
     });
 
     // ✅ Role filter change
-    $('#role').on('change', function() {
+    $('#role ,#search-status').on('change', function() {
+        fetchUsers();
+    });
+
+    // ✅ Status filter change
+    $('#search-status').on('change', function() {
         fetchUsers();
     });
 
