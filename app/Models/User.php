@@ -33,7 +33,7 @@ class User extends Authenticatable
     }
     public function bookIssues()
     {
-        return $this->hasMany(BookIssue::class);
+        return $this->hasMany(Book_issue::class);
     }
 
     public function bookRequests()

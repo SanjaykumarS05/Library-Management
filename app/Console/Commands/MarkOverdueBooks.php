@@ -33,7 +33,6 @@ class MarkOverdueBooks extends Command
 
         $this->info(count($overdueBooks) . ' books marked as overdue.');
 
-
         /** 2. SEND REMINDER FOR BOOKS DUE TOMORROW (issue_date = today - 14 days) */
        $today = Carbon::today();
        $tomorrow = $today->copy()->subDays(14);
@@ -67,13 +66,19 @@ class MarkOverdueBooks extends Command
 
          /** 3. IDENTIFY USERS WITH NO BOOK ISSUES IN THE PAST YEAR */
         $oneYearAgo = Carbon::now()->subYear();
-        $users = User::whereDoesntHave('bookIssues', function ($query) use ($oneYearAgo) {
-         $query->where('created_at', '>=', $oneYearAgo);
-        })->get();
+        $users = User::where('role', 'user')->where('created_at', '<=', $oneYearAgo)->where('status', 'active')
+            ->where(function($query) use ($oneYearAgo) {
+                $query->whereDoesntHave('bookIssues')
+                ->orWhereHas('bookIssues', function($q) use ($oneYearAgo) {
+                    $q->orderBy('created_at', 'desc')
+                    ->limit(1)
+                    ->where('created_at', '<=', $oneYearAgo);
+                });
+            })->get();
         foreach ($users as $user) {
             $user->status = 'disabled';
             $user->save();
         }
-        $this->info(count($users) . ' users have been disabled due to inactivity.');
+        $this->info(count($users) . ' users disabled (Because no borrow activity in the last year).');
     }
 }
